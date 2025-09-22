@@ -14,11 +14,9 @@ return new class extends Migration
         Schema::create('jadwal_peserta', function (Blueprint $table) {
             $table->id();
 
-            $table->uuid('peserta_id');
-            $table->foreignId('jadwal_id')->constrained('jadwal')->onDelete('cascade');
+            $table->foreignUuid('peserta_id')->constrained('pesertas')->onDelete('cascade');
+            $table->foreignId('jadwal_id')->constrained('jadwals')->onDelete('cascade');
             $table->timestamps();
-
-            $table->foreign('peserta_id')->references('id')->on('pesertas')->onDelete('cascade');
         });
     }
 

@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('mentor_id')->constrained('mentors')->onDelete('cascade');
 
             $table->timestamps();
+            $table->unique(['mentor_id', 'jadwal_id']);
         });
     }
 

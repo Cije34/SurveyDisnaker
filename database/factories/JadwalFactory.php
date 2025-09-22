@@ -22,7 +22,6 @@ class JadwalFactory extends Factory
     {
         return [
             'penjab_id' => Penjab::factory(),
-            'mentor_id' => Mentor::factory(),
             'kegiatan_id' => Kegiatan::factory(),
             'tempat_id' => Tempat::factory(),
             'tanggal_mulai' => $this->faker->dateTimeBetween('now', '+1 week'),
