@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             KegiatanSeeder::class,
             PenjabSeeder::class,
             MentorSeeder::class,
+            TempatSeeder::class,
         ]);
 
         User::factory()->create([
