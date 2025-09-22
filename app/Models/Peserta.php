@@ -9,4 +9,7 @@ class Peserta extends Model
 {
     /** @use HasFactory<\Database\Factories\PesertaFactory> */
     use HasFactory;
+
+    public $incrementing = false;
+    protected $keyType = 'string';
 }
