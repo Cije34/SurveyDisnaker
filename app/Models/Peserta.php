@@ -12,4 +12,11 @@ class Peserta extends Model
 
     public $incrementing = false;
     protected $keyType = 'string';
+
+     public function jadwals()
+    {
+        return $this->belongsToMany(Jadwal::class, 'jadwal_peserta')
+            ->withTimestamps();
+    }
+
 }

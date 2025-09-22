@@ -31,7 +31,8 @@ class DatabaseSeeder extends Seeder
             SurveySeeder::class,
             JawabanSeeder::class,
             JadwalSeeder::class,
-            JadwalMentorSeeder::class,  
+            JadwalMentorSeeder::class,
+            JadwalPesertaSeeder::class,
         ]);
 
         User::factory()->create([
