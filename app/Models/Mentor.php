@@ -9,4 +9,11 @@ class Mentor extends Model
 {
     /** @use HasFactory<\Database\Factories\MentorFactory> */
     use HasFactory;
+
+
+    public function jadwals()
+    {
+        return $this->belongsToMany(Kegiatan::class, 'jadwal_mentor')
+            ->withTimestamps();
+    }
 }
