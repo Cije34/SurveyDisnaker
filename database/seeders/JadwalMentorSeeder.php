@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Jadwal;
 use App\Models\Mentor;
 use App\Models\Kegiatan;
 use Illuminate\Database\Seeder;
@@ -14,14 +15,15 @@ class JadwalMentorSeeder extends Seeder
      */
     public function run(): void
     {
-         $mentors = Mentor::all();
-        $kegiatans = Kegiatan::all();
 
-        foreach ($mentors as $mentor) {
-            $mentor->jadwals()->attach(
-                $kegiatans->random(rand(1, 3))->pluck('id')->toArray(),
-                ['tanggal' => now()->addDays(rand(1, 10))]
-            );
-        }
+    $jadwals = Jadwal::all();
+    $mentors = Mentor::all();
+
+    foreach ($mentors as $mentor) {
+        $mentor->jadwals()->attach(
+            $jadwals->random(rand(1, 3))->pluck('id')->toArray()
+        );
+    }
+
     }
 }

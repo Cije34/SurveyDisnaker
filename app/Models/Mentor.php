@@ -13,7 +13,7 @@ class Mentor extends Model
 
     public function jadwals()
     {
-        return $this->belongsToMany(Kegiatan::class, 'jadwal_mentor')
+        return $this->belongsToMany(Jadwal::class, 'jadwal_mentor')
             ->withTimestamps();
     }
 }
