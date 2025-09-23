@@ -11,4 +11,7 @@
   <a href="{{ route('survey') }}"    class="{{ request()->routeIs('survey') ? 'active' : '' }}">Survey</a>
 </nav>
 
-<button class="logout" type="button">Log out</button>
+<button type="button" class="logout"
+        onclick="window.location.href='{{ route('login') }}'">
+  Log out
+</button>

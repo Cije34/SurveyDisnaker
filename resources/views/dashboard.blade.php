@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Halo Thomas')
+@section('title', 'Halo Slwbew')
 
 @section('content')
   <section class="section">
@@ -16,7 +16,10 @@
         <div class="survey-title">Survey Pelatihan</div>
         <div class="survey-desc">Berikan masukan untuk pelatihan kemarin</div>
       </div>
-      <button class="btn-primary">Isi Survey</button>
+      <button type="button" class="btn-primary"
+              onclick="window.location.href='{{ route('survey') }}'">
+        Isi survey
+      </button>
     </div>
   </section>
 @endsection
