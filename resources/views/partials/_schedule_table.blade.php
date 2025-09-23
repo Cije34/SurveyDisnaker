@@ -9,7 +9,7 @@
   </thead>
   <tbody>
   @foreach ($rows as $i => $r)
-    <tr class="{{ (isset($highlightIndex) && $highlightIndex === $i) ? 'row-focus' : '' }} {{ $i % 2 === 1 ? 'row-alt' : '' }}">
+    <tr class="{{ (isset($highlightIndex) && $highlightIndex === $i) }}">
       <td>{{ $r['kegiatan'] }}</td>
       <td>{{ $r['tanggal'] }}</td>
       <td>{{ $r['waktu'] }}</td>
