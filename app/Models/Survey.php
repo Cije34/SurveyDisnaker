@@ -9,4 +9,16 @@ class Survey extends Model
 {
     /** @use HasFactory<\Database\Factories\SurveyFactory> */
     use HasFactory;
+
+    public function kegiatan()
+    {
+        return $this->belongsTo(Kegiatan::class, 'kegiatan_id')
+            ->withTimestamps();
+    }
+
+    public function jawaban()
+    {
+        return $this->belongsTo(Jawaban::class,'jawaban_id')
+            ->withTimestamps();
+    }
 }

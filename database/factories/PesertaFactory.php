@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,6 +19,7 @@ class PesertaFactory extends Factory
     {
         return [
             'id' => $this->faker->uuid(),
+            'user_id' => User::factory(),
             'name' => $this->faker->name(),
             'alamat' => $this->faker->address(),
             'NIK' => $this->faker->unique()->numerify('##########'),

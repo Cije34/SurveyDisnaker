@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,6 +19,7 @@ class PenjabFactory extends Factory
     {
         return [
             'name' => $this->faker->name(),
+            'user_id' => User::factory(), // This will be set when creating the Penjab in the seeder
             'jabatan' => $this->faker->jobTitle(),
             'no_hp' => $this->faker->phoneNumber(),
             'email' => $this->faker->unique()->safeEmail(),

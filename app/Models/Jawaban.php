@@ -9,4 +9,14 @@ class Jawaban extends Model
 {
     /** @use HasFactory<\Database\Factories\JawabanFactory> */
     use HasFactory;
+
+    public function kegiatan()
+    {
+        return $this->belongsTo(Kegiatan::class);
+    }
+
+    public function jawaban()
+    {
+        return $this->belongsTo(Jawaban::class);
+    }
 }

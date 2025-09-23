@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('penjabs', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->unique()->constrained('users')->onDelete('cascade');
             $table->string('name');
             $table->string('jabatan');
             $table->string('no_hp', 15);

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use App\Models\Peserta;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -13,6 +14,8 @@ class PesertaSeeder extends Seeder
      */
     public function run(): void
     {
-        Peserta::factory()->count(10)->create();
+        Peserta::factory()
+        ->count(10)
+        ->create();
     }
 }
