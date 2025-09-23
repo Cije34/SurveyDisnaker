@@ -1,7 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DashboardController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', fn () => redirect()->route('dashboard'));
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+Route::get('/jadwal',    [DashboardController::class, 'jadwal'])->name('jadwal');
+Route::get('/survey',    [DashboardController::class, 'survey'])->name('survey');
+
+Route::view('/login', 'login')->name('login');

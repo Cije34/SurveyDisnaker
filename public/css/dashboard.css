@@ -1,0 +1,35 @@
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Arial,Helvetica,sans-serif;background:#f9f9f9;color:#1f2937}
+h2{font-size:28px;margin:24px 0 12px;font-weight:800}
+h3{font-size:18px;margin:16px 0;font-weight:800}
+.section{margin-top:8px}
+.container{display:flex;min-height:100dvh}
+.sidebar{width:240px;background:#0b65c2;color:#fff;display:flex;flex-direction:column;padding:20px}
+.main-content{flex:1;padding:16px 32px}
+.brand{font-size:22px;font-weight:800;margin-bottom:28px}
+.user-info{margin-bottom:20px}
+.user-name{font-weight:700}
+.user-email{opacity:.95}
+.menu{display:flex;flex-direction:column;gap:10px;margin:10px 0 20px}
+.menu a{color:#fff;text-decoration:none;padding:12px 14px;border-radius:10px;outline:2px solid transparent;transition:all .15s}
+.menu a:hover{background:#0a56a6}
+.menu a.active{background:#084b8a;outline-color:#052e5a}
+.logout{margin-top:auto;background:#fff;color:#0b65c2;border:none;padding:12px 16px;border-radius:12px;cursor:pointer;font-weight:600}
+.card{background:#fff;border-radius:12px;border:1px solid #e5e7eb;padding:16px}
+.table-card{padding:0;overflow:hidden}
+.table-rounded{border-radius:14px;overflow:hidden}
+.table-card table{width:100%;border-collapse:collapse}
+.table-card thead th{background:#0b65c2;color:#fff;text-align:left;padding:12px 16px;font-weight:800}
+.table-card tbody td{border-top:1px solid #e5e7eb;padding:12px 16px}
+.schedule-table tbody tr.row-alt td{background:#f3f4f6}
+.schedule-table tbody tr.row-focus td{outline:2px solid #084b8a;outline-offset:-6px;background:#eaf2fb}
+.survey-card{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.survey-title{font-weight:800;margin-bottom:6px}
+.survey-desc{color:#6b7280}
+.btn-primary{display:inline-block;background:#0b65c2;color:#fff;border:none;padding:12px 18px;border-radius:12px;text-decoration:none;cursor:pointer;font-weight:700}
+.btn-primary:hover{background:#084b8a}
+.divider{height:2px;background:#cbd5e1;margin-top:8px}
+.empty-state{height:calc(100dvh - 140px);display:grid;place-items:center;color:#d1d5db;font-weight:800;font-size:28px}
+.survey-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.survey-item .survey-title{font-weight:800;margin-bottom:6px}
+.survey-item .survey-desc{color:#6b7280;margin-bottom:10px}
