@@ -2,7 +2,7 @@
     <!-- Session Status -->
     <x-auth-session-status class="mb-4 rounded-full bg-white/70 px-5 py-3 text-center text-sm text-slate-600" :status="session('status')" />
 
-    <h1 class="text-3xl font-semibold text-center text-slate-900">Disnaker</h1>
+    <h1 class="text-3xl font-semibold text-center text-slate-900">Disnaker Administrator</h1>
     <p class="mt-1 text-center text-slate-500">Please enter your detail</p>
 
     <form class="mt-10 space-y-6" method="POST" action="{{ route('login') }}" x-data="{ showPassword: false }">
@@ -49,7 +49,7 @@
             <x-input-error :messages="$errors->get('password')" class="mt-2 text-sm text-red-500" />
         </div>
 
-        <input type="hidden" name="role" value="{{ old('role', 'peserta') }}">
+        <input type="hidden" name="role" value="{{ old('role','admin' ) }}">
 
         <!-- Remember Me & Forgot -->
         <div class="flex items-center justify-between text-sm text-slate-500">

@@ -28,7 +28,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        return $request->user()->role === 'admin' ? to_route('admin.dashboard') : to_route('dashboard');
     }
 
     /**
@@ -43,5 +43,9 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/');
+    }
+
+    public function createAdmin(){
+        return view('admin.login');
     }
 }
