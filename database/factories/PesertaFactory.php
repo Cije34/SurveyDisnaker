@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Peserta;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -10,6 +11,13 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class PesertaFactory extends Factory
 {
+    public function configure(): static
+    {
+        return $this->afterCreating(function (Peserta $peserta): void {
+            $peserta->user?->assignRole('peserta');
+        });
+    }
+
     /**
      * Define the model's default state.
      *

@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 use Database\Seeders\MentorSeeder;
 use Database\Seeders\PenjabSeeder;
+use Database\Seeders\RolePermissionSeeder;
 use Database\Seeders\SurveySeeder;
 use Database\Seeders\TempatSeeder;
 use Database\Seeders\JawabanSeeder;
@@ -22,6 +23,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
+            RolePermissionSeeder::class,
             TahunKegiatanSeeder::class,
             KegiatanSeeder::class,
             PenjabSeeder::class,
@@ -35,11 +37,12 @@ class DatabaseSeeder extends Seeder
             JadwalPesertaSeeder::class,
         ]);
 
-        User::factory()->create([
+        $admin = User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
-            'role' => 'admin',
             'password' => bcrypt('password'), // Ensure to hash the password
         ]);
+
+        $admin->assignRole('admin');
     }
 }

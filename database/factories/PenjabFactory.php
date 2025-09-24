@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Penjab;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -10,6 +11,13 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class PenjabFactory extends Factory
 {
+    public function configure(): static
+    {
+        return $this->afterCreating(function (Penjab $penjab): void {
+            $penjab->user?->assignRole('admin');
+        });
+    }
+
     /**
      * Define the model's default state.
      *

@@ -28,7 +28,21 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+<<<<<<< HEAD
         return $request->user()->role === 'admin' ? to_route('admin.dashboard') : to_route('dashboard');
+=======
+        $user = $request->user();
+
+        if ($user->hasRole('admin')) {
+            return redirect()->intended(route('admin.dashboard', absolute: false));
+        }
+
+        if ($user->hasRole('peserta')) {
+            return redirect()->intended(route('peserta.dashboard', absolute: false));
+        }
+
+        return redirect()->intended(route('dashboard', absolute: false));
+>>>>>>> 843bcfc (install spatie)
     }
 
     /**
