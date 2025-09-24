@@ -5,15 +5,6 @@ namespace Database\Seeders;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Database\Seeders\MentorSeeder;
-use Database\Seeders\PenjabSeeder;
-use Database\Seeders\RolePermissionSeeder;
-use Database\Seeders\SurveySeeder;
-use Database\Seeders\TempatSeeder;
-use Database\Seeders\JawabanSeeder;
-use Database\Seeders\PesertaSeeder;
-use Database\Seeders\KegiatanSeeder;
-use Database\Seeders\TahunKegiatanSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -37,9 +28,10 @@ class DatabaseSeeder extends Seeder
             JadwalPesertaSeeder::class,
         ]);
 
-        $admin = User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        $admin = User::create([
+            'name' => 'admin',
+            'email' => 'admin@example.com',
+            'email_verified_at' => now(),
             'password' => bcrypt('password'), // Ensure to hash the password
         ]);
 

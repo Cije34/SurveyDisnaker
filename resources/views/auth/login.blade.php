@@ -49,8 +49,6 @@
             <x-input-error :messages="$errors->get('password')" class="mt-2 text-sm text-red-500" />
         </div>
 
-        <input type="hidden" name="role" value="{{ old('role', 'peserta') }}">
-
         <!-- Remember Me & Forgot -->
         <div class="flex items-center justify-between text-sm text-slate-500">
             <label for="remember_me" class="flex items-center gap-3 cursor-pointer">
