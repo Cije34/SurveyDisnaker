@@ -1,14 +1,15 @@
 <?php
 
 use App\Http\Controllers\PenjabController;
+use App\Http\Controllers\PesertaController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/','/login');
 
-Route::get('/dashboard', function () {
-    return view('peserta.dashboard');
-})->middleware(['auth', 'verified','is.peserta'])->name('dashboard');
+Route::middleware(['auth','is.peserta','verified'])->group(function () {
+    Route::get('/dashboard', [PesertaController::class,'index'])->name('dashboard');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
