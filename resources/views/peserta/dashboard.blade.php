@@ -12,6 +12,9 @@
                 <x-perserta.survey-card
                     :title="$survey['title']"
                     :description="$survey['description']"
+                    :deadline="$survey['deadline']"
+                    :mentor="$survey['mentor']"
+                    :status="$survey['status']"
                     :action="$survey['action']" />
             @endforeach
         </div>

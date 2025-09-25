@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Mentor;
 use Illuminate\Database\Seeder;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class MentorSeeder extends Seeder
 {
@@ -13,6 +12,6 @@ class MentorSeeder extends Seeder
      */
     public function run(): void
     {
-        Mentor::factory()->count(10)->create();
+        Mentor::factory()->count(5)->create();
     }
 }

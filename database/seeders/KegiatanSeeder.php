@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\Kegiatan;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class KegiatanSeeder extends Seeder
@@ -14,7 +13,7 @@ class KegiatanSeeder extends Seeder
     public function run(): void
     {
         Kegiatan::factory()
-            ->count(10)
+            ->count(100)
             ->create([
                 'tahun_kegiatan_id' => \App\Models\TahunKegiatan::factory(),
             ]);

@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Jadwal;
 use Illuminate\Database\Seeder;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class JadwalSeeder extends Seeder
 {
@@ -14,8 +13,8 @@ class JadwalSeeder extends Seeder
     public function run(): void
     {
         Jadwal::factory()
-        ->count(10)
-        ->create();
+            ->count(1000)
+            ->create();
         // You can add more logic here if needed, such as attaching mentors or activities
         // to the jadwals created, similar to what you did in JadwalMentorSeeder.
         // For example:

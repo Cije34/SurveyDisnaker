@@ -33,7 +33,7 @@
                         'label' => 'Jadwal',
                         'icon' => asset('icons/calendar.svg'),
                         'route' => route('peserta.jadwal'),
-                        'key' => 'schedule',
+                        'key' => 'jadwal',
                     ],
                     [
                         'label' => 'Survey',

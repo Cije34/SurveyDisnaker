@@ -15,7 +15,7 @@ class JadwalPesertaSeeder extends Seeder
     public function run(): void
     {
         $jadwals = Jadwal::all();
-    $peserta = Peserta::all();
+        $peserta = Peserta::all();
 
     foreach ($peserta as $pesertas) {
         $pesertas->jadwals()->attach(

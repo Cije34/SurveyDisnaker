@@ -4,12 +4,12 @@
 ])
 
 @php
-    $scheduleUrl = \Illuminate\Support\Facades\Route::has('peserta.schedule')
-        ? route('peserta.schedule')
+    $scheduleUrl = \Illuminate\Support\Facades\Route::has('peserta.jadwal')
+        ? route('peserta.jadwal')
         : '#';
 @endphp
 
-<section class="rounded-2x4 bg-white p-6 shadow-[0_35px_55px_-30px_rgba(15,23,42,0.35)]">
+<section class="rounded-2x4  bg-white p-6 shadow-[0_35px_55px_-30px_rgba(15,23,42,0.35)]">
     <header class="mb-5 flex items-center justify-between">
         <h2 class="text-3xl font-semibold text-slate-900">{{ $title }}</h2>
         <a href="{{ $scheduleUrl }}"

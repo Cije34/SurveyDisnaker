@@ -18,8 +18,8 @@ class JawabanFactory extends Factory
     public function definition(): array
     {
         return [
-            'peserta_id' => Peserta::inRandomOrder()->first()->id ?? Peserta::factory(),
-            'survey_id' => \App\Models\Survey::query()->inRandomOrder('id')->first()->id,
+            'peserta_id' => Peserta::query()->inRandomOrder()->value('id') ?? Peserta::factory(),
+            'survey_id' => \App\Models\Survey::query()->inRandomOrder()->value('id') ?? \App\Models\Survey::factory(),
             'jawaban' => $this->faker->text(),
             'tipe' => $this->faker->randomElement(['essay', 'survey']),
             'created_at' => now(),

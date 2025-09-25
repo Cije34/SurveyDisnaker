@@ -7,7 +7,6 @@
 
     <div class="px-8 py-10 space-y-10">
         <x-perserta.schedule-table :items="$jadwal" />
-        <div class="grid gap-6 md:grid-cols-2">
-        </div>
+        
     </div>
 </x-perserta.layout>
