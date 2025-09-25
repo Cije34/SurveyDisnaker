@@ -13,8 +13,20 @@ class SurveySeeder extends Seeder
      */
     public function run(): void
     {
-        Survey::factory()
-            ->count(1000)
-            ->create();
+        $kegiatans = \App\Models\Kegiatan::all();
+
+        foreach ($kegiatans as $kegiatan) {
+            Survey::factory()->create([
+                'kegiatan_id' => $kegiatan->id,
+                'type' => 'choice',
+                'pertanyaan' => 'Seberapa puas Anda dengan kegiatan ini?',
+            ]);
+
+            Survey::factory()->create([
+                'kegiatan_id' => $kegiatan->id,
+                'type' => 'text',
+                'pertanyaan' => 'Masukan atau saran untuk kegiatan ini',
+            ]);
+        }
     }
 }

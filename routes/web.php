@@ -14,6 +14,8 @@ Route::middleware(['auth', 'verified', 'role:peserta'])->prefix('peserta')->name
     Route::get('/dashboard', [PesertaController::class, 'index'])->name('dashboard');
     Route::get('/jadwal', [PesertaController::class, 'jadwal'])->name('jadwal');
     Route::get('/survey', [PesertaController::class, 'survey'])->name('survey');
+    Route::get('/survey/{kegiatan}', [PesertaController::class, 'showSurvey'])->name('survey.show');
+    Route::post('/survey/{kegiatan}', [PesertaController::class, 'submitSurvey'])->name('survey.submit');
 });
 
 Route::middleware(['auth', 'verified'])->get('/dashboard', function () {

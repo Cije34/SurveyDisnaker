@@ -19,6 +19,7 @@ class SurveyFactory extends Factory
     {
         return [
             'pertanyaan' => $this->faker->sentence(6, true),
+            'type' => 'choice',
             'kegiatan_id' => Kegiatan::query()->inRandomOrder()->value('id') ?? Kegiatan::factory(),
             'created_at' => now(),
             'updated_at' => now(),

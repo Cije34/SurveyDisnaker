@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignUuid('peserta_id')->constrained('pesertas')->cascadeOnDelete();
             $table->foreignId('survey_id')->constrained('surveys')->onDelete('cascade');
             $table->text('jawaban')->nullable();
-            $table->enum('tipe', ['essay', 'survey']); // tipe jawaban
+            $table->enum('tipe', ['choice', 'text']);
             $table->timestamps();
 
 

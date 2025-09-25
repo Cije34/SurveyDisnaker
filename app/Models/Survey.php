@@ -12,6 +12,13 @@ class Survey extends Model
     /** @use HasFactory<\Database\Factories\SurveyFactory> */
     use HasFactory;
 
+    public const TYPE_CHOICE = 'choice';
+    public const TYPE_TEXT = 'text';
+
+    protected $casts = [
+        'type' => 'string',
+    ];
+
     public function kegiatan(): BelongsTo
     {
         return $this->belongsTo(Kegiatan::class);
@@ -20,5 +27,15 @@ class Survey extends Model
     public function jawabans(): HasMany
     {
         return $this->hasMany(Jawaban::class);
+    }
+
+    public function isChoice(): bool
+    {
+        return $this->type === self::TYPE_CHOICE;
+    }
+
+    public function isText(): bool
+    {
+        return $this->type === self::TYPE_TEXT;
     }
 }

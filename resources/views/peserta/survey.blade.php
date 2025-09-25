@@ -4,14 +4,20 @@
         </x-slot:sidebar>
 
         <x-perserta.topbar :user="$profile ?? $user" />
-        <div class="px-8 py-10">
+    <div class="px-8 py-10">
+            @if (session('status'))
+                <div class="mb-6 rounded-2xl bg-sky-50 px-5 py-4 text-sm text-sky-700">
+                    {{ session('status') }}
+                </div>
+            @endif
+
             <div class="mb-8">
                 <h2 class="text-3xl font-semibold text-slate-900">Survey</h2>
                 <p class="mt-1 text-sm text-slate-500">Pilih pelatihan yang ingin Anda berikan umpan balik.</p>
             </div>
 
             @if ($surveys->isNotEmpty())
-                <div class="space-y-6">
+                <div class="grid gap-6 md:grid-cols-2">
                     @foreach ($surveys as $survey)
                         <x-perserta.survey-card
                             :title="$survey['title']"

@@ -17,11 +17,22 @@ class JawabanFactory extends Factory
      */
     public function definition(): array
     {
+        $survey = \App\Models\Survey::query()->inRandomOrder()->first();
+
+        if (! $survey) {
+            $survey = \App\Models\Survey::factory()->create();
+        }
+
+        $surveyId = $survey->id;
+        $surveyType = $survey->type;
+
         return [
             'peserta_id' => Peserta::query()->inRandomOrder()->value('id') ?? Peserta::factory(),
-            'survey_id' => \App\Models\Survey::query()->inRandomOrder()->value('id') ?? \App\Models\Survey::factory(),
-            'jawaban' => $this->faker->text(),
-            'tipe' => $this->faker->randomElement(['essay', 'survey']),
+            'survey_id' => $surveyId,
+            'jawaban' => $surveyType === 'choice'
+                ? $this->faker->randomElement(['Sangat baik', 'Baik', 'Cukup baik', 'Buruk'])
+                : $this->faker->text(),
+            'tipe' => $surveyType,
             'created_at' => now(),
             'updated_at' => now(),
         ];

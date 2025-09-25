@@ -16,9 +16,14 @@ class Kegiatan extends Model
             ->withTimestamps();
     }
 
-    public function survey()
+    public function surveys()
     {
         return $this->hasMany(Survey::class, 'kegiatan_id');
+    }
+
+    public function survey()
+    {
+        return $this->surveys();
     }
 
     public function jadwal()
