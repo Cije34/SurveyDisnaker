@@ -12,6 +12,7 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('ad
 
 Route::middleware(['auth', 'verified', 'role:peserta'])->prefix('peserta')->name('peserta.')->group(function () {
     Route::get('/dashboard', [PesertaController::class, 'index'])->name('dashboard');
+    Route::get('/jadwal', [PesertaController::class, 'jadwal'])->name('jadwal');
 });
 
 Route::middleware(['auth', 'verified'])->get('/dashboard', function () {

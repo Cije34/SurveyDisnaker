@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\Mentor;
 use App\Models\Penjab;
 use App\Models\Tempat;
 use App\Models\Kegiatan;
@@ -21,9 +20,9 @@ class JadwalFactory extends Factory
     public function definition(): array
     {
         return [
-            'penjab_id' => Penjab::factory(),
-            'kegiatan_id' => Kegiatan::factory(),
-            'tempat_id' => Tempat::factory(),
+            'penjab_id' => Penjab::query()->inRandomOrder()->value('id') ?? Penjab::factory(),
+            'kegiatan_id' => Kegiatan::query()->inRandomOrder()->value('id') ?? Kegiatan::factory(),
+            'tempat_id' => Tempat::query()->inRandomOrder()->value('id') ?? Tempat::factory(),
             'tanggal_mulai' => $this->faker->dateTimeBetween('now', '+1 week'),
             'tanggal_selesai' => $this->faker->dateTimeBetween('+1 week', '+2 weeks'),
             'jam_mulai' => $this->faker->time(),

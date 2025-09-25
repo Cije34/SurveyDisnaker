@@ -54,4 +54,41 @@ class PesertaController extends Controller
             'surveys' => $surveys,
         ]);
     }
+
+    public function jadwal()
+    {
+
+        $user = Auth::user();
+        $peserta = $user?->peserta;
+
+        if (! $peserta) {
+            abort(403, 'peserta tidak di temukan');
+        }
+
+        $jadwal = $peserta->jadwals()->get();
+        // ->with(['kegiatan', 'tempat'])
+        // ->orderByDesc('tanggal_mulai')
+        // ->get()
+        // ->map(function (Jadwal $jadwal) {
+        //     $waktuMulai = $jadwal->jam_mulai ? substr($jadwal->jam_mulai, 0, 5) : null;
+        //     $waktuSelesai = $jadwal->jam_selesai ? substr($jadwal->jam_selesai, 0, 5) : null;
+
+        //     return [
+        //         'kegiatan' => $jadwal->kegiatan->nama_kegiatan ?? '-',
+        //         'tanggal' => $jadwal->tanggal_mulai?->format('d M Y') ?? '-',
+        //         'waktu' => $waktuMulai && $waktuSelesai
+        //             ? $waktuMulai.' - '.$waktuSelesai
+        //             : ($waktuMulai ?? '-'),
+        //         'lokasi' => $jadwal->tempat->name ?? '-',
+        //     ];
+        // });
+
+        return view('peserta.jadwal',
+            [
+                'user' => $user,
+                'profile' => $peserta,
+                'jadwal' => $jadwal,
+            ]
+        );
+    }
 }

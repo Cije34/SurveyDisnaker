@@ -19,7 +19,7 @@ class JawabanFactory extends Factory
     {
         return [
             'peserta_id' => Peserta::inRandomOrder()->first()->id ?? Peserta::factory(),
-            'survey_id' => \App\Models\Survey::factory(),
+            'survey_id' => \App\Models\Survey::query()->inRandomOrder('id')->first()->id,
             'jawaban' => $this->faker->text(),
             'tipe' => $this->faker->randomElement(['essay', 'survey']),
             'created_at' => now(),

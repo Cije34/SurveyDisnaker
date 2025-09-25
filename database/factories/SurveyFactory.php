@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Kegiatan;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,7 +19,7 @@ class SurveyFactory extends Factory
     {
         return [
             'pertanyaan' => $this->faker->sentence(6, true),
-            'kegiatan_id' => \App\Models\Kegiatan::factory(),
+            'kegiatan_id' => Kegiatan::factory(),
             'created_at' => now(),
             'updated_at' => now(),
         ];

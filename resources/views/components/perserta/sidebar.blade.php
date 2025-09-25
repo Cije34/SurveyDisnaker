@@ -13,9 +13,9 @@
         <div class="rounded-3xl bg-white/15 px-4 py-5 text-sm shadow-inner shadow-sky-900/10">
             <div class="flex items-center gap-4">
                 <img src="{{ asset('icons/user-circle.svg') }}" alt="Profil" class="h-12 w-12 invert">
-                <div class="leading-tight">
-                    <p class="font-medium text-white">{{ $user?->name }}</p>
-                    <p class="text-white/80 text-xs">{{ $user?->email }}</p>
+                <div class="leading-tight max-w-[150px]">
+                    <p class="font-medium text-white truncate" title="{{ $user?->name }}">{{ $user?->name }}</p>
+                    <p class="text-white/80 text-xs truncate" title="{{ $user?->email }}">{{ $user?->email }}</p>
                 </div>
             </div>
         </div>
@@ -32,7 +32,7 @@
                     [
                         'label' => 'Jadwal',
                         'icon' => asset('icons/calendar.svg'),
-                        'route' => Route::has('peserta.schedule') ? route('peserta.schedule') : '#',
+                        'route' => route('peserta.jadwal'),
                         'key' => 'schedule',
                     ],
                     [

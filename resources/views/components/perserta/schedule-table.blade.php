@@ -9,9 +9,9 @@
         : '#';
 @endphp
 
-<section class="rounded-3xl bg-white p-6 shadow-[0_35px_55px_-30px_rgba(15,23,42,0.35)]">
-    <header class="mb-4 flex items-center justify-between">
-        <h2 class="text-xl font-semibold text-slate-900">{{ $title }}</h2>
+<section class="rounded-2x4 bg-white p-6 shadow-[0_35px_55px_-30px_rgba(15,23,42,0.35)]">
+    <header class="mb-5 flex items-center justify-between">
+        <h2 class="text-3xl font-semibold text-slate-900">{{ $title }}</h2>
         <a href="{{ $scheduleUrl }}"
            class="text-sm font-medium text-sky-600 hover:text-sky-700">
             Lihat semua

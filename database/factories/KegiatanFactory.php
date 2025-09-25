@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\TahunKegiatan;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,7 +19,8 @@ class KegiatanFactory extends Factory
     {
         return [
             'nama_kegiatan' => $this->faker->sentence(3),
-            'tahun_kegiatan_id' => \App\Models\TahunKegiatan::factory(),
+            'tahun_kegiatan_id' => TahunKegiatan::query()->inRandomOrder()->value('id')
+                ?? TahunKegiatan::factory(),
             'created_at' => now(),
             'updated_at' => now(),
         ];

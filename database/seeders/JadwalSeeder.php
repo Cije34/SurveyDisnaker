@@ -14,7 +14,7 @@ class JadwalSeeder extends Seeder
     public function run(): void
     {
         Jadwal::factory()
-        ->count(5)
+        ->count(10)
         ->create();
         // You can add more logic here if needed, such as attaching mentors or activities
         // to the jadwals created, similar to what you did in JadwalMentorSeeder.
