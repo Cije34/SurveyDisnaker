@@ -1,49 +1,40 @@
 @props(['active' => 'dashboard', 'user' => null])
 
+@php
+    $menus = [
+        ['label' => 'Dashboard', 'icon' => asset('icons/list.svg'), 'route' => route('admin.dashboard'), 'key' => 'dashboard'],
+        ['label' => 'Tahun Kegiatan', 'icon' => asset('icons/calendar.svg'), 'route' => '#', 'key' => 'tahun'],
+        ['label' => 'Kegiatan', 'icon' => asset('icons/calendar-plus.svg'), 'route' => '#', 'key' => 'kegiatan'],
+        ['label' => 'Jadwal', 'icon' => asset('icons/calendar-dot.svg'), 'route' => '#', 'key' => 'jadwal'],
+        ['label' => 'Peserta', 'icon' => asset('icons/users.svg'), 'route' => '#', 'key' => 'peserta'],
+        ['label' => 'Mentor', 'icon' => asset('icons/user-check.svg'), 'route' => '#', 'key' => 'mentor'],
+        ['label' => 'Penjab', 'icon' => asset('icons/user.svg'), 'route' => '#', 'key' => 'penjab'],
+        ['label' => 'Tempat', 'icon' => asset('icons/map-pin-line.svg'), 'route' => '#', 'key' => 'tempat'],
+        ['label' => 'Survey', 'icon' => asset('icons/chalkboard-teacher.svg'), 'route' => '#', 'key' => 'survey'],
+    ];
+@endphp
+
 <div class="flex h-full flex-col justify-between px-6 py-8">
     <div class="space-y-8">
         <header class="flex items-center gap-3">
             <img src="{{ asset('img/logo_disnaker.svg') }}" alt="Disnaker" class="h-14 w-14 object-contain">
             <div>
                 <p class="text-xl font-semibold leading-tight">Disnaker</p>
-                <span class="text-xs text-white/80">Kabupaten/Kota</span>
+                <span class="text-xs text-white/80">Administrator</span>
             </div>
         </header>
 
         <div class="rounded-3xl bg-white/15 px-4 py-5 text-sm shadow-inner shadow-sky-900/10">
             <div class="flex items-center gap-4">
                 <img src="{{ asset('icons/user-circle.svg') }}" alt="Profil" class="h-12 w-12 invert">
-                <div class="leading-tight max-w-[150px]">
-                    <p class="font-medium text-white truncate" title="{{ $user?->name }}">{{ $user?->name }}</p>
+                <div class="leading-tight max-w-[160px]">
+                    <p class="font-medium text-white truncate" title="{{ $user?->name }}">{{ $user?->name ?? 'Admin' }}</p>
                     <p class="text-white/80 text-xs truncate" title="{{ $user?->email }}">{{ $user?->email }}</p>
                 </div>
             </div>
         </div>
 
         <nav class="space-y-2 text-base font-medium">
-            @php
-                $menus = [
-                    [
-                        'label' => 'Dashboard',
-                        'icon' => asset('icons/list.svg'),
-                        'route' => route('dashboard'),
-                        'key' => 'dashboard',
-                    ],
-                    [
-                        'label' => 'Jadwal',
-                        'icon' => asset('icons/calendar.svg'),
-                        'route' => route('peserta.jadwal'),
-                        'key' => 'jadwal',
-                    ],
-                    [
-                        'label' => 'Survey',
-                        'icon' => asset('icons/chalkboard-teacher.svg'),
-                        'route' => Route::has('peserta.survey') ? route('peserta.survey') : '#',
-                        'key' => 'survey',
-                    ],
-                ];
-            @endphp
-
             @foreach ($menus as $menu)
                 <a href="{{ $menu['route'] }}"
                    @class([
