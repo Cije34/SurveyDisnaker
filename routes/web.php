@@ -9,6 +9,7 @@ Route::redirect('/', '/login');
 
 Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [PenjabController::class, 'index'])->name('dashboard');
+    Route::post('/jadwal', [PenjabController::class, 'storeSchedule'])->name('jadwal.store');
 });
 
 Route::middleware(['auth', 'verified', 'role:peserta'])->prefix('peserta')->name('peserta.')->group(function () {

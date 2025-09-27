@@ -12,6 +12,8 @@ class Jadwal extends Model
     /** @use HasFactory<\Database\Factories\JadwalFactory> */
     use HasFactory;
 
+    protected $guarded = [];
+
     protected $casts = [
         'tanggal_mulai' => 'datetime',
         'tanggal_selesai' => 'datetime',
