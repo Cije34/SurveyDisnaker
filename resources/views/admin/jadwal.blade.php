@@ -131,7 +131,7 @@
             @endif
         </section>
 
-        <!-- Placeholder Modal Tambah -->
+        <!-- Modal Tambah Jadwal -->
         <div x-show="createOpen"
              x-cloak
              x-transition.opacity
@@ -139,14 +139,83 @@
              @click.self="closeCreateModal()">
             <div x-show="createOpen"
                  x-transition.scale
-                 class="w-full max-w-lg rounded-3xl bg-gradient-to-b from-sky-700 via-sky-600 to-sky-800 p-[1px] shadow-2xl">
-                <div class="rounded-3xl bg-white/95 p-6">
-                    <div class="mb-4 flex items-center justify-between">
-                        <h3 class="text-lg font-semibold text-slate-900">Tambah Jadwal</h3>
+                 class="w-full max-w-2xl rounded-3xl bg-gradient-to-b from-sky-700 via-sky-600 to-sky-800 p-[1px] shadow-2xl">
+                <form method="POST" action="{{ route('admin.jadwal.store') }}" class="rounded-3xl bg-white/95 p-6 space-y-5">
+                    @csrf
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-xl font-semibold text-slate-900">Tambah Jadwal Baru</h3>
                         <button type="button" @click="closeCreateModal()" class="text-slate-400 transition hover:text-slate-600">✕</button>
                     </div>
-                    <p class="text-sm text-slate-600">Form penambahan jadwal akan tersedia pada langkah berikutnya.</p>
-                </div>
+
+                    @if ($errors->any())
+                        <div class="rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
+                            <h4 class="font-semibold">Terjadi Kesalahan</h4>
+                            <ul class="mt-2 list-inside list-disc">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+                    <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+                        <div>
+                            <label for="kegiatan_id" class="mb-1 block text-sm font-medium text-slate-700">Kegiatan</label>
+                            <select name="kegiatan_id" id="kegiatan_id" class="w-full rounded-xl border-slate-300 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
+                                <option value="">Pilih Kegiatan</option>
+                                @foreach($kegiatanOptions as $kegiatan)
+                                    <option value="{{ $kegiatan->id }}" @selected(old('kegiatan_id') == $kegiatan->id)>{{ $kegiatan->nama_kegiatan }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div>
+                            <label for="penjab_id" class="mb-1 block text-sm font-medium text-slate-700">Penanggung Jawab</label>
+                            <select name="penjab_id" id="penjab_id" class="w-full rounded-xl border-slate-300 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
+                                <option value="">Pilih Penanggung Jawab</option>
+                                @foreach($penjabOptions as $penjab)
+                                    <option value="{{ $penjab->id }}" @selected(old('penjab_id') == $penjab->id)>{{ $penjab->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="tempat_id" class="mb-1 block text-sm font-medium text-slate-700">Lokasi</label>
+                        <select name="tempat_id" id="tempat_id" class="w-full rounded-xl border-slate-300 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
+                            <option value="">Pilih Lokasi</option>
+                            @foreach($tempatOptions as $tempat)
+                                <option value="{{ $tempat->id }}" @selected(old('tempat_id') == $tempat->id)>{{ $tempat->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+                        <div>
+                            <label for="tanggal_mulai" class="mb-1 block text-sm font-medium text-slate-700">Tanggal Mulai</label>
+                            <input type="date" name="tanggal_mulai" id="tanggal_mulai" value="{{ old('tanggal_mulai') }}" class="w-full rounded-xl border-slate-300 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
+                        </div>
+                        <div>
+                            <label for="tanggal_selesai" class="mb-1 block text-sm font-medium text-slate-700">Tanggal Selesai</label>
+                            <input type="date" name="tanggal_selesai" id="tanggal_selesai" value="{{ old('tanggal_selesai') }}" class="w-full rounded-xl border-slate-300 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+                        <div>
+                            <label for="jam_mulai" class="mb-1 block text-sm font-medium text-slate-700">Jam Mulai</label>
+                            <input type="time" name="jam_mulai" id="jam_mulai" value="{{ old('jam_mulai') }}" class="w-full rounded-xl border-slate-300 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
+                        </div>
+                        <div>
+                            <label for="jam_selesai" class="mb-1 block text-sm font-medium text-slate-700">Jam Selesai</label>
+                            <input type="time" name="jam_selesai" id="jam_selesai" value="{{ old('jam_selesai') }}" class="w-full rounded-xl border-slate-300 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end gap-3 pt-4">
+                        <button type="button" @click="closeCreateModal()" class="rounded-full bg-slate-100 px-5 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-200">Batal</button>
+                        <button type="submit" class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-sky-500 via-sky-400 to-emerald-400 px-5 py-2 text-sm font-semibold text-white shadow-lg transition hover:brightness-110">Simpan Jadwal</button>
+                    </div>
+                </form>
             </div>
         </div>
 
@@ -182,7 +251,7 @@
 <script>
     function jadwalPage() {
         return {
-            createOpen: false,
+            createOpen: {{ $errors->any() ? 'true' : 'false' }},
             editOpen: false,
             editMeta: null,
             openCreateModal() {

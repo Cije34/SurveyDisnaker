@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Jadwal;
+use App\Models\Kegiatan;
+use App\Models\Penjab;
+use App\Models\Tempat;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
@@ -14,11 +17,17 @@ class JadwalController extends Controller
         $schedules = Jadwal::with(['kegiatan:id,nama_kegiatan', 'tempat:id,name', 'mentors:id,name'])
             ->orderByDesc('tanggal_mulai')
             ->paginate(5);
-        // dd($schedules);
+        
+        $kegiatanOptions = Kegiatan::orderBy('nama_kegiatan')->get(['id', 'nama_kegiatan']);
+        $penjabOptions = Penjab::orderBy('name')->get(['id', 'name']);
+        $tempatOptions = Tempat::orderBy('name')->get(['id', 'name']);
 
         return view('admin.jadwal', [
             'user' => Auth::user(),
             'schedules' => $schedules,
+            'kegiatanOptions' => $kegiatanOptions,
+            'penjabOptions' => $penjabOptions,
+            'tempatOptions' => $tempatOptions,
         ]);
 
         // Debug: Cek data mentors
