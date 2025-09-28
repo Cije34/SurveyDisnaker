@@ -10,9 +10,14 @@ class TahunKegiatan extends Model
     /** @use HasFactory<\Database\Factories\TahunKegiatanFactory> */
     use HasFactory;
 
+    protected $guarded = [];
+
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
+
     public function kegiatan()
     {
-        return $this->belongsToMany(Kegiatan::class,'tahun_kegiatan_kegiatan')
-            ->withTimestamps();
+        return $this->belongsToMany(Kegiatan::class, 'tahun_kegiatan_kegiatan')->withTimestamps();
     }
 }

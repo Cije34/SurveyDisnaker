@@ -188,7 +188,7 @@
                         class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-sky-500 via-sky-400 to-emerald-400 px-5 py-2 text-sm font-semibold text-white shadow-lg transition hover:brightness-110">
                     <span class="text-center">Tambah Jadwal</span>
                     <span class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-white/25">
-                        <img src="{{ asset('icons/calendar-plus.svg') }}" alt="Tambah" class="h-4 w-4">
+                        <img src="{{ asset('icons/calendar-plus.svg') }}" alt="Tambah" class="h-4 w-4 invert">
                     </span>
                 </button>
             </div>

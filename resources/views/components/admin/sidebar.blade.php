@@ -3,7 +3,7 @@
 @php
     $menus = [
         ['label' => 'Dashboard', 'icon' => asset('icons/list.svg'), 'route' => route('admin.dashboard'), 'key' => 'dashboard'],
-        ['label' => 'Tahun Kegiatan', 'icon' => asset('icons/calendar.svg'), 'route' => '#', 'key' => 'tahun'],
+        ['label' => 'Tahun Kegiatan', 'icon' => asset('icons/calendar.svg'), 'route' => route('admin.tahun.index'), 'key' => 'tahun'],
         ['label' => 'Kegiatan', 'icon' => asset('icons/calendar-plus.svg'), 'route' => '#', 'key' => 'kegiatan'],
         ['label' => 'Jadwal', 'icon' => asset('icons/calendar-dot.svg'), 'route' => '#', 'key' => 'jadwal'],
         ['label' => 'Peserta', 'icon' => asset('icons/users.svg'), 'route' => '#', 'key' => 'peserta'],
