@@ -11,6 +11,15 @@ class Mentor extends Model
     use HasFactory;
 
 
+    protected $fillable = [
+        'name',
+        'no_hp',
+        'email',
+        'alamat',
+        'jenis_kelamin',
+        'materi',
+    ];
+
     public function jadwals()
     {
         return $this->belongsToMany(Jadwal::class, 'jadwal_mentor')

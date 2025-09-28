@@ -36,11 +36,11 @@ class Jadwal extends Model
 
     public function mentors(): BelongsToMany
     {
-        return $this->belongsToMany(Mentor::class, 'jadwal_mentor')->withTimestamps();
+        return $this->belongsToMany(Mentor::class, 'jadwal_mentor');
     }
 
     public function pesertas(): BelongsToMany
     {
-        return $this->belongsToMany(Peserta::class, 'jadwal_peserta')->withTimestamps();
+        return $this->belongsToMany(Peserta::class, 'jadwal_peserta');
     }
 }

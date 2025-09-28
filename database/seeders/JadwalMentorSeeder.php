@@ -4,9 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Jadwal;
 use App\Models\Mentor;
-use App\Models\Kegiatan;
 use Illuminate\Database\Seeder;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class JadwalMentorSeeder extends Seeder
 {
@@ -16,14 +14,22 @@ class JadwalMentorSeeder extends Seeder
     public function run(): void
     {
 
-    $jadwals = Jadwal::all();
-    $mentors = Mentor::all();
+        $jadwals = Jadwal::all();
+        $mentors = Mentor::all();
 
-    foreach ($mentors as $mentor) {
-        $mentor->jadwals()->attach(
-            $jadwals->random(rand(1, 3))->pluck('id')->toArray()
-        );
-    }
+        if ($jadwals->isEmpty() || $mentors->isEmpty()) {
+            $this->command->info('Tidak ada jadwal atau mentor untuk di-seed');
 
+            return;
+        }
+
+        // Attach mentors ke jadwals yang ada
+        foreach ($jadwals as $jadwal) {
+            // Attach 1-3 mentor random ke setiap jadwal
+            $randomMentors = $mentors->random(rand(1, min(3, $mentors->count())));
+            $jadwal->mentors()->attach($randomMentors->pluck('id')->toArray());
+        }
+
+        $this->command->info('JadwalMentorSeeder completed successfully');
     }
 }
