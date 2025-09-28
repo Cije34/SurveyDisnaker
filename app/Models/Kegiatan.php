@@ -10,10 +10,14 @@ class Kegiatan extends Model
     /** @use HasFactory<\Database\Factories\KegiatanFactory> */
     use HasFactory;
 
+    protected $fillable = [
+        'nama_kegiatan',
+        'tahun_kegiatan_id',
+    ];
+
     public function tahunKegiatan()
     {
-        return $this->belongsTo(TahunKegiatan::class, 'tahun_kegiatan_kegiatan')
-            ->withTimestamps();
+        return $this->belongsTo(TahunKegiatan::class, 'tahun_kegiatan_id');
     }
 
     public function surveys()
@@ -28,7 +32,6 @@ class Kegiatan extends Model
 
     public function jadwal()
     {
-        return $this->hasMany(Jadwal::class,'kegiatan_id')
-            ->withTimestamps();
+        return $this->hasMany(Jadwal::class, 'kegiatan_id');
     }
 }

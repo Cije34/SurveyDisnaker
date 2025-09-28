@@ -18,6 +18,6 @@ class TahunKegiatan extends Model
 
     public function kegiatan()
     {
-        return $this->belongsToMany(Kegiatan::class, 'tahun_kegiatan_kegiatan')->withTimestamps();
+        return $this->hasMany(Kegiatan::class);
     }
 }

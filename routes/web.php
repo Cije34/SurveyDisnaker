@@ -1,9 +1,10 @@
 <?php
 
+use App\Http\Controllers\Admin\TahunKegiatanController;
+use App\Http\Controllers\KegiatanController;
+use App\Http\Controllers\PenjabController;
 use App\Http\Controllers\PesertaController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\PenjabController;
-use App\Http\Controllers\Admin\TahunKegiatanController;
 use Illuminate\Support\Facades\Route;
 
 Route::redirect('/', '/login');
@@ -14,6 +15,10 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('ad
     Route::get('/tahun-kegiatan', [TahunKegiatanController::class, 'index'])->name('tahun.index');
     Route::post('/tahun-kegiatan', [TahunKegiatanController::class, 'store'])->name('tahun.store');
     Route::delete('/tahun-kegiatan/{tahunKegiatan}', [TahunKegiatanController::class, 'destroy'])->name('tahun.destroy');
+    Route::get('/kegiatan', [KegiatanController::class, 'index'])->name('kegiatan.index');
+    Route::post('/kegiatan', [KegiatanController::class, 'store'])->name('kegiatan.store');
+    Route::put('/kegiatan/{kegiatan}', [KegiatanController::class, 'update'])->name('kegiatan.update');
+    Route::delete('/kegiatan/{kegiatan}', [KegiatanController::class, 'destroy'])->name('kegiatan.destroy');
 });
 
 Route::middleware(['auth', 'verified', 'role:peserta'])->prefix('peserta')->name('peserta.')->group(function () {
