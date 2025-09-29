@@ -11,7 +11,7 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasRoles;
+    use HasFactory, HasRoles, Notifiable;
 
     /**
      * Explicit guard to match Spatie configuration.
@@ -27,6 +27,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        // custom fields used by admin peserta creation
+        'nik',
+        'no_hp',
     ];
 
     /**

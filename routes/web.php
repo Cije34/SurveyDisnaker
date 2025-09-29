@@ -1,7 +1,11 @@
 <?php
 
 use App\Http\Controllers\Admin\JadwalController;
+use App\Http\Controllers\Admin\MentorController as AdminMentorController;
+use App\Http\Controllers\Admin\PenjabController as AdminPenjabController;
+use App\Http\Controllers\Admin\PesertaController as AdminPesertaController;
 use App\Http\Controllers\Admin\TahunKegiatanController;
+use App\Http\Controllers\Admin\TempatController as AdminTempatController;
 use App\Http\Controllers\KegiatanController;
 use App\Http\Controllers\PenjabController;
 use App\Http\Controllers\PesertaController;
@@ -30,6 +34,44 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('ad
     Route::post('/jadwal', [JadwalController::class, 'store'])->name('jadwal.store');
     Route::put('/jadwal/{jadwal}', [JadwalController::class, 'update'])->name('jadwal.update');
     Route::delete('/jadwal/{jadwal}', [JadwalController::class, 'destroy'])->name('jadwal.destroy');
+
+    // Peserta
+    Route::get('/peserta', [AdminPesertaController::class, 'index'])->name('peserta.index');
+    Route::post('/peserta', [AdminPesertaController::class, 'store'])->name('peserta.store');
+    Route::put('/peserta/{peserta}', [AdminPesertaController::class, 'update'])->name('peserta.update');
+    Route::delete('/peserta/{peserta}', [AdminPesertaController::class, 'destroy'])->name('peserta.destroy');
+
+    // Mentor
+    Route::get('/mentor', [AdminMentorController::class, 'index'])->name('mentor.index');
+    Route::post('/mentor', [AdminMentorController::class, 'store'])->name('mentor.store');
+    // Route::put('/mentor/{mentor}', [AdminMentorController::class, 'update'])->name('mentor.update');
+    // Route::delete('/mentor/{mentor}', [AdminMentorController::class, 'destroy'])->name('mentor.destroy');
+
+    // Penjab
+    Route::get('/penjab', [AdminPenjabController::class, 'index'])->name('penjab.index');
+    // Route::post('/penjab', [AdminPenjabController::class, 'store'])->name('penjab.store');
+    // Route::put('/penjab/{penjab}', [AdminPenjabController::class, 'update'])->name('penjab.update');
+    // Route::delete('/penjab/{penjab}', [AdminPenjabController::class, 'destroy'])->name('penjab.destroy');
+
+    // Tempat
+    Route::get('/tempat', [AdminTempatController::class, 'index'])->name('tempat.index');
+    Route::post('/tempat', [AdminTempatController::class, 'store'])->name('tempat.store');
+    // Route::put('/tempat/{tempat}', [AdminTempatController::class, 'update'])->name('tempat.update');
+    // Route::delete('/tempat/{tempat}', [AdminTempatController::class, 'destroy'])->name('tempat.destroy');
+
+    // Survey
+    Route::get('/survey', [SurveyController::class, 'index'])->name('survey.index');
+    Route::post('/survey', [SurveyController::class, 'store'])->name('survey.store');
+    Route::put('/survey/{survey}', [SurveyController::class, 'update'])->name('survey.update');
+    Route::delete('/survey/{survey}', [SurveyController::class, 'destroy'])->name('survey.destroy');
+
+    // Jawaban
+    Route::get('/jawaban', [JawabanController::class, 'index'])->name('jawaban.index');
+    Route::post('/jawaban', [JawabanController::class, 'store'])->name('jawaban.store');
+    Route::put('/jawaban/{jawaban}', [JawabanController::class, 'update'])->name('jawaban.update');
+    Route::delete('/jawaban/{jawaban}', [JawabanController::class, 'destroy'])->name('jawaban.destroy');
+
+    // User
 });
 
 Route::middleware(['auth', 'verified', 'role:peserta'])->prefix('peserta')->name('peserta.')->group(function () {

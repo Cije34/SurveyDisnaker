@@ -6,10 +6,10 @@
         ['label' => 'Tahun Kegiatan', 'icon' => asset('icons/calendar.svg'), 'route' => route('admin.tahun.index'), 'key' => 'tahun'],
         ['label' => 'Kegiatan', 'icon' => asset('icons/calendar-plus.svg'), 'route' => route('admin.kegiatan.index'), 'key' => 'kegiatan'],
         ['label' => 'Jadwal', 'icon' => asset('icons/calendar-dot.svg'), 'route' => route('admin.jadwal.index'), 'key' => 'jadwal'],
-        ['label' => 'Peserta', 'icon' => asset('icons/users.svg'), 'route' => '#', 'key' => 'peserta'],
-        ['label' => 'Mentor', 'icon' => asset('icons/user-check.svg'), 'route' => '#', 'key' => 'mentor'],
-        ['label' => 'Penjab', 'icon' => asset('icons/user.svg'), 'route' => '#', 'key' => 'penjab'],
-        ['label' => 'Tempat', 'icon' => asset('icons/map-pin-line.svg'), 'route' => '#', 'key' => 'tempat'],
+        ['label' => 'Peserta', 'icon' => asset('icons/users.svg'), 'route' => route('admin.peserta.index'), 'key' => 'peserta'],
+        ['label' => 'Mentor', 'icon' => asset('icons/user-check.svg'), 'route' => route('admin.mentor.index'), 'key' => 'mentor'],
+        ['label' => 'Penjab', 'icon' => asset('icons/user.svg'), 'route' => route('admin.penjab.index'), 'key' => 'penjab'],
+        ['label' => 'Tempat', 'icon' => asset('icons/map-pin-line.svg'), 'route' => route('admin.tempat.index'), 'key' => 'tempat'],
         ['label' => 'Survey', 'icon' => asset('icons/chalkboard-teacher.svg'), 'route' => '#', 'key' => 'survey'],
     ];
 @endphp
