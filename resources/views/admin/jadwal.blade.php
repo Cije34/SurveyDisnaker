@@ -29,10 +29,12 @@
                 </button>
             </div>
 
-            <div class="overflow-hidden rounded-3xl border border-slate-200 shadow-lg">
+            <div class="relative rounded-3xl border border-slate-200 shadow-lg overflow-x-auto">
                 <table class="min-w-full divide-y divide-slate-200">
                     <thead>
-                        <tr class="bg-sky-700">
+                        <tr
+                        class="bg-sky-700">
+                        <th scope="col" class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wide text-white">Tahun Kegiatan</th>
                             <th scope="col" class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wide text-white">Kegiatan</th>
                             <th scope="col" class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wide text-white">Mentor</th>
                             <th scope="col" class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wide text-white">Tanggal</th>
@@ -45,18 +47,16 @@
                         @forelse ($schedules as $schedule)
                             @php
                                 $date = optional($schedule->tanggal_mulai)->format('d-m-Y') ?? '-';
-                                $startTime = $schedule->jam_mulai
-                                    ? \Illuminate\Support\Carbon::createFromFormat('H:i:s', $schedule->jam_mulai)->format('H:i')
-                                    : optional($schedule->tanggal_mulai)->format('H:i');
-                                $endReference = $schedule->jam_selesai
-                                    ? \Illuminate\Support\Carbon::createFromFormat('H:i:s', $schedule->jam_selesai)
-                                    : optional($schedule->tanggal_selesai ?? $schedule->tanggal_mulai);
-                                $endTime = $endReference ? $endReference->format('H:i') : null;
+                                $startTime = $schedule->jam_mulai ? substr($schedule->jam_mulai, 0, 5) : null;
+                                $endTime = $schedule->jam_selesai ? substr($schedule->jam_selesai, 0, 5) : null;
                                 $timeRange = trim(($startTime ? $startTime : '') . ($endTime ? ' - ' . $endTime : ''));
                                 $mentor = $schedule->mentors->pluck('name')->implode(', ') ?? '-';
                             @endphp
-                            <tr class="hover:bg-slate-50">
+                            <tr class="hover:bg-slate-50" x-data="{ open: false }" :class="{ 'relative z-10': open }">
                                 <td class="whitespace-nowrap px-6 py-4 text-sm font-semibold text-slate-800">
+                                    {{ $schedule->kegiatan->tahunKegiatan->tahun ?? '-' }}
+                                </td>
+                                <td class="whitespace-nowrap px-6 py-4 text-sm text-slate-600">
                                     {{ $schedule->kegiatan->nama_kegiatan ?? '-' }}
                                 </td>
                                 <td class="whitespace-nowrap px-6 py-4 text-sm text-slate-600">
@@ -72,7 +72,7 @@
                                     {{ $schedule->tempat->name ?? '-' }}
                                 </td>
                                 <td class="whitespace-nowrap px-6 py-4 text-right text-sm">
-                                    <div x-data="{ open: false }" class="relative inline-flex">
+                                    <div class="relative inline-flex">
                                         <button type="button"
                                                 @click="open = !open"
                                                 @click.outside="open = false"
@@ -85,14 +85,18 @@
                                         <div x-show="open"
                                              x-transition.origin.top.right
                                              x-cloak
-                                             class="absolute right-0 top-full mt-2 w-40 rounded-2xl border border-slate-200 bg-white py-2 shadow-xl">
+                                             class="absolute right-0 top-full z-50 mt-2 w-40 rounded-2xl border border-slate-200 bg-white py-2 shadow-xl">
                                             <button type="button"
                                                     @click="open = false; openEditModal({
                                                         id: {{ $schedule->id }},
-                                                        nama: @js($schedule->kegiatan->nama_kegiatan ?? 'Tanpa Nama'),
-                                                        tanggal: '{{ $date }}',
-                                                        waktu: '{{ $timeRange ?: '-' }}',
-                                                        lokasi: @js($schedule->tempat->name ?? '-')
+                                                        kegiatan_id: '{{ $schedule->kegiatan_id }}',
+                                                        penjab_id: '{{ $schedule->penjab_id }}',
+                                                        tempat_id: '{{ $schedule->tempat_id }}',
+                                                        mentor_ids: @js($schedule->mentors->pluck('id')),
+                                                        tanggal_mulai: '{{ optional($schedule->tanggal_mulai)->format('Y-m-d') }}',
+                                                        tanggal_selesai: '{{ optional($schedule->tanggal_selesai)->format('Y-m-d') }}',
+                                                        jam_mulai: '{{ $schedule->jam_mulai ? substr($schedule->jam_mulai, 0, 5) : '' }}',
+                                                        jam_selesai: '{{ $schedule->jam_selesai ? substr($schedule->jam_selesai, 0, 5) : '' }}'
                                                     })"
                                                     class="flex w-full items-center gap-2 px-4 py-2 text-left text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900">
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="h-4 w-4">
@@ -115,7 +119,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="px-6 py-12 text-center text-sm text-slate-400">
+                                <td colspan="7" class="px-6 py-12 text-center text-sm text-slate-400">
                                     Belum ada jadwal yang terdaftar.
                                 </td>
                             </tr>
@@ -179,16 +183,32 @@
                         </div>
                     </div>
 
-                    <div>
-                        <label for="tempat_id" class="mb-1 block text-sm font-medium text-slate-700">Lokasi</label>
-                        <select name="tempat_id" id="tempat_id" class="w-full rounded-xl border-slate-300 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
-                            <option value="">Pilih Lokasi</option>
-                            @foreach($tempatOptions as $tempat)
-                                <option value="{{ $tempat->id }}" @selected(old('tempat_id') == $tempat->id)>{{ $tempat->name }}</option>
-                            @endforeach
-                        </select>
+                    <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+                        <div>
+                            <label for="tempat_id" class="mb-1 block text-sm font-medium text-slate-700">Lokasi</label>
+                            <select name="tempat_id" id="tempat_id" class="w-full rounded-xl border-slate-300 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
+                                <option value="">Pilih Lokasi</option>
+                                @foreach($tempatOptions as $tempat)
+                                    <option value="{{ $tempat->id }}" @selected(old('tempat_id') == $tempat->id)>{{ $tempat->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div>
+                            <label for="mentor_ids" class="mb-1 block text-sm font-medium text-slate-700">Mentor</label>
+                            <select name="mentor_ids[]" id="mentor_ids" multiple class="w-full rounded-xl border-slate-300 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
+                                @foreach($mentorOptions as $mentor)
+                                    <option value="{{ $mentor->id }}" @selected(in_array($mentor->id, old('mentor_ids', [])))>{{ $mentor->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('mentor_ids')
+                                <p class="mt-1 text-xs text-rose-500">{{ $message }}</p>
+                            @enderror
+                            @error('mentor_ids.*')
+                                <p class="mt-1 text-xs text-rose-500">{{ $message }}</p>
+                            @enderror
+                        </div>
                     </div>
-                    
+
                     <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
                         <div>
                             <label for="tanggal_mulai" class="mb-1 block text-sm font-medium text-slate-700">Tanggal Mulai</label>
@@ -199,7 +219,7 @@
                             <input type="date" name="tanggal_selesai" id="tanggal_selesai" value="{{ old('tanggal_selesai') }}" class="w-full rounded-xl border-slate-300 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
                         </div>
                     </div>
-                    
+
                     <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
                         <div>
                             <label for="jam_mulai" class="mb-1 block text-sm font-medium text-slate-700">Jam Mulai</label>
@@ -219,33 +239,144 @@
             </div>
         </div>
 
-        <!-- Placeholder Modal Edit -->
-        <div x-show="editOpen"
+        <!-- Ganti modal edit placeholder (baris 240-263) dengan form lengkap -->
+<div x-show="editOpen"
+x-cloak
+x-transition.opacity
+class="fixed inset-0 z-[100] flex h-screen w-screen items-center justify-center bg-slate-900/50 backdrop-blur-md"
+@click.self="closeEditModal()">
+<div x-show="editOpen"
+    x-transition.scale
+    class="w-full max-w-2xl rounded-3xl bg-gradient-to-b from-sky-700 via-sky-600 to-sky-800 p-[1px] shadow-2xl">
+   <div class="rounded-3xl bg-white/95 p-6">
+       <div class="mb-4 flex items-center justify-between">
+           <h3 class="text-lg font-semibold text-slate-900">Edit Jadwal</h3>
+           <button type="button" @click="closeEditModal()" class="text-slate-400 transition hover:text-slate-600">✕</button>
+       </div>
+
+       <form method="POST" :action="`/admin/jadwal/${editMeta?.id}`" class="space-y-4">
+           @csrf
+           @method('PUT')
+
+           <div>
+               <label for="edit_kegiatan" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Kegiatan</label>
+               <select id="edit_kegiatan" name="kegiatan_id"
+                       class="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-2 text-sm text-slate-700 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100">
+                   <option value="">Pilih kegiatan</option>
+                   @foreach ($kegiatanOptions as $option)
+                       <option value="{{ $option->id }}" :selected="editMeta?.kegiatan_id == {{ $option->id }}">{{ $option->nama_kegiatan }}</option>
+                   @endforeach
+               </select>
+           </div>
+
+           <div class="grid gap-4 md:grid-cols-2">
+               <div>
+                   <label for="edit_penjab" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Penanggung Jawab</label>
+                   <select id="edit_penjab" name="penjab_id"
+                           class="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-2 text-sm text-slate-700 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100">
+                       <option value="">Pilih penanggung jawab</option>
+                       @foreach ($penjabOptions as $penjab)
+                           <option value="{{ $penjab->id }}" :selected="editMeta?.penjab_id == {{ $penjab->id }}">{{ $penjab->name }}</option>
+                       @endforeach
+                   </select>
+               </div>
+
+               <div>
+                   <label for="edit_tempat" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Tempat</label>
+                   <select id="edit_tempat" name="tempat_id"
+                           class="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-2 text-sm text-slate-700 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100">
+                       <option value="">Pilih tempat</option>
+                       @foreach ($tempatOptions as $tempat)
+                           <option value="{{ $tempat->id }}" :selected="editMeta?.tempat_id == {{ $tempat->id }}">{{ $tempat->name }}</option>
+                       @endforeach
+                   </select>
+               </div>
+           </div>
+
+           <div>
+               <label for="edit_mentor" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Mentor</label>
+               <select id="edit_mentor" name="mentor_ids[]" multiple
+                       class="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-2 text-sm text-slate-700 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100">
+                   @foreach ($mentorOptions as $mentor)
+                       <option value="{{ $mentor->id }}" :selected="editMeta?.mentor_ids?.includes({{ $mentor->id }})">{{ $mentor->name }}</option>
+                   @endforeach
+               </select>
+           </div>
+
+           <div class="grid gap-4 md:grid-cols-2">
+               <div>
+                   <label for="edit_tanggal_mulai" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Tanggal Mulai</label>
+                   <input id="edit_tanggal_mulai" type="date" name="tanggal_mulai"
+                          :value="editMeta?.tanggal_mulai"
+                          class="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-2 text-sm text-slate-700 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100">
+               </div>
+
+               <div>
+                   <label for="edit_tanggal_selesai" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Tanggal Selesai</label>
+                   <input id="edit_tanggal_selesai" type="date" name="tanggal_selesai"
+                          :value="editMeta?.tanggal_selesai"
+                          class="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-2 text-sm text-slate-700 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100">
+               </div>
+           </div>
+
+           <div class="grid gap-4 md:grid-cols-2">
+               <div>
+                   <label for="edit_jam_mulai" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Jam Mulai</label>
+                   <input id="edit_jam_mulai" type="time" name="jam_mulai"
+                          :value="editMeta?.jam_mulai"
+                          class="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-2 text-sm text-slate-700 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100">
+               </div>
+
+               <div>
+                   <label for="edit_jam_selesai" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Jam Selesai</label>
+                   <input id="edit_jam_selesai" type="time" name="jam_selesai"
+                          :value="editMeta?.jam_selesai"
+                          class="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-2 text-sm text-slate-700 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100">
+               </div>
+           </div>
+
+           <div class="flex items-center justify-end gap-3 pt-2">
+               <button type="button" @click="closeEditModal()"
+                       class="inline-flex items-center gap-2 rounded-full border border-slate-300 px-5 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100">Batal</button>
+               <button type="submit"
+                       class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-sky-500 via-sky-400 to-emerald-400 px-6 py-2 text-sm font-semibold text-white shadow-lg transition hover:brightness-110">
+                   Simpan Perubahan
+               </button>
+           </div>
+       </form>
+   </div>
+</div>
+</div>
+
+        <!-- Modal Hapus Jadwal -->
+        <div x-show="deleteOpen"
              x-cloak
              x-transition.opacity
              class="fixed inset-0 z-[100] flex h-screen w-screen items-center justify-center bg-slate-900/50 backdrop-blur-md"
-             @click.self="closeEditModal()">
-            <div x-show="editOpen"
+             @click.self="closeDeleteModal()">
+            <div x-show="deleteOpen"
                  x-transition.scale
-                 class="w-full max-w-lg rounded-3xl bg-gradient-to-b from-sky-700 via-sky-600 to-sky-800 p-[1px] shadow-2xl">
-                <div class="rounded-3xl bg-white/95 p-6 space-y-4">
+                 class="w-full max-w-lg rounded-3xl bg-gradient-to-b from-rose-700 via-rose-600 to-rose-800 p-[1px] shadow-2xl">
+                <form method="POST" :action="deleteAction()" class="rounded-3xl bg-white/95 p-6 space-y-5">
+                    @csrf
+                    @method('DELETE')
                     <div class="flex items-center justify-between">
-                        <h3 class="text-lg font-semibold text-slate-900">Edit Jadwal</h3>
-                        <button type="button" @click="closeEditModal()" class="text-slate-400 transition hover:text-slate-600">✕</button>
+                        <h3 class="text-xl font-semibold text-slate-900">Konfirmasi Hapus</h3>
+                        <button type="button" @click="closeDeleteModal()" class="text-slate-400 transition hover:text-slate-600">✕</button>
                     </div>
-                    <template x-if="editMeta">
-                        <div class="space-y-1 text-sm text-slate-600">
-                            <p><span class="font-semibold text-slate-800">Kegiatan:</span> <span x-text="editMeta.nama"></span></p>
-                            <p><span class="font-semibold text-slate-800">Tanggal:</span> <span x-text="editMeta.tanggal"></span></p>
-                            <p><span class="font-semibold text-slate-800">Waktu:</span> <span x-text="editMeta.waktu"></span></p>
-                            <p><span class="font-semibold text-slate-800">Lokasi:</span> <span x-text="editMeta.lokasi"></span></p>
-                        </div>
-                    </template>
-                    <p class="text-sm text-slate-500">Form pengubahan jadwal akan disiapkan pada tahap berikutnya.</p>
-                </div>
+                    <p>
+                        Apakah Anda yakin ingin menghapus jadwal kegiatan <strong x-text="editMeta?.nama" class="font-semibold text-slate-800"></strong>?
+                        Tindakan ini tidak dapat diurungkan.
+                    </p>
+                    <div class="flex justify-end gap-3 pt-4">
+                        <button type="button" @click="closeDeleteModal()" class="rounded-full bg-slate-100 px-5 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-200">Batal</button>
+                        <button type="submit" class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-rose-500 via-rose-500 to-red-500 px-5 py-2 text-sm font-semibold text-white shadow-lg transition hover:brightness-110">Ya, Hapus</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
+
 </x-admin.layout>
 
 <script>
@@ -253,7 +384,9 @@
         return {
             createOpen: {{ $errors->any() ? 'true' : 'false' }},
             editOpen: false,
+            deleteOpen: false,
             editMeta: null,
+            deleteTemplate: '{{ route('admin.jadwal.destroy', '__ID__') }}',
             openCreateModal() {
                 this.createOpen = true;
             },
@@ -269,9 +402,16 @@
                 this.editMeta = null;
             },
             confirmDelete(meta) {
-                // Placeholder; aksi hapus akan diimplementasikan pada tahap berikutnya.
                 this.editMeta = meta;
-                alert(`Fitur hapus akan tersedia segera untuk jadwal "${meta.nama}".`);
+                this.deleteOpen = true;
+            },
+            closeDeleteModal() {
+                this.deleteOpen = false;
+                this.editMeta = null;
+            },
+            deleteAction() {
+                if (!this.editMeta?.id) return '#';
+                return this.deleteTemplate.replace('__ID__', this.editMeta.id);
             },
         };
     }

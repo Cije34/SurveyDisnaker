@@ -18,7 +18,7 @@
         </a>
     </header>
 
-    <div class="overflow-hidden rounded-3xl border border-slate-200">
+    <div class="rounded-3xl border border-slate-200">
         <table class="min-w-full border-collapse text-sm text-slate-700">
             <thead class="bg-sky-700 text-white text-left">
                 <tr>

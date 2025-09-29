@@ -23,7 +23,7 @@
                 </button>
             </div>
 
-            <div class="overflow-x-auto">
+            <div>
                 <table class="min-w-full border-collapse text-sm text-slate-700">
                     <thead class="bg-sky-700 text-left text-white">
                         <tr>

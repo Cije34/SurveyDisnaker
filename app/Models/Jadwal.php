@@ -39,7 +39,7 @@ class Jadwal extends Model
         return $this->belongsToMany(Mentor::class, 'jadwal_mentor');
     }
 
-    public function pesertas(): BelongsToMany
+    public function pesertas(): BelongsToMany   
     {
         return $this->belongsToMany(Peserta::class, 'jadwal_peserta');
     }
