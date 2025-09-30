@@ -90,10 +90,26 @@ class PesertaController extends Controller
             ->with('status', 'Import peserta berhasil diproses.');
     }
 
-    public function destroy(Peserta $peserta): RedirectResponse
-    {
-        $peserta->delete();
+     public function destroy(Peserta $peserta): RedirectResponse
+     {
+         try {
+             // Log sebelum hapus untuk debug
+             \Log::info('Menghapus peserta: ', ['id' => $peserta->id, 'name' => $peserta->name]);
 
-        return redirect()->route('admin.peserta.index')->with('status', 'Peserta berhasil dihapus.');
-    }
+             // Hapus user terkait jika ada
+             if ($peserta->user) {
+                 $peserta->user->delete();
+             }
+
+             $peserta->delete();
+
+             \Log::info('Peserta berhasil dihapus: ', ['id' => $peserta->id]);
+
+             return redirect()->route('admin.peserta.index')->with('status', 'Peserta berhasil dihapus.');
+         } catch (\Exception $e) {
+             \Log::error('Error menghapus peserta: ', ['id' => $peserta->id, 'error' => $e->getMessage()]);
+
+             return redirect()->route('admin.peserta.index')->with('error', 'Gagal menghapus peserta: ' . $e->getMessage());
+         }
+     }
 }

@@ -61,17 +61,9 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('ad
     // Route::put('/tempat/{tempat}', [AdminTempatController::class, 'update'])->name('tempat.update');
     // Route::delete('/tempat/{tempat}', [AdminTempatController::class, 'destroy'])->name('tempat.destroy');
 
-    // Survey
-    Route::get('/survey', [SurveyController::class, 'index'])->name('survey.index');
-    Route::post('/survey', [SurveyController::class, 'store'])->name('survey.store');
-    Route::put('/survey/{survey}', [SurveyController::class, 'update'])->name('survey.update');
-    Route::delete('/survey/{survey}', [SurveyController::class, 'destroy'])->name('survey.destroy');
 
-    // Jawaban
-    Route::get('/jawaban', [JawabanController::class, 'index'])->name('jawaban.index');
-    Route::post('/jawaban', [JawabanController::class, 'store'])->name('jawaban.store');
-    Route::put('/jawaban/{jawaban}', [JawabanController::class, 'update'])->name('jawaban.update');
-    Route::delete('/jawaban/{jawaban}', [JawabanController::class, 'destroy'])->name('jawaban.destroy');
+
+
 
     // User
 });

@@ -87,9 +87,11 @@
                                                  </svg>
                                                  Edit
                                              </button>
-                                             <button type="button"
-                                                     @click="open = false; confirmDelete({ id: {{ $peserta->id }}, nama: @js($peserta->user->name ?? 'Tanpa Nama') })"
-                                                     class="flex w-full items-center gap-2 px-4 py-2 text-left text-sm font-medium text-rose-500 transition hover:bg-rose-50">
+                                              <button type="button"
+                                                      @click="open = false; confirmDelete($event.target.dataset)"
+                                                      data-id="{{ $peserta->id }}"
+                                                      data-nama="{{ $peserta->user->name ?? 'Tanpa Nama' }}"
+                                                      class="flex w-full items-center gap-2 px-4 py-2 text-left text-sm font-medium text-rose-500 transition hover:bg-rose-50">
                                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="h-4 w-4">
                                                      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                                                  </svg>
@@ -131,7 +133,7 @@
                                 </button>
                                  <div x-show="open" x-transition.origin.top.right x-cloak class="absolute right-0 top-full z-10 mt-2 w-40 rounded-xl border bg-white py-2 shadow-lg">
                                      <button type="button" @click="open = false; openEditModal({ id: {{ $peserta->id }}, name: '{{ $peserta->user->name ?? '' }}' })" class="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-slate-600 hover:bg-slate-100">Edit</button>
-                                     <button type="button" @click="open = false; confirmDelete({ id: {{ $peserta->id }}, nama: @js($peserta->user->name ?? 'Tanpa Nama') })" class="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-rose-500 hover:bg-rose-50">Hapus</button>
+                                      <button type="button" @click="open = false; confirmDelete($event.target.dataset)" data-id="{{ $peserta->id }}" data-nama="{{ $peserta->user->name ?? 'Tanpa Nama' }}" class="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-rose-500 hover:bg-rose-50">Hapus</button>
                                  </div>
                             </div>
                         </div>
@@ -325,21 +327,21 @@
                    x-transition.scale
                    class="w-full max-w-lg mx-4 rounded-3xl bg-gradient-to-b from-rose-700 via-rose-600 to-rose-800 p-[1px] shadow-2xl sm:mx-0">
                   <form method="POST" :action="deleteAction()" class="rounded-3xl bg-white/95 p-4 sm:p-6 space-y-4 sm:space-y-5">
-                     @csrf
-                     @method('DELETE')
-                     <div class="flex items-center justify-between">
-                         <h3 class="text-xl font-semibold text-slate-900">Konfirmasi Hapus</h3>
-                         <button type="button" @click="closeDeleteModal()" class="text-slate-400 transition hover:text-slate-600">✕</button>
-                     </div>
-                     <p>
-                         Apakah Anda yakin ingin menghapus peserta <strong x-text="editMeta?.nama" class="font-semibold text-slate-800"></strong>?
-                         Tindakan ini tidak dapat diurungkan.
-                     </p>
-                     <div class="flex justify-end gap-3 pt-4">
-                         <button type="button" @click="closeDeleteModal()" class="rounded-full bg-slate-100 px-5 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-200">Batal</button>
-                         <button type="submit" class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-rose-500 via-rose-500 to-red-500 px-5 py-2 text-sm font-semibold text-white shadow-lg transition hover:brightness-110">Ya, Hapus</button>
-                     </div>
-                 </form>
+                    @csrf
+                    @method('DELETE')
+                      <div class="flex items-center justify-between">
+                          <h3 class="text-xl font-semibold text-slate-900">Konfirmasi Hapus</h3>
+                          <button type="button" @click="closeDeleteModal()" class="text-slate-400 transition hover:text-slate-600">✕</button>
+                      </div>
+                      <p>
+                          Apakah Anda yakin ingin menghapus peserta <strong x-text="editMeta?.nama" class="font-semibold text-slate-800"></strong>?
+                          Tindakan ini tidak dapat diurungkan.
+                      </p>
+                      <div class="flex justify-end gap-3 pt-4">
+                          <button type="button" @click="closeDeleteModal()" class="rounded-full bg-slate-100 px-5 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-200">Batal</button>
+                          <button type="submit" class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-rose-500 via-rose-500 to-red-500 px-5 py-2 text-sm font-semibold text-white shadow-lg transition hover:brightness-110">Ya, Hapus</button>
+                      </div>
+                  </form>
              </div>
          </div>
 
@@ -364,18 +366,22 @@
                 this.editOpen = false;
                 this.editMeta = null;
             },
-            confirmDelete(meta) {
-                this.editMeta = meta;
-                this.deleteOpen = true;
-            },
+             confirmDelete(data) {
+                  console.log('Confirm delete called with:', data);
+                  this.editMeta = { id: data.id, nama: data.nama };
+                  this.deleteOpen = true;
+                  console.log('deleteOpen set to true');
+              },
             closeDeleteModal() {
                 this.deleteOpen = false;
                 this.editMeta = null;
             },
-            deleteAction() {
-                if (!this.editMeta?.id) return '#';
-                return this.deleteTemplate.replace('__ID__', this.editMeta.id);
-            },
+             deleteAction() {
+                 if (!this.editMeta?.id) return '#';
+                 const action = this.deleteTemplate.replace('__ID__', this.editMeta.id);
+                 console.log('Delete action URL:', action); // Debug log
+                 return action;
+             },
         };
     }
 </script>
