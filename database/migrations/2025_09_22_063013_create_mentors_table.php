@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('mentors', function (Blueprint $table) {
             $table->id();
-             $table->string('name');
-            $table->string('no_hp', 15);
+            $table->string('name');
+            $table->string('no_hp', 50);
             $table->string('email')->nullable();
             $table->string('alamat')->nullable();
             $table->enum('jenis_kelamin', ['Laki-laki', 'Perempuan']);

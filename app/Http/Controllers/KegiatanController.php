@@ -71,7 +71,7 @@ class KegiatanController extends Controller
             return PHP_INT_MIN;
         })->values();
 
-        $yearOptions = TahunKegiatan::orderByDesc('tahun')->get(['id', 'tahun', 'is_active']);
+        $yearOptions = TahunKegiatan::where('is_active', true)->orderByDesc('tahun')->get(['id', 'tahun', 'is_active']);
 
         return view('admin.kegiatan', [
             'user' => Auth::user(),

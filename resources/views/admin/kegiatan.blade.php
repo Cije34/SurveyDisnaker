@@ -95,45 +95,42 @@
                 </button>
             </div>
 
-            <div class="space-y-5">
-                @forelse ($years as $year)
-                    <article class="rounded-3xl bg-gradient-to-r from-sky-700 via-sky-600 to-sky-700 p-[1px] shadow-lg">
-                        <div class="rounded-3xl bg-sky-700/95 px-6 py-5 text-white">
-                            <div class="mb-4 flex items-center justify-between">
-                                <div>
-                                    <p class="text-sm uppercase tracking-wider text-sky-200">Tahun Kegiatan</p>
-                                    <h3 class="text-2xl font-semibold">{{ $year->tahun }}</h3>
-                                </div>
-                                @if ($year->is_active)
-                                    <span class="inline-flex items-center gap-2 rounded-full bg-emerald-500/20 px-4 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-100">
-                                        <span class="h-2.5 w-2.5 rounded-full bg-emerald-300"></span>
-                                        Aktif
-                                    </span>
-                                @endif
-                            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full table-auto border-collapse rounded-3xl border border-slate-200 bg-white shadow-[0_30px_55px_-35px_rgba(15,23,42,0.35)]">
+                    <thead class="bg-slate-50">
+                        <tr>
+                            <th class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wide text-slate-600">No</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wide text-slate-600">Nama Kegiatan</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wide text-slate-600">Tahun</th>
+                            <th class="px-6 py-4 text-center text-sm font-semibold uppercase tracking-wide text-slate-600">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php $no = 1; @endphp
+                        @forelse ($years as $year)
+                            @if ($year->kegiatan->isNotEmpty())
+                                @foreach ($year->kegiatan as $kegiatan)
+                                    <tr class="border-t border-slate-200 hover:bg-slate-50">
+                                        <td class="px-6 py-4 text-sm font-medium text-slate-900">{{ $no++ }}</td>
+                                        <td class="px-6 py-4 text-sm font-medium text-slate-900">
 
-                            @if ($year->kegiatan->isEmpty())
-                                <p class="rounded-2xl bg-white/10 px-5 py-6 text-center text-sm text-sky-100/80">
-                                    Belum ada kegiatan di tahun {{ $year->tahun }}.
-                                </p>
-                            @else
-                                <ul class="space-y-3">
-                                    @foreach ($year->kegiatan as $kegiatan)
-                                        <li class="flex flex-col gap-3 rounded-2xl bg-white/10 px-5 py-4 text-slate-50 md:flex-row md:items-center md:justify-between">
-                                            <div class="flex items-center gap-3 text-base font-medium">
-                                                <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/15 text-sm font-semibold">
-                                                    {{ $loop->iteration }}
-                                                </span>
-                                                <span class="leading-tight">{{ $kegiatan->nama_kegiatan }}</span>
-                                            </div>
-                                            <div class="flex items-center gap-2">
+                                            @if (!$kegiatan->is_active)
+                                                tidak ada tahun kegiatan yang active
+                                            @else
+                                                $kegiatan->nama_kegiatan
+                                            @endif
+
+                                        </td>
+                                        <td class="px-6 py-4 text-sm text-slate-600">{{ $year->tahun }}{{ $year->is_active ? ' (Aktif)' : '' }}</td>
+                                        <td class="px-6 py-4 text-center">
+                                            <div class="flex items-center justify-center gap-2">
                                                 <button type="button"
                                                         @click="openEditModal({
                                                             id: {{ $kegiatan->id }},
                                                             nama_kegiatan: @js($kegiatan->nama_kegiatan),
                                                             tahun_kegiatan_id: '{{ $kegiatan->tahun_kegiatan_id === null ? '' : (string) $kegiatan->tahun_kegiatan_id }}',
                                                         })"
-                                                        class="inline-flex items-center gap-2 rounded-full border border-white/60 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-white transition hover:bg-white/15">
+                                                        class="inline-flex items-center gap-2 rounded-full border border-sky-300 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-sky-600 transition hover:bg-sky-50">
                                                     Edit
                                                 </button>
                                                 <form method="POST"
@@ -143,33 +140,35 @@
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit"
-                                                            class="inline-flex items-center gap-2 rounded-full border border-rose-200 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-rose-100 transition hover:bg-rose-500/20">
+                                                            class="inline-flex items-center gap-2 rounded-full border border-rose-300 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-rose-600 transition hover:bg-rose-50">
                                                         Hapus
                                                     </button>
                                                 </form>
                                             </div>
-                                        </li>
-                                    @endforeach
-                                </ul>
+                                        </td>
+                                    </tr>
+                                @endforeach
                             @endif
-                        </div>
-                    </article>
-                @empty
-                    <div class="rounded-3xl border border-dashed border-slate-300 px-6 py-12 text-center text-slate-400">
-                        @if ($yearOptions->isEmpty())
-                            Belum ada tahun kegiatan yang terdaftar.
-                        @else
-                            Belum ada kegiatan yang terdaftar.
-                        @endif
-                    </div>
-                @endforelse
-
-                @if (isset($kegiatanPaginator) && $kegiatanPaginator->hasPages())
-                    <div class="pt-6">
-                        {{ $kegiatanPaginator->links('components.admin.pagination') }}
-                    </div>
-                @endif
+                        @empty
+                            <tr>
+                                <td colspan="4" class="px-6 py-12 text-center text-slate-400">
+                                    @if ($yearOptions->isEmpty())
+                                        Belum ada tahun kegiatan yang terdaftar.
+                                    @else
+                                        Belum ada kegiatan yang terdaftar.
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
+
+            @if (isset($kegiatanPaginator) && $kegiatanPaginator->hasPages())
+                <div class="pt-6">
+                    {{ $kegiatanPaginator->links('components.admin.pagination') }}
+                </div>
+            @endif
         </section>
 
         <!-- Modal Tambah -->

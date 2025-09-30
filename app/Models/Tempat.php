@@ -9,4 +9,9 @@ class Tempat extends Model
 {
     /** @use HasFactory<\Database\Factories\TempatFactory> */
     use HasFactory;
+
+    protected $fillable = [
+        'name',
+        'alamat',
+    ];
 }

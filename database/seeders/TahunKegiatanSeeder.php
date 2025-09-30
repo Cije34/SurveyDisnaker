@@ -11,6 +11,19 @@ class TahunKegiatanSeeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\TahunKegiatan::factory()->count(1)->create();
+        \App\Models\TahunKegiatan::create([
+            'tahun' => '2023',
+            'is_active' => false,
+        ]);
+
+        \App\Models\TahunKegiatan::create([
+            'tahun' => '2024',
+            'is_active' => false,
+        ]);
+
+        \App\Models\TahunKegiatan::create([
+            'tahun' => '2025',
+            'is_active' => true,
+        ]);
     }
 }

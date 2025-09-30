@@ -62,8 +62,8 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('ad
     // Tempat
     Route::get('/tempat', [AdminTempatController::class, 'index'])->name('tempat.index');
     Route::post('/tempat', [AdminTempatController::class, 'store'])->name('tempat.store');
-    // Route::put('/tempat/{tempat}', [AdminTempatController::class, 'update'])->name('tempat.update');
-    // Route::delete('/tempat/{tempat}', [AdminTempatController::class, 'destroy'])->name('tempat.destroy');
+    Route::put('/tempat/{tempat}', [AdminTempatController::class, 'update'])->name('tempat.update');
+    Route::delete('/tempat/{tempat}', [AdminTempatController::class, 'destroy'])->name('tempat.destroy');
 
 
 
