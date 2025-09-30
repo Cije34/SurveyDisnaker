@@ -36,7 +36,7 @@
                             class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-sky-500 via-sky-400 to-emerald-400 px-5 py-2 text-sm font-semibold text-white shadow-lg transition hover:brightness-110">
                         <span>Tambah Peserta</span>
                         <span class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-white/25">
-                            <img src="{{ asset('icons/plus.svg') }}" alt="Tambah" class="h-4 w-4">
+                            <img src="{{ asset('icons/plus.svg') }}" alt="Tambah" class="h-4 w-4 invert">
                         </span>
                     </button>
                 </div>
@@ -78,15 +78,24 @@
                                               x-transition.origin.top.right
                                               x-cloak
                                               class="absolute right-0 top-full z-50 mt-2 w-40 rounded-2xl border border-slate-200 bg-white py-2 shadow-xl">
-                                             <button type="button"
-                                                     @click="open = false; openEditModal({ id: {{ $peserta->id }}, name: '{{ $peserta->user->name ?? '' }}' })"
-                                                     class="flex w-full items-center gap-2 px-4 py-2 text-left text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900">
-                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="h-4 w-4">
-                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652l-10.5 10.5a4.5 4.5 0 01-1.897 1.125l-3.562 1.02 1.02-3.562a4.5 4.5 0 011.125-1.897l10.5-10.5z" />
-                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 7.125L16.875 4.5" />
-                                                 </svg>
-                                                 Edit
-                                             </button>
+
+                                              <button type="button"
+                                                      @click="open = false; openEditModal($event.target.dataset)"
+                                                      data-id="{{ $peserta->id }}"
+                                                      data-name="{{ $peserta->user->name ?? 'Tanpa Nama' }}"
+                                                      data-nik="{{ $peserta->nik }}"
+                                                      data-email="{{ $peserta->email }}"
+                                                      data-no_hp="{{ $peserta->no_hp }}"
+                                                      data-pendidikan_terakhir="{{ $peserta->pendidikan_terakhir }}"
+                                                      data-jenis_kelamin="{{ $peserta->jenis_kelamin }}"
+                                                      data-alamat="{{ $peserta->alamat }}"
+                                                      class="flex w-full items-center gap-2 px-4 py-2 text-left text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900">
+                                                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="h-4 w-4">
+                                                      <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652l-10.5 10.5a4.5 4.5 0 01-1.897 1.125l-3.562 1.02 1.02-3.562a4.5 4.5 0 011.125-1.897l10.5-10.5z" />
+                                                      <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 7.125L16.875 4.5" />
+                                                  </svg>
+                                                  Edit
+                                              </button>
                                               <button type="button"
                                                       @click="open = false; confirmDelete($event.target.dataset)"
                                                       data-id="{{ $peserta->id }}"
@@ -131,10 +140,10 @@
                                         <path d="M12 7.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm0 6a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm0 6a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" />
                                     </svg>
                                 </button>
-                                 <div x-show="open" x-transition.origin.top.right x-cloak class="absolute right-0 top-full z-10 mt-2 w-40 rounded-xl border bg-white py-2 shadow-lg">
-                                     <button type="button" @click="open = false; openEditModal({ id: {{ $peserta->id }}, name: '{{ $peserta->user->name ?? '' }}' })" class="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-slate-600 hover:bg-slate-100">Edit</button>
+                                  <div x-show="open" x-transition.origin.top.right x-cloak class="absolute right-0 top-full z-10 mt-2 w-40 rounded-xl border bg-white py-2 shadow-lg">
+                                      <button type="button" @click="open = false; openEditModal($event.target.dataset)" data-id="{{ $peserta->id }}" data-name="{{ $peserta->user->name ?? 'Tanpa Nama' }}" data-nik="{{ $peserta->nik }}" data-email="{{ $peserta->email }}" data-no_hp="{{ $peserta->no_hp }}" data-pendidikan_terakhir="{{ $peserta->pendidikan_terakhir }}" data-jenis_kelamin="{{ $peserta->jenis_kelamin }}" data-alamat="{{ $peserta->alamat }}" class="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-slate-600 hover:bg-slate-100">Edit</button>
                                       <button type="button" @click="open = false; confirmDelete($event.target.dataset)" data-id="{{ $peserta->id }}" data-nama="{{ $peserta->user->name ?? 'Tanpa Nama' }}" class="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-rose-500 hover:bg-rose-50">Hapus</button>
-                                 </div>
+                                  </div>
                             </div>
                         </div>
                         <div class="mt-4 space-y-2 border-t border-slate-100 pt-4 text-sm">
@@ -315,9 +324,104 @@
                     </form>
                 </div>
             </div>
-         </div>
+          </div>
 
-         <!-- Modal Hapus Peserta -->
+          <!-- Modal Edit Peserta -->
+          <div x-show="editOpen"
+               x-cloak
+               x-transition.opacity
+               class="fixed inset-0 w-screen h-screen z-[100] flex items-center justify-center bg-slate-900/50 backdrop-blur-md"
+               @click.self="closeEditModal()">
+              <div x-show="editOpen"
+                   x-transition.scale
+                   class="w-full max-w-2xl rounded-3xl bg-gradient-to-b from-sky-700 via-sky-600 to-sky-800 p-[1px] shadow-2xl">
+                  <div class="rounded-3xl bg-white/95 p-6">
+                      <div class="mb-4 flex items-center justify-between">
+                          <h3 class="text-lg font-semibold text-slate-900">Edit Peserta</h3>
+                          <button type="button" @click="closeEditModal()" class="text-slate-400 transition hover:text-slate-600">✕</button>
+                      </div>
+
+                      @if ($errors->any())
+                          <div class="rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
+                              <h4 class="font-semibold">Terjadi Kesalahan</h4>
+                              <ul class="mt-2 list-inside list-disc">
+                                  @foreach ($errors->all() as $error)
+                                      <li>{{ $error }}</li>
+                                  @endforeach
+                              </ul>
+                          </div>
+                      @endif
+
+                      <form method="POST" :action="`/admin/peserta/${editMeta?.id}`" class="space-y-4 pt-2">
+                          @csrf
+                          @method('PUT')
+                          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div>
+                                  <label for="edit_name" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Nama Lengkap</label>
+                                  <input id="edit_name" type="text" name="name" :value="editMeta?.name" required
+                                         class="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-5 py-2.5 text-sm text-slate-800 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100" />
+                              </div>
+                              <div>
+                                  <label for="edit_nik" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">NIK/NIP</label>
+                                  <input id="edit_nik" type="text" name="nik" :value="editMeta?.nik" required
+                                         class="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-5 py-2.5 text-sm text-slate-800 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100" />
+                              </div>
+                          </div>
+                          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div>
+                                  <label for="edit_email" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Alamat Email</label>
+                                  <input id="edit_email" type="email" name="email" :value="editMeta?.email" required
+                                         class="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-5 py-2.5 text-sm text-slate-800 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100" />
+                              </div>
+                              <div>
+                                  <label for="edit_no_hp" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">No. Telepon</label>
+                                  <input id="edit_no_hp" type="tel" name="no_hp" :value="editMeta?.no_hp" required
+                                         class="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-5 py-2.5 text-sm text-slate-800 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100" />
+                              </div>
+                          </div>
+                          <div>
+                              <label for="edit_pendidikan_terakhir" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Pendidikan Terakhir</label>
+                              <input id="edit_pendidikan_terakhir" type="text" name="pendidikan_terakhir" :value="editMeta?.pendidikan_terakhir" required
+                                     class="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-5 py-2.5 text-sm text-slate-800 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100" />
+                          </div>
+                          <div>
+                              <label for="edit_jenis_kelamin" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Jenis Kelamin</label>
+                              <select id="edit_jenis_kelamin" name="jenis_kelamin" required
+                                      class="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-5 py-2.5 text-sm text-slate-800 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100">
+                                  <option value="">Pilih</option>
+                                  <option value="Laki-laki" :selected="editMeta?.jenis_kelamin === 'Laki-laki'">Laki-laki</option>
+                                  <option value="Perempuan" :selected="editMeta?.jenis_kelamin === 'Perempuan'">Perempuan</option>
+                              </select>
+                          </div>
+                          <div>
+                              <label for="edit_alamat" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Alamat</label>
+                              <textarea id="edit_alamat" name="alamat" rows="2" required
+                                        class="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-5 py-2.5 text-sm text-slate-800 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100" x-text="editMeta?.alamat"></textarea>
+                          </div>
+                          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div>
+                                  <label for="edit_password" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Password Baru (Opsional)</label>
+                                  <input id="edit_password" type="password" name="password"
+                                         class="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-5 py-2.5 text-sm text-slate-800 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100" />
+                              </div>
+                              <div>
+                                  <label for="edit_password_confirmation" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Konfirmasi Password Baru</label>
+                                  <input id="edit_password_confirmation" type="password" name="password_confirmation"
+                                         class="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-5 py-2.5 text-sm text-slate-800 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100" />
+                              </div>
+                          </div>
+                          <div class="flex items-center justify-end gap-3 pt-3">
+                              <button type="button" @click="closeEditModal()"
+                                      class="inline-flex items-center gap-2 rounded-full border border-slate-300 px-6 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100">Batal</button>
+                              <button type="submit"
+                                      class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-sky-500 via-sky-400 to-emerald-400 px-6 py-2 text-sm font-semibold text-white shadow-lg transition hover:brightness-110">Simpan Perubahan</button>
+                          </div>
+                      </form>
+                  </div>
+              </div>
+          </div>
+
+          <!-- Modal Hapus Peserta -->
          <div x-show="deleteOpen"
               x-cloak
               x-transition.opacity
@@ -358,8 +462,18 @@
             deleteOpen: false,
             editMeta: null,
             deleteTemplate: '{{ route('admin.peserta.destroy', '__ID__') }}',
-            openEditModal(meta) {
-                this.editMeta = meta;
+            openEditModal(data) {
+                console.log('Open edit modal with:', data);
+                this.editMeta = {
+                    id: data.id,
+                    name: data.name,
+                    nik: data.nik,
+                    email: data.email,
+                    no_hp: data.no_hp,
+                    pendidikan_terakhir: data.pendidikan_terakhir,
+                    jenis_kelamin: data.jenis_kelamin,
+                    alamat: data.alamat
+                };
                 this.editOpen = true;
             },
             closeEditModal() {
@@ -377,11 +491,11 @@
                 this.editMeta = null;
             },
              deleteAction() {
-                 if (!this.editMeta?.id) return '#';
-                 const action = this.deleteTemplate.replace('__ID__', this.editMeta.id);
-                 console.log('Delete action URL:', action); // Debug log
-                 return action;
-             },
+                  if (!this.editMeta?.id) return '#';
+                  const action = this.deleteTemplate.replace('__ID__', this.editMeta.id);
+                  console.log('Delete action URL:', action); // Debug log
+                  return action;
+              },
         };
     }
 </script>

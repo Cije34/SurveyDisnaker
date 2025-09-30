@@ -46,14 +46,18 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('ad
     // Mentor
     Route::get('/mentor', [AdminMentorController::class, 'index'])->name('mentor.index');
     Route::post('/mentor', [AdminMentorController::class, 'store'])->name('mentor.store');
-    // Route::put('/mentor/{mentor}', [AdminMentorController::class, 'update'])->name('mentor.update');
-    // Route::delete('/mentor/{mentor}', [AdminMentorController::class, 'destroy'])->name('mentor.destroy');
+    Route::put('/mentor/{mentor}', [AdminMentorController::class, 'update'])->name('mentor.update');
+    Route::delete('/mentor/{mentor}', [AdminMentorController::class, 'destroy'])->name('mentor.destroy');
+    Route::get('/mentor/template', [AdminMentorController::class, 'downloadTemplate'])->name('mentor.template');
+    Route::post('/mentor/import', [AdminMentorController::class, 'import'])->name('mentor.import');
 
     // Penjab
     Route::get('/penjab', [AdminPenjabController::class, 'index'])->name('penjab.index');
-    // Route::post('/penjab', [AdminPenjabController::class, 'store'])->name('penjab.store');
-    // Route::put('/penjab/{penjab}', [AdminPenjabController::class, 'update'])->name('penjab.update');
-    // Route::delete('/penjab/{penjab}', [AdminPenjabController::class, 'destroy'])->name('penjab.destroy');
+    Route::post('/penjab', [AdminPenjabController::class, 'store'])->name('penjab.store');
+    Route::put('/penjab/{penjab}', [AdminPenjabController::class, 'update'])->name('penjab.update');
+    Route::delete('/penjab/{penjab}', [AdminPenjabController::class, 'destroy'])->name('penjab.destroy');
+    Route::get('/penjab/template', [AdminPenjabController::class, 'downloadTemplate'])->name('penjab.template');
+    Route::post('/penjab/import', [AdminPenjabController::class, 'import'])->name('penjab.import');
 
     // Tempat
     Route::get('/tempat', [AdminTempatController::class, 'index'])->name('tempat.index');

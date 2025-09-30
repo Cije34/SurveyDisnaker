@@ -10,6 +10,16 @@ class Penjab extends Model
     /** @use HasFactory<\Database\Factories\PenjabFactory> */
     use HasFactory;
 
+    protected $fillable = [
+        'user_id',
+        'name',
+        'jabatan',
+        'no_hp',
+        'email',
+        'alamat',
+        'jenis_kelamin',
+    ];
+
     public function jadwal()
     {
         return $this->hasMany(Jadwal::class, 'penjab_id')
