@@ -85,9 +85,9 @@
         <section class="rounded-3xl border border-slate-200 bg-white p-5 shadow-[0_30px_55px_-35px_rgba(15,23,42,0.35)]">
             <div class="mb-6 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                 <h2 class="text-xl font-semibold text-slate-900">List Kegiatan</h2>
-                <button type="button"
-                        @click="openCreateModal()"
-                        class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-sky-500 via-sky-400 to-emerald-400 px-5 py-2 text-sm font-semibold text-white shadow-lg transition hover:brightness-110">
+                 <button type="button"
+                          @click="openCreateModal()"
+                          class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-sky-500 via-sky-400 to-emerald-400 px-5 py-2 text-sm font-semibold text-white shadow-lg transition hover:brightness-110">
                     <span>Tambah Kegiatan</span>
                     <span class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-white/25">
                         <img src="{{ asset('icons/plus.svg') }}" alt="Tambah" class="h-4 w-4">
@@ -97,12 +97,12 @@
 
             <div class="overflow-x-auto">
                 <table class="w-full table-auto border-collapse rounded-3xl border border-slate-200 bg-white shadow-[0_30px_55px_-35px_rgba(15,23,42,0.35)]">
-                    <thead class="bg-slate-50">
+                    <thead class="bg-sky-700">
                         <tr>
-                            <th class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wide text-slate-600">No</th>
-                            <th class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wide text-slate-600">Nama Kegiatan</th>
-                            <th class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wide text-slate-600">Tahun</th>
-                            <th class="px-6 py-4 text-center text-sm font-semibold uppercase tracking-wide text-slate-600">Aksi</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wide text-white">No</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wide text-white">Nama Kegiatan</th>
+                            <th class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wide text-white">Tahun</th>
+                            <th class="px-6 py-4 text-center text-sm font-semibold uppercase tracking-wide text-white">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -210,16 +210,16 @@
                             @enderror
                         </div>
 
-                        <div class="flex items-center justify-end gap-3 pt-2">
-                            <button type="button" @click="closeCreateModal()"
-                                    class="inline-flex items-center gap-2 rounded-full border border-slate-300 px-6 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100">
-                                Batal
-                            </button>
-                            <button type="submit"
-                                    class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-sky-500 via-sky-400 to-emerald-400 px-6 py-2 text-sm font-semibold text-white shadow-lg transition hover:brightness-110">
-                                Simpan
-                            </button>
-                        </div>
+                         <div class="flex items-center justify-end gap-3 pt-2">
+                              <button type="button" @click="closeCreateModal()"
+                                      class="inline-flex items-center gap-2 rounded-full border border-slate-300 px-6 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100">
+                                  Batal
+                              </button>
+                              <button type="submit"
+                                      class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-sky-500 via-sky-400 to-emerald-400 px-6 py-2 text-sm font-semibold text-white shadow-lg transition hover:brightness-110">
+                                  Simpan
+                              </button>
+                         </div>
                     </form>
                 </div>
             </div>
@@ -281,16 +281,16 @@
                             @enderror
                         </div>
 
-                        <div class="flex items-center justify-end gap-3 pt-2">
-                            <button type="button" @click="closeEditModal()"
-                                    class="inline-flex items-center gap-2 rounded-full border border-slate-300 px-6 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100">
-                                Batal
-                            </button>
-                            <button type="submit"
-                                    class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-sky-500 via-sky-400 to-emerald-400 px-6 py-2 text-sm font-semibold text-white shadow-lg transition hover:brightness-110">
-                                Simpan Perubahan
-                            </button>
-                        </div>
+                         <div class="flex items-center justify-end gap-3 pt-2">
+                              <button type="button" @click="closeEditModal()"
+                                      class="inline-flex items-center gap-2 rounded-full border border-slate-300 px-6 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100">
+                                  Batal
+                              </button>
+                              <button type="submit"
+                                      class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-sky-500 via-sky-400 to-emerald-400 px-6 py-2 text-sm font-semibold text-white shadow-lg transition hover:brightness-110">
+                                  Simpan Perubahan
+                              </button>
+                         </div>
                     </form>
                 </div>
             </div>
