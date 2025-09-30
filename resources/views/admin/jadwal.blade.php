@@ -5,8 +5,9 @@
 
     <x-admin.topbar :user="$user" title="Jadwal" />
 
-    <div class="px-6 py-8 lg:px-10 lg:py-10 space-y-8"
-         x-data="jadwalPage()">
+     <div class="px-6 py-8 lg:px-10 lg:py-10 space-y-8"
+          x-data="jadwalPage()"
+          x-init="init()">
         @if (session('status'))
             <div class="rounded-2xl border border-emerald-100 bg-emerald-50 px-5 py-3 text-sm text-emerald-700">
                 {{ session('status') }}
@@ -69,9 +70,9 @@
                                 <td class="whitespace-nowrap px-6 py-4 text-sm text-slate-600">
                                     {{ $timeRange ?: '-' }}
                                 </td>
-                                <td class="whitespace-nowrap px-6 py-4 text-sm text-slate-600">
-                                    {{ $schedule->tempat->name ?? '-' }}
-                                </td>
+                                 <td class="whitespace-nowrap px-6 py-4 text-sm text-slate-600">
+                                     {{ $schedule->tempat->name }}
+                                 </td>
                                 <td class="whitespace-nowrap px-6 py-4 text-right text-sm">
                                     <div class="relative inline-flex">
                                         <button type="button"
@@ -87,18 +88,18 @@
                                              x-transition.origin.top.right
                                              x-cloak
                                              class="absolute right-0 top-full z-50 mt-2 w-40 rounded-2xl border border-slate-200 bg-white py-2 shadow-xl">
-                                            <button type="button"
-                                                    @click="open = false; openEditModal({
-                                                        id: {{ $schedule->id }},
-                                                        kegiatan_id: '{{ $schedule->kegiatan_id }}',
-                                                        penjab_id: '{{ $schedule->penjab_id }}',
-                                                        tempat_id: '{{ $schedule->tempat_id }}',
-                                                        mentor_ids: @js($schedule->mentors->pluck('id')),
-                                                        tanggal_mulai: '{{ optional($schedule->tanggal_mulai)->format('Y-m-d') }}',
-                                                        tanggal_selesai: '{{ optional($schedule->tanggal_selesai)->format('Y-m-d') }}',
-                                                        jam_mulai: '{{ $schedule->jam_mulai ? substr($schedule->jam_mulai, 0, 5) : '' }}',
-                                                        jam_selesai: '{{ $schedule->jam_selesai ? substr($schedule->jam_selesai, 0, 5) : '' }}'
-                                                    })"
+                                             <button type="button"
+                                                     @click="open = false; openEditModal({
+                                                         id: {{ $schedule->id }},
+                                                         kegiatan_id: '{{ $schedule->kegiatan_id }}',
+                                                         penjab_ids: @js($schedule->penjabs->pluck('id')),
+                                                         tempat_id: '{{ $schedule->tempat_id }}',
+                                                         mentor_ids: @js($schedule->mentors->pluck('id')),
+                                                         tanggal_mulai: '{{ optional($schedule->tanggal_mulai)->format('Y-m-d') }}',
+                                                         tanggal_selesai: '{{ optional($schedule->tanggal_selesai)->format('Y-m-d') }}',
+                                                         jam_mulai: '{{ $schedule->jam_mulai ? substr($schedule->jam_mulai, 0, 5) : '' }}',
+                                                         jam_selesai: '{{ $schedule->jam_selesai ? substr($schedule->jam_selesai, 0, 5) : '' }}'
+                                                     })"
                                                     class="flex w-full items-center gap-2 px-4 py-2 text-left text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900">
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="h-4 w-4">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652l-10.5 10.5a4.5 4.5 0 01-1.897 1.125l-3.562 1.02 1.02-3.562a4.5 4.5 0 011.125-1.897l10.5-10.5z" />
@@ -157,15 +158,15 @@
                                  </button>
                                 <div x-show="open" x-transition.origin.top.right x-cloak class="absolute right-0 top-full z-10 mt-2 w-40 rounded-xl border bg-white py-2 shadow-lg">
                                     <button type="button" @click="open = false; openEditModal({
-                                            id: {{ $schedule->id }},
-                                            kegiatan_id: '{{ $schedule->kegiatan_id }}',
-                                            penjab_id: '{{ $schedule->penjab_id }}',
-                                            tempat_id: '{{ $schedule->tempat_id }}',
-                                            mentor_ids: @js($schedule->mentors->pluck('id')),
-                                            tanggal_mulai: '{{ optional($schedule->tanggal_mulai)->format('Y-m-d') }}',
-                                            tanggal_selesai: '{{ optional($schedule->tanggal_selesai)->format('Y-m-d') }}',
-                                            jam_mulai: '{{ $schedule->jam_mulai ? substr($schedule->jam_mulai, 0, 5) : '' }}',
-                                            jam_selesai: '{{ $schedule->jam_selesai ? substr($schedule->jam_selesai, 0, 5) : '' }}'
+                                             id: {{ $schedule->id }},
+                                             kegiatan_id: '{{ $schedule->kegiatan_id }}',
+                                             penjab_ids: @js($schedule->penjabs->pluck('id')),
+                                             tempat_id: '{{ $schedule->tempat_id }}',
+                                             mentor_ids: @js($schedule->mentors->pluck('id')),
+                                             tanggal_mulai: '{{ optional($schedule->tanggal_mulai)->format('Y-m-d') }}',
+                                             tanggal_selesai: '{{ optional($schedule->tanggal_selesai)->format('Y-m-d') }}',
+                                             jam_mulai: '{{ $schedule->jam_mulai ? substr($schedule->jam_mulai, 0, 5) : '' }}',
+                                             jam_selesai: '{{ $schedule->jam_selesai ? substr($schedule->jam_selesai, 0, 5) : '' }}'
                                         })" class="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-slate-600 hover:bg-slate-100">
                                         Edit
                                     </button>
@@ -188,10 +189,10 @@
                                  <span class="text-slate-500 flex-shrink-0">Waktu:</span>
                                  <span class="font-medium text-slate-700 text-right">{{ $timeRange ?: '-' }}</span>
                              </div>
-                             <div class="flex justify-between gap-2">
-                                 <span class="text-slate-500 flex-shrink-0">Lokasi:</span>
-                                 <span class="font-medium text-slate-700 text-right break-words">{{ $schedule->tempat->name ?? '-' }}</span>
-                             </div>
+                              <div class="flex justify-between gap-2">
+                                  <span class="text-slate-500 flex-shrink-0">Penanggung Jawab:</span>
+                                  <span class="font-medium text-slate-700 text-right break-words">{{ $schedule->penjabs->pluck('name')->implode(', ') ?: '-' }}</span>
+                              </div>
                          </div>
                     </div>
                 @empty
@@ -245,15 +246,27 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div>
-                            <label for="penjab_id" class="mb-1 block text-sm font-medium text-slate-700">Penanggung Jawab</label>
-                            <select name="penjab_id" id="penjab_id" class="w-full rounded-xl border-slate-300 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
-                                <option value="">Pilih Penanggung Jawab</option>
-                                @foreach($penjabOptions as $penjab)
-                                    <option value="{{ $penjab->id }}" @selected(old('penjab_id') == $penjab->id)>{{ $penjab->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
+                         <div>
+                             <label class="mb-1 block text-sm font-medium text-slate-700">Penanggung Jawab</label>
+                             <div class="space-y-2 max-h-40 overflow-y-auto border border-slate-200 rounded-xl p-3 bg-slate-50">
+                                 @foreach($penjabOptions as $penjab)
+                                     <label class="flex items-center gap-3 cursor-pointer">
+                                         <input type="checkbox"
+                                                value="String{{ $penjab->id }}"
+                                                x-model="selectedPenjabIds"
+                                                name="penjab_ids[]"
+                                                class="rounded border-slate-300 text-sky-600 focus:ring-sky-500">
+                                         <span class="text-sm text-slate-700">{{ $penjab->name }}</span>
+                                     </label>
+                                 @endforeach
+                             </div>
+                             @error('penjab_ids')
+                                 <p class="mt-1 text-xs text-rose-500">{{ $message }}</p>
+                             @enderror
+                             @error('penjab_ids.*')
+                                 <p class="mt-1 text-xs text-rose-500">{{ $message }}</p>
+                             @enderror
+                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
@@ -266,20 +279,27 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div>
-                            <label for="mentor_ids" class="mb-1 block text-sm font-medium text-slate-700">Mentor</label>
-                            <select name="mentor_ids[]" id="mentor_ids" multiple class="w-full rounded-xl border-slate-300 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
-                                @foreach($mentorOptions as $mentor)
-                                    <option value="{{ $mentor->id }}" @selected(in_array($mentor->id, old('mentor_ids', [])))>{{ $mentor->name }}</option>
-                                @endforeach
-                            </select>
-                            @error('mentor_ids')
-                                <p class="mt-1 text-xs text-rose-500">{{ $message }}</p>
-                            @enderror
-                            @error('mentor_ids.*')
-                                <p class="mt-1 text-xs text-rose-500">{{ $message }}</p>
-                            @enderror
-                        </div>
+                         <div>
+                             <label class="mb-1 block text-sm font-medium text-slate-700">Mentor</label>
+                             <div class="space-y-2 max-h-40 overflow-y-auto border border-slate-200 rounded-xl p-3 bg-slate-50">
+                                 @foreach($mentorOptions as $mentor)
+                                     <label class="flex items-center gap-3 cursor-pointer">
+                                         <input type="checkbox"
+                                                value="String{{ $mentor->id }}"
+                                                x-model="selectedMentorIds"
+                                                name="mentor_ids[]"
+                                                class="rounded border-slate-300 text-sky-600 focus:ring-sky-500">
+                                         <span class="text-sm text-slate-700">{{ $mentor->name }}</span>
+                                     </label>
+                                 @endforeach
+                             </div>
+                             @error('mentor_ids')
+                                 <p class="mt-1 text-xs text-rose-500">{{ $message }}</p>
+                             @enderror
+                             @error('mentor_ids.*')
+                                 <p class="mt-1 text-xs text-rose-500">{{ $message }}</p>
+                             @enderror
+                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
@@ -343,16 +363,21 @@ class="fixed inset-0 z-[100] flex h-screen w-screen items-center justify-center 
            </div>
 
            <div class="grid gap-4 md:grid-cols-2">
-               <div>
-                   <label for="edit_penjab" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Penanggung Jawab</label>
-                   <select id="edit_penjab" name="penjab_id"
-                           class="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-2 text-sm text-slate-700 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100">
-                       <option value="">Pilih penanggung jawab</option>
-                       @foreach ($penjabOptions as $penjab)
-                           <option value="{{ $penjab->id }}" :selected="editMeta?.penjab_id == {{ $penjab->id }}">{{ $penjab->name }}</option>
-                       @endforeach
-                   </select>
-               </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Penanggung Jawab</label>
+                    <div class="mt-2 space-y-2 max-h-40 overflow-y-auto border border-slate-200 rounded-2xl bg-slate-50 p-3">
+                        @foreach ($penjabOptions as $penjab)
+                            <label class="flex items-center gap-3 cursor-pointer">
+                                <input type="checkbox"
+                                       value="{{ $penjab->id }}"
+                                       x-model="selectedPenjabIdsEdit"
+                                       name="penjab_ids[]"
+                                       class="rounded border-slate-300 text-sky-600 focus:ring-sky-500">
+                                <span class="text-sm text-slate-700">{{ $penjab->name }}</span>
+                            </label>
+                        @endforeach
+                    </div>
+                </div>
 
                <div>
                    <label for="edit_tempat" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Tempat</label>
@@ -366,15 +391,21 @@ class="fixed inset-0 z-[100] flex h-screen w-screen items-center justify-center 
                </div>
            </div>
 
-           <div>
-               <label for="edit_mentor" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Mentor</label>
-               <select id="edit_mentor" name="mentor_ids[]" multiple
-                       class="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-2 text-sm text-slate-700 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100">
-                   @foreach ($mentorOptions as $mentor)
-                       <option value="{{ $mentor->id }}" :selected="editMeta?.mentor_ids?.includes({{ $mentor->id }})">{{ $mentor->name }}</option>
-                   @endforeach
-               </select>
-           </div>
+            <div>
+                <label class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Mentor</label>
+                <div class="mt-2 space-y-2 max-h-40 overflow-y-auto border border-slate-200 rounded-2xl bg-slate-50 p-3">
+                    @foreach ($mentorOptions as $mentor)
+                        <label class="flex items-center gap-3 cursor-pointer">
+                            <input type="checkbox"
+                                   value="{{ $mentor->id }}"
+                                   x-model="selectedMentorIdsEdit"
+                                   name="mentor_ids[]"
+                                   class="rounded border-slate-300 text-sky-600 focus:ring-sky-500">
+                            <span class="text-sm text-slate-700">{{ $mentor->name }}</span>
+                        </label>
+                    @endforeach
+                </div>
+            </div>
 
            <div class="grid gap-4 md:grid-cols-2">
                <div>
@@ -453,23 +484,29 @@ class="fixed inset-0 z-[100] flex h-screen w-screen items-center justify-center 
 </x-admin.layout>
 
 <script>
-    function jadwalPage() {
-        return {
-            createOpen: {{ $errors->any() ? 'true' : 'false' }},
-            editOpen: false,
-            deleteOpen: false,
-            editMeta: null,
-            deleteTemplate: '{{ route('admin.jadwal.destroy', '__ID__') }}',
+     function jadwalPage() {
+         return {
+             createOpen: {{ $errors->any() ? 'true' : 'false' }},
+             editOpen: false,
+             deleteOpen: false,
+             editMeta: null,
+             deleteTemplate: '{{ route('admin.jadwal.destroy', '__ID__') }}',
+             selectedPenjabIds: {{ old('penjab_ids', '[]') }},
+             selectedPenjabIdsEdit: [],
+             selectedMentorIds: {{ old('mentor_ids', '[]') }},
+             selectedMentorIdsEdit: [],
             openCreateModal() {
                 this.createOpen = true;
             },
             closeCreateModal() {
                 this.createOpen = false;
             },
-            openEditModal(meta) {
-                this.editMeta = meta;
-                this.editOpen = true;
-            },
+              openEditModal(meta) {
+                  this.editMeta = meta;
+                  this.selectedPenjabIdsEdit = (meta.penjab_ids || []).map(id => id.toString());
+                  this.selectedMentorIdsEdit = (meta.mentor_ids || []).map(id => id.toString());
+                  this.editOpen = true;
+              },
             closeEditModal() {
                 this.editOpen = false;
                 this.editMeta = null;
@@ -482,10 +519,13 @@ class="fixed inset-0 z-[100] flex h-screen w-screen items-center justify-center 
                 this.deleteOpen = false;
                 this.editMeta = null;
             },
-            deleteAction() {
-                if (!this.editMeta?.id) return '#';
-                return this.deleteTemplate.replace('__ID__', this.editMeta.id);
-            },
+             deleteAction() {
+                 if (!this.editMeta?.id) return '#';
+                 return this.deleteTemplate.replace('__ID__', this.editMeta.id);
+             },
+             init() {
+                 // Initialize edit penjab ids when opening edit modal
+             },
         };
     }
 </script>

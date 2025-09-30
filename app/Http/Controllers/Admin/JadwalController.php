@@ -17,7 +17,7 @@ class JadwalController extends Controller
 {
     public function index(): View
     {
-        $schedules = Jadwal::with(['kegiatan.tahunKegiatan', 'tempat:id,name', 'mentors:id,name'])
+        $schedules = Jadwal::with(['kegiatan.tahunKegiatan', 'tempat:id,name', 'mentors:id,name', 'penjabs:id,name'])
             ->select('jadwals.*')
             ->join('kegiatans', 'jadwals.kegiatan_id', '=', 'kegiatans.id')
             ->join('tahun_kegiatans', 'kegiatans.tahun_kegiatan_id', '=', 'tahun_kegiatans.id')
@@ -29,6 +29,7 @@ class JadwalController extends Controller
         $penjabOptions = Penjab::orderBy('name')->get(['id', 'name']);
         $tempatOptions = Tempat::orderBy('name')->get(['id', 'name']);
         $mentorOptions = Mentor::orderBy('name')->get(['id', 'name']);
+        // dd($schedules);
 
         return view('admin.jadwal', [
             'user' => Auth::user(),
@@ -44,7 +45,8 @@ class JadwalController extends Controller
     {
         $validated = $request->validate([
             'kegiatan_id' => ['required', 'exists:kegiatans,id'],
-            'penjab_id' => ['required', 'exists:penjabs,id'],
+            'penjab_ids' => ['required', 'array', 'min:1'],
+            'penjab_ids.*' => ['integer', 'exists:penjabs,id'],
             'tempat_id' => ['required', 'exists:tempats,id'],
             'mentor_ids' => ['required', 'array', 'min:1'],
             'mentor_ids.*' => ['integer', 'exists:mentors,id'],
@@ -54,9 +56,10 @@ class JadwalController extends Controller
             'jam_selesai' => ['nullable', 'date_format:H:i'],
         ]);
         // dd($validated);
-        $jadwalData = collect($validated)->except('mentor_ids')->all();
+        $jadwalData = collect($validated)->except(['mentor_ids', 'penjab_ids'])->all();
         $jadwal = Jadwal::create($jadwalData);
         $jadwal->mentors()->attach($validated['mentor_ids']);
+        $jadwal->penjabs()->attach($validated['penjab_ids']);
 
         return redirect()->route('admin.jadwal.index')->with('status', 'Jadwal baru berhasil ditambahkan.');
     }
@@ -65,7 +68,8 @@ class JadwalController extends Controller
     {
         $validated = $request->validate([
             'kegiatan_id' => ['required', 'exists:kegiatans,id'],
-            'penjab_id' => ['required', 'exists:penjabs,id'],
+            'penjab_ids' => ['required', 'array', 'min:1'],
+            'penjab_ids.*' => ['integer', 'exists:penjabs,id'],
             'tempat_id' => ['required', 'exists:tempats,id'],
             'mentor_ids' => ['required', 'array', 'min:1'],
             'mentor_ids.*' => ['integer', 'exists:mentors,id'],
@@ -75,9 +79,10 @@ class JadwalController extends Controller
             'jam_selesai' => ['nullable', 'date_format:H:i'],
         ]);
 
-        $jadwalData = collect($validated)->except('mentor_ids')->all();
+        $jadwalData = collect($validated)->except(['mentor_ids', 'penjab_ids'])->all();
         $jadwal->update($jadwalData);
         $jadwal->mentors()->sync($validated['mentor_ids']);
+        $jadwal->penjabs()->sync($validated['penjab_ids']);
 
         return redirect()->route('admin.jadwal.index')->with('status', 'Jadwal berhasil diperbarui.');
     }

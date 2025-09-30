@@ -20,10 +20,9 @@ class Penjab extends Model
         'jenis_kelamin',
     ];
 
-    public function jadwal()
+    public function jadwals()
     {
-        return $this->hasMany(Jadwal::class, 'penjab_id')
-            ->withTimestamps();
+        return $this->belongsToMany(Jadwal::class, 'jadwal_penjab');
     }
 
     public function user()

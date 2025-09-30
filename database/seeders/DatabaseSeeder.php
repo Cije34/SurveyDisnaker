@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
             JadwalSeeder::class,
             JadwalMentorSeeder::class,
             JadwalPesertaSeeder::class,
+            JadwalPenjabs::class,
         ]);
 
         $admin = User::create([

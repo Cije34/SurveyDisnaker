@@ -12,7 +12,7 @@ class Jadwal extends Model
     /** @use HasFactory<\Database\Factories\JadwalFactory> */
     use HasFactory;
 
-    protected $guarded = [];
+    protected $guarded = [];    
 
     protected $casts = [
         'tanggal_mulai' => 'datetime',
@@ -22,6 +22,11 @@ class Jadwal extends Model
     public function penjab(): BelongsTo
     {
         return $this->belongsTo(Penjab::class);
+    }
+
+    public function penjabs(): BelongsToMany
+    {
+        return $this->belongsToMany(Penjab::class, 'jadwal_penjab');
     }
 
     public function kegiatan(): BelongsTo
@@ -39,7 +44,7 @@ class Jadwal extends Model
         return $this->belongsToMany(Mentor::class, 'jadwal_mentor');
     }
 
-    public function pesertas(): BelongsToMany   
+    public function pesertas(): BelongsToMany
     {
         return $this->belongsToMany(Peserta::class, 'jadwal_peserta');
     }
