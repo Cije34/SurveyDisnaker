@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Imports\PesertaImport;
 use App\Models\Peserta;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
@@ -12,12 +13,14 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\View\View;
+use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class PesertaController extends Controller
 {
     public function index(): View
     {
-        $pesertas = Peserta::with('user')->paginate(30);
+        $pesertas = Peserta::with('user')->get();
 
         return view('admin.peserta', [
             'user' => Auth::user(),
@@ -27,6 +30,10 @@ class PesertaController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
+        // Normalize jenis_kelamin to title case
+        $jenisKelamin = ucwords(strtolower($request->jenis_kelamin));
+        $request->merge(['jenis_kelamin' => $jenisKelamin]);
+
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'nik' => ['required', 'string', 'max:30', 'unique:pesertas,nik'],
@@ -60,5 +67,33 @@ class PesertaController extends Controller
         });
 
         return redirect()->route('admin.peserta.index')->with('status', 'Peserta baru berhasil ditambahkan.');
+    }
+
+    public function downloadTemplate(): BinaryFileResponse
+    {
+        $path = resource_path('templates/peserta_template.xlsx');
+        abort_unless(file_exists($path), 404, 'Template file not found.');
+
+        return response()->download($path, 'peserta_template.xlsx');
+    }
+
+    public function import(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'file' => ['required', 'file', 'mimes:xlsx,xls,csv', 'max:20480'],
+        ]);
+
+        // Basic import (switch to queueImport for large files)
+        Excel::import(new PesertaImport, $request->file('file'));
+
+        return redirect()->route('admin.peserta.index')
+            ->with('status', 'Import peserta berhasil diproses.');
+    }
+
+    public function destroy(Peserta $peserta): RedirectResponse
+    {
+        $peserta->delete();
+
+        return redirect()->route('admin.peserta.index')->with('status', 'Peserta berhasil dihapus.');
     }
 }

@@ -40,6 +40,8 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('ad
     Route::post('/peserta', [AdminPesertaController::class, 'store'])->name('peserta.store');
     Route::put('/peserta/{peserta}', [AdminPesertaController::class, 'update'])->name('peserta.update');
     Route::delete('/peserta/{peserta}', [AdminPesertaController::class, 'destroy'])->name('peserta.destroy');
+    Route::get('/peserta/template', [AdminPesertaController::class, 'downloadTemplate'])->name('peserta.template');
+    Route::post('/peserta/import', [AdminPesertaController::class, 'import'])->name('peserta.import');
 
     // Mentor
     Route::get('/mentor', [AdminMentorController::class, 'index'])->name('mentor.index');

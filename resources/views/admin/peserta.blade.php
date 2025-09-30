@@ -5,16 +5,13 @@
 
     <x-admin.topbar :user="$user" title="Peserta" />
 
-    <div class="px-6 py-8 lg:px-10 lg:py-10 space-y-8" x-data="{
-            modalOpen: {{ $errors->any() ? 'true' : 'false' }},
-            importOpen: false,
-            importFileName: ''
-        }">
+     <div class="px-6 py-8 lg:px-10 lg:py-10 space-y-8" x-data="pesertaPage()">
         @if (session('status'))
             <div class="rounded-2xl border border-emerald-100 bg-emerald-50 px-5 py-3 text-sm text-emerald-700">
                 {{ session('status') }}
             </div>
         @endif
+
 
         <section class="rounded-3xl border border-slate-200 bg-white p-5 shadow-[0_30px_55px_-35px_rgba(15,23,42,0.35)]">
             <div class="mb-6 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
@@ -24,14 +21,6 @@
                 </div>
                 <div class="flex items-center gap-3">
                     <button type="button"
-                            @click="modalOpen = true"
-                            class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-sky-500 via-sky-400 to-emerald-400 px-5 py-2 text-sm font-semibold text-white shadow-lg transition hover:brightness-110">
-                        <span>Tambah Peserta</span>
-                        <span class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-white/25">
-                            <img src="{{ asset('icons/plus.svg') }}" alt="Tambah" class="h-4 w-4">
-                        </span>
-                    </button>
-                    <button type="button"
                        @click="importOpen = true"
                        class="inline-flex items-center gap-2 rounded-full bg-sky-700 px-5 py-2 text-sm font-semibold text-white shadow-lg transition hover:brightness-110">
                         <span>Import</span>
@@ -40,6 +29,14 @@
                                 <path d="M12 3.75a.75.75 0 01.75.75v8.19l2.47-2.47a.75.75 0 111.06 1.06l-3.75 3.75a.75.75 0 01-1.06 0l-3.75-3.75a.75.75 0 111.06-1.06l2.47 2.47V4.5a.75.75 0 01.75-.75z" />
                                 <path d="M4.5 14.25a.75.75 0 01.75.75v2.25A2.25 2.25 0 007.5 19.5h9a2.25 2.25 0 002.25-2.25V15a.75.75 0 011.5 0v2.25A3.75 3.75 0 0116.5 21h-9A3.75 3.75 0 013.75 17.25V15a.75.75 0 01.75-.75z" />
                             </svg>
+                        </span>
+                    </button>
+                    <button type="button"
+                            @click="modalOpen = true"
+                            class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-sky-500 via-sky-400 to-emerald-400 px-5 py-2 text-sm font-semibold text-white shadow-lg transition hover:brightness-110">
+                        <span>Tambah Peserta</span>
+                        <span class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-white/25">
+                            <img src="{{ asset('icons/plus.svg') }}" alt="Tambah" class="h-4 w-4">
                         </span>
                     </button>
                 </div>
@@ -52,7 +49,7 @@
                         <tr class="bg-sky-700">
                             <th scope="col" class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wide text-white">Nama</th>
                             <th scope="col" class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wide text-white">NIK</th>
-                            <th scope="col" class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wide text-white">Asal Instansi</th>
+                            <th scope="col" class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wide text-white">Pendidikan trakhir</th>
                             <th scope="col" class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wide text-white">Email</th>
                             <th scope="col" class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wide text-white">No. Telepon</th>
                             <th scope="col" class="px-6 py-4 text-right text-sm font-semibold uppercase tracking-wide text-white">Aksi</th>
@@ -60,16 +57,48 @@
                     </thead>
                     <tbody class="divide-y divide-slate-100 bg-white">
                         @forelse ($pesertas as $peserta)
-                            <tr class="hover:bg-slate-50">
-                                <td class="whitespace-nowrap px-6 py-4 text-sm font-semibold text-slate-800">{{ $peserta->user->name ?? '-' }}</td>
-                                <td class="whitespace-nowrap px-6 py-4 text-sm text-slate-600">{{ $peserta->nik ?? '-' }}</td>
-                                <td class="whitespace-nowrap px-6 py-4 text-sm text-slate-600">{{ $peserta->pendidikan_terakhir ?? '-' }}</td>
-                                <td class="whitespace-nowrap px-6 py-4 text-sm text-slate-600">{{ $peserta->email ?? '-' }}</td>
-                                <td class="whitespace-nowrap px-6 py-4 text-sm text-slate-600">{{ $peserta->no_hp ?? '-' }}</td>
-                                <td class="whitespace-nowrap px-6 py-4 text-right text-sm">
-                                    {{-- Actions (edit, delete) can be added here --}}
-                                </td>
-                            </tr>
+                             <tr class="hover:bg-slate-50" x-data="{ open: false }" :class="{ 'relative z-10': open }">
+                                 <td class="whitespace-nowrap px-6 py-4 text-sm font-semibold text-slate-800">{{ $peserta->user->name ?? '-' }}</td>
+                                 <td class="whitespace-nowrap px-6 py-4 text-sm text-slate-600">{{ $peserta->nik ?? '-' }}</td>
+                                 <td class="whitespace-nowrap px-6 py-4 text-sm text-slate-600">{{ $peserta->pendidikan_terakhir ?? '-' }}</td>
+                                 <td class="whitespace-nowrap px-6 py-4 text-sm text-slate-600">{{ $peserta->email ?? '-' }}</td>
+                                 <td class="whitespace-nowrap px-6 py-4 text-sm text-slate-600">{{ $peserta->no_hp ?? '-' }}</td>
+                                 <td class="whitespace-nowrap px-6 py-4 text-right text-sm">
+                                     <div class="relative inline-flex">
+                                         <button type="button"
+                                                 @click="open = !open"
+                                                 @click.outside="open = false"
+                                                 class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 text-slate-500 transition hover:border-sky-300 hover:text-sky-600">
+                                             <span class="sr-only">Aksi</span>
+                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-5 w-5">
+                                                 <path d="M12 7.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm0 6a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm0 6a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" />
+                                             </svg>
+                                         </button>
+                                         <div x-show="open"
+                                              x-transition.origin.top.right
+                                              x-cloak
+                                              class="absolute right-0 top-full z-50 mt-2 w-40 rounded-2xl border border-slate-200 bg-white py-2 shadow-xl">
+                                             <button type="button"
+                                                     @click="open = false; openEditModal({ id: {{ $peserta->id }}, name: '{{ $peserta->user->name ?? '' }}' })"
+                                                     class="flex w-full items-center gap-2 px-4 py-2 text-left text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900">
+                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="h-4 w-4">
+                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652l-10.5 10.5a4.5 4.5 0 01-1.897 1.125l-3.562 1.02 1.02-3.562a4.5 4.5 0 011.125-1.897l10.5-10.5z" />
+                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 7.125L16.875 4.5" />
+                                                 </svg>
+                                                 Edit
+                                             </button>
+                                             <button type="button"
+                                                     @click="open = false; confirmDelete({ id: {{ $peserta->id }}, nama: @js($peserta->user->name ?? 'Tanpa Nama') })"
+                                                     class="flex w-full items-center gap-2 px-4 py-2 text-left text-sm font-medium text-rose-500 transition hover:bg-rose-50">
+                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="h-4 w-4">
+                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                                 </svg>
+                                                 Hapus
+                                             </button>
+                                         </div>
+                                     </div>
+                                 </td>
+                             </tr>
                         @empty
                             <tr>
                                 <td colspan="6" class="px-6 py-12 text-center text-sm text-slate-400">
@@ -100,11 +129,10 @@
                                         <path d="M12 7.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm0 6a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm0 6a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" />
                                     </svg>
                                 </button>
-                                <div x-show="open" x-transition.origin.top.right x-cloak class="absolute right-0 top-full z-10 mt-2 w-40 rounded-xl border bg-white py-2 shadow-lg">
-                                    {{-- Actions will be implemented later --}}
-                                    <button type="button" class="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-slate-600 hover:bg-slate-100 disabled:opacity-50" disabled>Edit</button>
-                                    <button type="button" class="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-rose-500 hover:bg-rose-50 disabled:opacity-50" disabled>Hapus</button>
-                                </div>
+                                 <div x-show="open" x-transition.origin.top.right x-cloak class="absolute right-0 top-full z-10 mt-2 w-40 rounded-xl border bg-white py-2 shadow-lg">
+                                     <button type="button" @click="open = false; openEditModal({ id: {{ $peserta->id }}, name: '{{ $peserta->user->name ?? '' }}' })" class="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-slate-600 hover:bg-slate-100">Edit</button>
+                                     <button type="button" @click="open = false; confirmDelete({ id: {{ $peserta->id }}, nama: @js($peserta->user->name ?? 'Tanpa Nama') })" class="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-rose-500 hover:bg-rose-50">Hapus</button>
+                                 </div>
                             </div>
                         </div>
                         <div class="mt-4 space-y-2 border-t border-slate-100 pt-4 text-sm">
@@ -129,12 +157,65 @@
                 @endforelse
             </div>
 
-            @if ($pesertas->hasPages())
-                <div class="pt-6">
-                    {{ $pesertas->links('components.admin.pagination') }}
-                </div>
-            @endif
+
         </section>
+
+        <!-- Modal Import Peserta -->
+        <div x-show="importOpen"
+             x-cloak
+             x-transition.opacity
+             class="fixed inset-0 z-[110] flex items-center justify-center bg-slate-900/50 backdrop-blur-md p-4 sm:p-6"
+             @click.self="importOpen = false">
+            <div x-show="importOpen"
+                 x-transition.scale
+                 class="w-full max-w-3xl rounded-3txl bg-gradient-to-b from-sky-900 via-sky-800 to-sky-900 p-[1px] shadow-2xl">
+                <div class="rounded-2xl sm:rounded-3xl bg-sky-900/95 max-h-[85vh] overflow-y-auto">
+                    <div class="p-4 sm:p-6">
+                        <h3 class="text-2xl font-semibold text-white">Download Template</h3>
+                        <p class="mt-1 text-slate-200">Unduh templates excel terlebih dahulu sebelum mengimport data</p>
+
+                        <div class="mt-5">
+                            <a href="{{ route('admin.peserta.template') }}"
+                               class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-yellow-500 via-lime-400 to-emerald-400 px-4 sm:px-5 py-2.5 sm:py-3 text-sm font-semibold text-white shadow-lg transition hover:brightness-110">
+                                Download Template
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-5 w-5">
+                                    <path d="M12 3.75a.75.75 0 01.75.75v8.19l2.47-2.47a.75.75 0 111.06 1.06l-3.75 3.75a.75.75 0 01-1.06 0l-3.75-3.75a.75.75 0 111.06-1.06l2.47 2.47V4.5a.75.75 0 01.75-.75z" />
+                                    <path d="M4.5 14.25a.75.75 0 01.75.75v2.25A2.25 2.25 0 007.5 19.5h9a2.25 2.25 0 002.25-2.25V15a.75.75 0 011.5 0v2.25A3.75 3.75 0 0116.5 21h-9A3.75 3.75 0 013.75 17.25V15a.75.75 0 01.75-.75z" />
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="px-4 sm:px-6 pb-4 sm:pb-6">
+                        <div class="rounded-2xl sm:rounded-3xl bg-sky-800/70 p-6 sm:p-8 text-center text-slate-100">
+                            <div class="mx-auto mb-4 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-sky-700/60">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-8 w-8">
+                                    <path d="M9 8.25a.75.75 0 011.5 0V15l2.47-2.47a.75.75 0 111.06 1.06l-3.75 3.75a.75.75 0 01-1.06 0l-3.75-3.75a.75.75 0 111.06-1.06L9 15V8.25z" />
+                                    <path d="M6.75 3A2.25 2.25 0 004.5 5.25v13.5A2.25 2.25 0 006.75 21h10.5A2.25 2.25 0 0019.5 18.75V5.25A2.25 2.25 0 0017.25 3H6.75z" />
+                                </svg>
+                            </div>
+                            <p class="text-lg">Upload File atau drag and drop</p>
+                            <p class="text-sm opacity-80">Excel atau CSV 10MB</p>
+
+                            <form method="POST" action="{{ route('admin.peserta.import') }}" enctype="multipart/form-data" class="mt-6">
+                                @csrf
+                                <label for="import_file" class="block">
+                                    <input id="import_file" name="file" type="file" accept=".xlsx,.xls,.csv" class="hidden" @change="importFileName = $event.target.files[0]?.name || ''">
+                                    <div class="cursor-pointer rounded-2xl border-2 border-dashed border-sky-600/60 px-4 sm:px-6 py-8 sm:py-10 text-slate-200 hover:border-sky-400/80">
+                                        <span x-text="importFileName || 'Pilih file untuk diunggah'"></span>
+                                    </div>
+                                </label>
+
+                                <div class="mt-6 grid grid-cols-1 sm:flex sm:items-center sm:justify-between gap-3">
+                                    <button type="button" @click="importOpen = false" class="w-full sm:w-auto rounded-full bg-sky-700 px-8 py-3 font-semibold text-white hover:brightness-110">BATAL</button>
+                                    <button type="submit" class="w-full sm:w-auto rounded-full bg-gradient-to-r from-yellow-500 via-lime-400 to-emerald-400 px-8 py-3 font-semibold text-white shadow-lg hover:brightness-110">IMPORT</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- Modal Tambah Peserta -->
         <div x-show="modalOpen"
@@ -228,63 +309,70 @@
                     </form>
                 </div>
             </div>
-        </div>
+         </div>
 
-        <!-- Modal Import Peserta -->
-        <div x-show="importOpen"
-             x-cloak
-             x-transition.opacity
-             class="fixed inset-0 z-[110] flex items-center justify-center bg-slate-900/50 backdrop-blur-md p-4 sm:p-6"
-             @click.self="importOpen = false">
-            <div x-show="importOpen"
-                 x-transition.scale
-                 class="w-full max-w-3xl rounded-3txl bg-gradient-to-b from-sky-900 via-sky-800 to-sky-900 p-[1px] shadow-2xl">
-                <div class="rounded-2xl sm:rounded-3xl bg-sky-900/95 max-h-[85vh] overflow-y-auto">
-                    <div class="p-4 sm:p-6">
-                        <h3 class="text-2xl font-semibold text-white">Download Template</h3>
-                        <p class="mt-1 text-slate-200">Unduh templates excel terlebih dahulu sebelum mengimport data</p>
+         <!-- Modal Hapus Peserta -->
+         <div x-show="deleteOpen"
+              x-cloak
+              x-transition.opacity
+              class="fixed inset-0 z-[100] flex h-screen w-screen items-center justify-center bg-slate-900/50 backdrop-blur-md"
+              @click.self="closeDeleteModal()">
+              <div x-show="deleteOpen"
+                   x-transition.scale
+                   class="w-full max-w-lg mx-4 rounded-3xl bg-gradient-to-b from-rose-700 via-rose-600 to-rose-800 p-[1px] shadow-2xl sm:mx-0">
+                  <form method="POST" :action="deleteAction()" class="rounded-3xl bg-white/95 p-4 sm:p-6 space-y-4 sm:space-y-5">
+                     @csrf
+                     @method('DELETE')
+                     <div class="flex items-center justify-between">
+                         <h3 class="text-xl font-semibold text-slate-900">Konfirmasi Hapus</h3>
+                         <button type="button" @click="closeDeleteModal()" class="text-slate-400 transition hover:text-slate-600">✕</button>
+                     </div>
+                     <p>
+                         Apakah Anda yakin ingin menghapus peserta <strong x-text="editMeta?.nama" class="font-semibold text-slate-800"></strong>?
+                         Tindakan ini tidak dapat diurungkan.
+                     </p>
+                     <div class="flex justify-end gap-3 pt-4">
+                         <button type="button" @click="closeDeleteModal()" class="rounded-full bg-slate-100 px-5 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-200">Batal</button>
+                         <button type="submit" class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-rose-500 via-rose-500 to-red-500 px-5 py-2 text-sm font-semibold text-white shadow-lg transition hover:brightness-110">Ya, Hapus</button>
+                     </div>
+                 </form>
+             </div>
+         </div>
 
-                        <div class="mt-5">
-                            <a href=""
-                               class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-yellow-500 via-lime-400 to-emerald-400 px-4 sm:px-5 py-2.5 sm:py-3 text-sm font-semibold text-white shadow-lg transition hover:brightness-110">
-                                Download Template
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-5 w-5">
-                                    <path d="M12 3.75a.75.75 0 01.75.75v8.19l2.47-2.47a.75.75 0 111.06 1.06l-3.75 3.75a.75.75 0 01-1.06 0l-3.75-3.75a.75.75 0 111.06-1.06l2.47 2.47V4.5a.75.75 0 01.75-.75z" />
-                                    <path d="M4.5 14.25a.75.75 0 01.75.75v2.25A2.25 2.25 0 007.5 19.5h9a2.25 2.25 0 002.25-2.25V15a.75.75 0 011.5 0v2.25A3.75 3.75 0 0116.5 21h-9A3.75 3.75 0 013.75 17.25V15a.75.75 0 01.75-.75z" />
-                                </svg>
-                            </a>
-                        </div>
-                    </div>
+     </div>
+ </x-admin.layout>
 
-                    <div class="px-4 sm:px-6 pb-4 sm:pb-6">
-                        <div class="rounded-2xl sm:rounded-3xl bg-sky-800/70 p-6 sm:p-8 text-center text-slate-100">
-                            <div class="mx-auto mb-4 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl bg-sky-700/60">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-8 w-8">
-                                    <path d="M9 8.25a.75.75 0 011.5 0V15l2.47-2.47a.75.75 0 111.06 1.06l-3.75 3.75a.75.75 0 01-1.06 0l-3.75-3.75a.75.75 0 111.06-1.06L9 15V8.25z" />
-                                    <path d="M6.75 3A2.25 2.25 0 004.5 5.25v13.5A2.25 2.25 0 006.75 21h10.5A2.25 2.25 0 0019.5 18.75V5.25A2.25 2.25 0 0017.25 3H6.75z" />
-                                </svg>
-                            </div>
-                            <p class="text-lg">Upload File atau drag and drop</p>
-                            <p class="text-sm opacity-80">Excel atau CSV 10MB</p>
+<script>
+    function pesertaPage() {
+        return {
+            modalOpen: {{ $errors->any() ? 'true' : 'false' }},
+            importOpen: false,
+            importFileName: '',
+            editOpen: false,
+            deleteOpen: false,
+            editMeta: null,
+            deleteTemplate: '{{ route('admin.peserta.destroy', '__ID__') }}',
+            openEditModal(meta) {
+                this.editMeta = meta;
+                this.editOpen = true;
+            },
+            closeEditModal() {
+                this.editOpen = false;
+                this.editMeta = null;
+            },
+            confirmDelete(meta) {
+                this.editMeta = meta;
+                this.deleteOpen = true;
+            },
+            closeDeleteModal() {
+                this.deleteOpen = false;
+                this.editMeta = null;
+            },
+            deleteAction() {
+                if (!this.editMeta?.id) return '#';
+                return this.deleteTemplate.replace('__ID__', this.editMeta.id);
+            },
+        };
+    }
+</script>
 
-                            <form method="POST" action="{{}}" enctype="multipart/form-data" class="mt-6">
-                                @csrf
-                                <label for="import_file" class="block">
-                                    <input id="import_file" name="file" type="file" accept=".xlsx,.xls,.csv" class="hidden" @change="importFileName = $event.target.files[0]?.name || ''">
-                                    <div class="cursor-pointer rounded-2xl border-2 border-dashed border-sky-600/60 px-4 sm:px-6 py-8 sm:py-10 text-slate-200 hover:border-sky-400/80">
-                                        <span x-text="importFileName || 'Pilih file untuk diunggah'"></span>
-                                    </div>
-                                </label>
-
-                                <div class="mt-6 grid grid-cols-1 sm:flex sm:items-center sm:justify-between gap-3">
-                                    <button type="button" @click="importOpen = false" class="w-full sm:w-auto rounded-full bg-sky-700 px-8 py-3 font-semibold text-white hover:brightness-110">BATAL</button>
-                                    <button type="submit" class="w-full sm:w-auto rounded-full bg-gradient-to-r from-yellow-500 via-lime-400 to-emerald-400 px-8 py-3 font-semibold text-white shadow-lg hover:brightness-110">IMPORT</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</x-admin.layout>

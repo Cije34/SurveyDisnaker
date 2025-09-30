@@ -139,22 +139,22 @@
                         $timeRange = trim(($startTime ? $startTime : '') . ($endTime ? ' - ' . $endTime : ''));
                         $mentor = $schedule->mentors->pluck('name')->implode(', ') ?? '-';
                     @endphp
-                    <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-md" x-data="{ open: false }">
-                        <div class="flex items-start justify-between gap-4">
-                            <div>
-                                <p class="text-xs font-semibold uppercase tracking-wide text-sky-600">{{ $schedule->kegiatan->tahunKegiatan->tahun ?? '-' }}</p>
-                                <h3 class="font-semibold text-slate-800">{{ $schedule->kegiatan->nama_kegiatan ?? '-' }}</h3>
-                            </div>
-                            <div class="relative flex-shrink-0">
-                                <button type="button"
-                                        @click="open = !open"
-                                        @click.outside="open = false"
-                                        class="inline-flex h-8 w-8 items-center justify-center rounded-full border text-slate-500 transition hover:border-slate-300">
-                                    <span class="sr-only">Aksi</span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-5 w-5">
-                                        <path d="M12 7.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm0 6a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm0 6a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" />
-                                    </svg>
-                                </button>
+                     <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-md" x-data="{ open: false }">
+                         <div class="flex items-start justify-between gap-3">
+                             <div class="flex-1 min-w-0">
+                                 <p class="text-xs font-semibold uppercase tracking-wide text-sky-600 truncate">{{ $schedule->kegiatan->tahunKegiatan->tahun ?? '-' }}</p>
+                                 <h3 class="font-semibold text-slate-800 truncate">{{ $schedule->kegiatan->nama_kegiatan ?? '-' }}</h3>
+                             </div>
+                             <div class="relative flex-shrink-0">
+                                 <button type="button"
+                                         @click="open = !open"
+                                         @click.outside="open = false"
+                                         class="inline-flex h-9 w-9 items-center justify-center rounded-full border text-slate-500 transition hover:border-slate-300">
+                                     <span class="sr-only">Aksi</span>
+                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="h-5 w-5">
+                                         <path d="M12 7.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm0 6a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm0 6a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" />
+                                     </svg>
+                                 </button>
                                 <div x-show="open" x-transition.origin.top.right x-cloak class="absolute right-0 top-full z-10 mt-2 w-40 rounded-xl border bg-white py-2 shadow-lg">
                                     <button type="button" @click="open = false; openEditModal({
                                             id: {{ $schedule->id }},
@@ -175,24 +175,24 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="mt-4 space-y-2 border-t border-slate-100 pt-4 text-sm">
-                            <div class="flex justify-between">
-                                <span class="text-slate-500">Mentor:</span>
-                                <span class="font-medium text-slate-700">{{ $mentor }}</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-slate-500">Tanggal:</span>
-                                <span class="font-medium text-slate-700">{{ $date }}</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-slate-500">Waktu:</span>
-                                <span class="font-medium text-slate-700">{{ $timeRange ?: '-' }}</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-slate-500">Lokasi:</span>
-                                <span class="font-medium text-slate-700">{{ $schedule->tempat->name ?? '-' }}</span>
-                            </div>
-                        </div>
+                         <div class="mt-4 space-y-2 border-t border-slate-100 pt-4 text-sm">
+                             <div class="flex justify-between gap-2">
+                                 <span class="text-slate-500 flex-shrink-0">Mentor:</span>
+                                 <span class="font-medium text-slate-700 text-right break-words">{{ $mentor }}</span>
+                             </div>
+                             <div class="flex justify-between gap-2">
+                                 <span class="text-slate-500 flex-shrink-0">Tanggal:</span>
+                                 <span class="font-medium text-slate-700 text-right">{{ $date }}</span>
+                             </div>
+                             <div class="flex justify-between gap-2">
+                                 <span class="text-slate-500 flex-shrink-0">Waktu:</span>
+                                 <span class="font-medium text-slate-700 text-right">{{ $timeRange ?: '-' }}</span>
+                             </div>
+                             <div class="flex justify-between gap-2">
+                                 <span class="text-slate-500 flex-shrink-0">Lokasi:</span>
+                                 <span class="font-medium text-slate-700 text-right break-words">{{ $schedule->tempat->name ?? '-' }}</span>
+                             </div>
+                         </div>
                     </div>
                 @empty
                     <div class="rounded-2xl border border-dashed border-slate-200 p-8 text-center text-sm text-slate-400">
@@ -214,10 +214,10 @@
              x-transition.opacity
              class="fixed inset-0 z-[100] flex h-screen w-screen items-center justify-center bg-slate-900/50 backdrop-blur-md"
              @click.self="closeCreateModal()">
-            <div x-show="createOpen"
-                 x-transition.scale
-                 class="w-full max-w-2xl rounded-3xl bg-gradient-to-b from-sky-700 via-sky-600 to-sky-800 p-[1px] shadow-2xl">
-                <form method="POST" action="{{ route('admin.jadwal.store') }}" class="rounded-3xl bg-white/95 p-6 space-y-5">
+             <div x-show="createOpen"
+                  x-transition.scale
+                  class="w-full max-w-2xl mx-4 rounded-3xl bg-gradient-to-b from-sky-700 via-sky-600 to-sky-800 p-[1px] shadow-2xl sm:mx-0">
+                 <form method="POST" action="{{ route('admin.jadwal.store') }}" class="rounded-3xl bg-white/95 p-4 sm:p-6 space-y-4 sm:space-y-5">
                     @csrf
                     <div class="flex items-center justify-between">
                         <h3 class="text-xl font-semibold text-slate-900">Tambah Jadwal Baru</h3>
@@ -318,10 +318,10 @@ x-cloak
 x-transition.opacity
 class="fixed inset-0 z-[100] flex h-screen w-screen items-center justify-center bg-slate-900/50 backdrop-blur-md"
 @click.self="closeEditModal()">
-<div x-show="editOpen"
-    x-transition.scale
-    class="w-full max-w-2xl rounded-3xl bg-gradient-to-b from-sky-700 via-sky-600 to-sky-800 p-[1px] shadow-2xl">
-   <div class="rounded-3xl bg-white/95 p-6">
+ <div x-show="editOpen"
+     x-transition.scale
+     class="w-full max-w-2xl mx-4 rounded-3xl bg-gradient-to-b from-sky-700 via-sky-600 to-sky-800 p-[1px] shadow-2xl sm:mx-0">
+    <div class="rounded-3xl bg-white/95 p-4 sm:p-6">
        <div class="mb-4 flex items-center justify-between">
            <h3 class="text-lg font-semibold text-slate-900">Edit Jadwal</h3>
            <button type="button" @click="closeEditModal()" class="text-slate-400 transition hover:text-slate-600">✕</button>
@@ -427,10 +427,10 @@ class="fixed inset-0 z-[100] flex h-screen w-screen items-center justify-center 
              x-transition.opacity
              class="fixed inset-0 z-[100] flex h-screen w-screen items-center justify-center bg-slate-900/50 backdrop-blur-md"
              @click.self="closeDeleteModal()">
-            <div x-show="deleteOpen"
-                 x-transition.scale
-                 class="w-full max-w-lg rounded-3xl bg-gradient-to-b from-rose-700 via-rose-600 to-rose-800 p-[1px] shadow-2xl">
-                <form method="POST" :action="deleteAction()" class="rounded-3xl bg-white/95 p-6 space-y-5">
+             <div x-show="deleteOpen"
+                  x-transition.scale
+                  class="w-full max-w-lg mx-4 rounded-3xl bg-gradient-to-b from-rose-700 via-rose-600 to-rose-800 p-[1px] shadow-2xl sm:mx-0">
+                 <form method="POST" :action="deleteAction()" class="rounded-3xl bg-white/95 p-4 sm:p-6 space-y-4 sm:space-y-5">
                     @csrf
                     @method('DELETE')
                     <div class="flex items-center justify-between">

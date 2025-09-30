@@ -21,7 +21,7 @@ return new class extends Migration
             $table->date('tanggal_lahir')->nullable();
             $table->enum('jenis_kelamin', ['Laki-laki', 'Perempuan']);
             $table->string('pendidikan_terakhir')->nullable();
-            $table->string('no_hp', 15)->nullable();
+            $table->string('no_hp', 20)->nullable();
             $table->string('email')->nullable();
             $table->timestamps();
         });

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->unique()->constrained('users')->onDelete('cascade');
             $table->string('name');
             $table->string('jabatan');
-            $table->string('no_hp', 15);
+            $table->string('no_hp', 20);
             $table->string('email')->unique();
             $table->string('alamat')->nullable();
             $table->enum('jenis_kelamin', ['Laki-laki', 'Perempuan']);

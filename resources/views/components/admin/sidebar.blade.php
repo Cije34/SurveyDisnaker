@@ -27,10 +27,10 @@
         <div class="rounded-3xl bg-white/15 px-4 py-5 text-sm shadow-inner shadow-sky-900/10">
             <div class="flex items-center gap-4">
                 <img src="{{ asset('icons/user-circle.svg') }}" alt="Profil" class="h-12 w-12 invert">
-                <div class="leading-tight max-w-[160px]">
-                    <p class="font-medium text-white truncate" title="{{ $user?->name }}">{{ $user?->name ?? 'Admin' }}</p>
-                    <p class="text-white/80 text-xs truncate" title="{{ $user?->email }}">{{ $user?->email }}</p>
-                </div>
+                 <div class="leading-tight flex-1 min-w-0">
+                     <p class="font-medium text-white truncate" title="{{ $user?->name }}">{{ $user?->name ?? 'Admin' }}</p>
+                     <p class="text-white/80 text-xs truncate" title="{{ $user?->email }}">{{ $user?->email }}</p>
+                 </div>
             </div>
         </div>
 
