@@ -1,16 +1,19 @@
 @props(['active' => 'dashboard', 'user' => null])
 
 @php
-    $menus = [
+    $mainMenus = [
         ['label' => 'Dashboard', 'icon' => asset('icons/list.svg'), 'route' => route('admin.dashboard'), 'key' => 'dashboard'],
         ['label' => 'Tahun Kegiatan', 'icon' => asset('icons/calendar.svg'), 'route' => route('admin.tahun.index'), 'key' => 'tahun'],
         ['label' => 'Kegiatan', 'icon' => asset('icons/calendar-plus.svg'), 'route' => route('admin.kegiatan.index'), 'key' => 'kegiatan'],
         ['label' => 'Jadwal', 'icon' => asset('icons/calendar-dot.svg'), 'route' => route('admin.jadwal.index'), 'key' => 'jadwal'],
+        ['label' => 'Survey', 'icon' => asset('icons/chalkboard-teacher.svg'), 'route' => '#', 'key' => 'survey'],
+    ];
+
+    $dataMenus = [
         ['label' => 'Peserta', 'icon' => asset('icons/users.svg'), 'route' => route('admin.peserta.index'), 'key' => 'peserta'],
         ['label' => 'Mentor', 'icon' => asset('icons/user-check.svg'), 'route' => route('admin.mentor.index'), 'key' => 'mentor'],
         ['label' => 'Penjab', 'icon' => asset('icons/user.svg'), 'route' => route('admin.penjab.index'), 'key' => 'penjab'],
         ['label' => 'Tempat', 'icon' => asset('icons/map-pin-line.svg'), 'route' => route('admin.tempat.index'), 'key' => 'tempat'],
-        ['label' => 'Survey', 'icon' => asset('icons/chalkboard-teacher.svg'), 'route' => '#', 'key' => 'survey'],
     ];
 @endphp
 
@@ -35,7 +38,21 @@
         </div>
 
         <nav class="space-y-2 text-base font-medium">
-            @foreach ($menus as $menu)
+            @foreach ($mainMenus as $menu)
+                <a href="{{ $menu['route'] }}"
+                   @class([
+                       'flex items-center gap-3 rounded-2xl px-5 py-3 transition-all duration-200',
+                       'bg-[#055784] text-white/85 shadow-lg shadow-sky-900/15' => $active === $menu['key'],
+                       'text-white/85 hover:bg-white/15 hover:text-white' => $active !== $menu['key'],
+                   ])>
+                    <img src="{{ $menu['icon'] }}" alt="{{ $menu['label'] }}" class="h-5 w-5 invert">
+                    <span>{{ $menu['label'] }}</span>
+                </a>
+            @endforeach
+
+            <hr class="border-white/20 my-4">
+
+            @foreach ($dataMenus as $menu)
                 <a href="{{ $menu['route'] }}"
                    @class([
                        'flex items-center gap-3 rounded-2xl px-5 py-3 transition-all duration-200',

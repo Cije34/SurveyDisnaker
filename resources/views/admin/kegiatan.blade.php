@@ -112,15 +112,7 @@
                                 @foreach ($year->kegiatan as $kegiatan)
                                     <tr class="border-t border-slate-200 hover:bg-slate-50">
                                         <td class="px-6 py-4 text-sm font-medium text-slate-900">{{ $no++ }}</td>
-                                        <td class="px-6 py-4 text-sm font-medium text-slate-900">
-
-                                            @if (!$kegiatan->is_active)
-                                                tidak ada tahun kegiatan yang active
-                                            @else
-                                                $kegiatan->nama_kegiatan
-                                            @endif
-
-                                        </td>
+                                        <td class="px-6 py-4 text-sm font-medium text-slate-900">{{ $kegiatan->nama_kegiatan }}</td>
                                         <td class="px-6 py-4 text-sm text-slate-600">{{ $year->tahun }}{{ $year->is_active ? ' (Aktif)' : '' }}</td>
                                         <td class="px-6 py-4 text-center">
                                             <div class="flex items-center justify-center gap-2">
@@ -152,11 +144,6 @@
                         @empty
                             <tr>
                                 <td colspan="4" class="px-6 py-12 text-center text-slate-400">
-                                    @if ($yearOptions->isEmpty())
-                                        Belum ada tahun kegiatan yang terdaftar.
-                                    @else
-                                        Belum ada kegiatan yang terdaftar.
-                                    @endif
                                 </td>
                             </tr>
                         @endforelse
