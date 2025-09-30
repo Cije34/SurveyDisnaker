@@ -155,10 +155,14 @@
                         Belum ada peserta yang terdaftar.
                     </div>
                 @endforelse
-            </div>
+             </div>
 
-
-        </section>
+             @if ($pesertas->hasPages())
+                 <div class="pt-6">
+                     {{ $pesertas->links('components.admin.pagination') }}
+                 </div>
+             @endif
+         </section>
 
         <!-- Modal Import Peserta -->
         <div x-show="importOpen"

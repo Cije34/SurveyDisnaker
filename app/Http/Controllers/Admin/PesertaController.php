@@ -18,15 +18,15 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class PesertaController extends Controller
 {
-    public function index(): View
-    {
-        $pesertas = Peserta::with('user')->get();
+     public function index(): View
+     {
+         $pesertas = Peserta::with('user')->paginate(10);
 
-        return view('admin.peserta', [
-            'user' => Auth::user(),
-            'pesertas' => $pesertas,
-        ]);
-    }
+         return view('admin.peserta', [
+             'user' => Auth::user(),
+             'pesertas' => $pesertas,
+         ]);
+     }
 
     public function store(Request $request): RedirectResponse
     {
