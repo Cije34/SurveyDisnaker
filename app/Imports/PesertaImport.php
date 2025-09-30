@@ -22,7 +22,6 @@ class PesertaImport implements SkipsEmptyRows, ToModel, WithBatchInserts, WithCh
     {
         $name = trim($row['name'] ?? '');
         if (empty($name) || strlen($name) < 3) {
-            \Log::warning('Skipping row due to invalid name: '.json_encode($row));
             dd('Debug: Row with invalid name', $row); // Temporary debug
 
             return null; // Skip this row
@@ -49,7 +48,6 @@ class PesertaImport implements SkipsEmptyRows, ToModel, WithBatchInserts, WithCh
 
         $jenisKelamin = trim($row['jenis_kelamin'] ?? '');
         if (empty($jenisKelamin) || ! in_array($jenisKelamin, ['Laki-laki', 'Perempuan'])) {
-            \Log::warning('Skipping row due to invalid jenis_kelamin: '.json_encode($row));
 
             return null;
         }
@@ -68,7 +66,6 @@ class PesertaImport implements SkipsEmptyRows, ToModel, WithBatchInserts, WithCh
         ]);
 
         // Log before save for debugging
-        \Log::info('Attempting to save Peserta: ', $peserta->toArray());
 
         $peserta->save();
 

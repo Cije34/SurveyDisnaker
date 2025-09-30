@@ -10,6 +10,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Maatwebsite\Excel\Facades\Excel;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -35,13 +36,12 @@ class PenjabController extends Controller
             'no_hp' => ['required', 'string', 'max:20'],
             'jenis_kelamin' => ['required', 'in:Laki-laki,Perempuan'],
             'alamat' => ['required', 'string', 'max:255'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
 
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
+            'password' => Hash::make('password'),
         ]);
 
         $user->assignRole('admin'); // Assuming penjab has admin role
@@ -64,11 +64,10 @@ class PenjabController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'jabatan' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:penjabs,email,' . $penjab->id],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:penjabs,email,'.$penjab->id],
             'no_hp' => ['required', 'string', 'max:20'],
             'jenis_kelamin' => ['required', 'in:Laki-laki,Perempuan'],
             'alamat' => ['required', 'string', 'max:255'],
-            'password' => ['nullable', 'string', 'min:8', 'confirmed'],
         ]);
 
         // Update user
@@ -76,9 +75,6 @@ class PenjabController extends Controller
             'name' => $validated['name'],
             'email' => $validated['email'],
         ];
-        if (!empty($validated['password'])) {
-            $userData['password'] = Hash::make($validated['password']);
-        }
         $penjab->user->update($userData);
 
         // Update penjab
@@ -97,7 +93,6 @@ class PenjabController extends Controller
     public function destroy(Penjab $penjab): RedirectResponse
     {
         try {
-            \Log::info('Menghapus penjab: ', ['id' => $penjab->id, 'name' => $penjab->name]);
 
             // Hapus user terkait jika ada
             if ($penjab->user) {
@@ -106,13 +101,11 @@ class PenjabController extends Controller
 
             $penjab->delete();
 
-            \Log::info('Penjab berhasil dihapus: ', ['id' => $penjab->id]);
-
             return redirect()->route('admin.penjab.index')->with('status', 'Penanggung Jawab berhasil dihapus.');
         } catch (\Exception $e) {
-            \Log::error('Error menghapus penjab: ', ['id' => $penjab->id, 'error' => $e->getMessage()]);
+            Log::error('Error menghapus penjab: ', ['id' => $penjab->id, 'error' => $e->getMessage()]);
 
-            return redirect()->route('admin.penjab.index')->with('error', 'Gagal menghapus penanggung jawab: ' . $e->getMessage());
+            return redirect()->route('admin.penjab.index')->with('error', 'Gagal menghapus penanggung jawab: '.$e->getMessage());
         }
     }
 

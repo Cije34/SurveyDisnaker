@@ -18,15 +18,15 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class PesertaController extends Controller
 {
-     public function index(): View
-     {
-         $pesertas = Peserta::with('user')->paginate(10);
+    public function index(): View
+    {
+        $pesertas = Peserta::with('user')->paginate(10);
 
-         return view('admin.peserta', [
-             'user' => Auth::user(),
-             'pesertas' => $pesertas,
-         ]);
-     }
+        return view('admin.peserta', [
+            'user' => Auth::user(),
+            'pesertas' => $pesertas,
+        ]);
+    }
 
     public function store(Request $request): RedirectResponse
     {
@@ -90,69 +90,64 @@ class PesertaController extends Controller
             ->with('status', 'Import peserta berhasil diproses.');
     }
 
-     public function update(Request $request, Peserta $peserta): RedirectResponse
-     {
-         // Normalize jenis_kelamin to title case
-         $jenisKelamin = ucwords(strtolower($request->jenis_kelamin));
-         $request->merge(['jenis_kelamin' => $jenisKelamin]);
+    public function update(Request $request, Peserta $peserta): RedirectResponse
+    {
+        // Normalize jenis_kelamin to title case
+        $jenisKelamin = ucwords(strtolower($request->jenis_kelamin));
+        $request->merge(['jenis_kelamin' => $jenisKelamin]);
 
-         $validated = $request->validate([
-             'name' => ['required', 'string', 'max:255'],
-             'nik' => ['required', 'string', 'max:30', 'unique:pesertas,nik,' . $peserta->id],
-             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $peserta->user_id],
-             'no_hp' => ['required', 'string', 'max:20'],
-             'jenis_kelamin' => ['required', 'in:Laki-laki,Perempuan'],
-             'pendidikan_terakhir' => ['required', 'string', 'max:255'],
-             'alamat' => ['required', 'string', 'max:255'],
-             'password' => ['nullable', 'string', 'min:8', 'confirmed'],
-         ]);
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'nik' => ['required', 'string', 'max:30', 'unique:pesertas,nik,'.$peserta->id],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,'.$peserta->user_id],
+            'no_hp' => ['required', 'string', 'max:20'],
+            'jenis_kelamin' => ['required', 'in:Laki-laki,Perempuan'],
+            'pendidikan_terakhir' => ['required', 'string', 'max:255'],
+            'alamat' => ['required', 'string', 'max:255'],
+            'password' => ['nullable', 'string', 'min:8', 'confirmed'],
+        ]);
 
-         DB::transaction(function () use ($validated, $peserta) {
-             // Update user
-             $userData = [
-                 'name' => $validated['name'],
-                 'email' => $validated['email'],
-             ];
-             if (!empty($validated['password'])) {
-                 $userData['password'] = Hash::make($validated['password']);
-             }
-             $peserta->user->update($userData);
+        DB::transaction(function () use ($validated, $peserta) {
+            // Update user
+            $userData = [
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+            ];
+            if (! empty($validated['password'])) {
+                $userData['password'] = Hash::make($validated['password']);
+            }
+            $peserta->user->update($userData);
 
-             // Update peserta
-             $peserta->update([
-                 'name' => $validated['name'],
-                 'nik' => $validated['nik'],
-                 'jenis_kelamin' => $validated['jenis_kelamin'],
-                 'pendidikan_terakhir' => $validated['pendidikan_terakhir'],
-                 'alamat' => $validated['alamat'],
-                 'no_hp' => $validated['no_hp'],
-                 'email' => $validated['email'],
-             ]);
-         });
+            // Update peserta
+            $peserta->update([
+                'name' => $validated['name'],
+                'nik' => $validated['nik'],
+                'jenis_kelamin' => $validated['jenis_kelamin'],
+                'pendidikan_terakhir' => $validated['pendidikan_terakhir'],
+                'alamat' => $validated['alamat'],
+                'no_hp' => $validated['no_hp'],
+                'email' => $validated['email'],
+            ]);
+        });
 
-         return redirect()->route('admin.peserta.index')->with('status', 'Peserta berhasil diperbarui.');
-     }
+        return redirect()->route('admin.peserta.index')->with('status', 'Peserta berhasil diperbarui.');
+    }
 
-     public function destroy(Peserta $peserta): RedirectResponse
-      {
-          try {
-              // Log sebelum hapus untuk debug
-              \Log::info('Menghapus peserta: ', ['id' => $peserta->id, 'name' => $peserta->name]);
+    public function destroy(Peserta $peserta): RedirectResponse
+    {
+        try {
+            // Log sebelum hapus untuk debug
 
-              // Hapus user terkait jika ada
-              if ($peserta->user) {
-                  $peserta->user->delete();
-              }
+            // Hapus user terkait jika ada
+            if ($peserta->user) {
+                $peserta->user->delete();
+            }
 
-              $peserta->delete();
+            $peserta->delete();
 
-              \Log::info('Peserta berhasil dihapus: ', ['id' => $peserta->id]);
-
-              return redirect()->route('admin.peserta.index')->with('status', 'Peserta berhasil dihapus.');
-          } catch (\Exception $e) {
-              \Log::error('Error menghapus peserta: ', ['id' => $peserta->id, 'error' => $e->getMessage()]);
-
-              return redirect()->route('admin.peserta.index')->with('error', 'Gagal menghapus peserta: ' . $e->getMessage());
-          }
-      }
+            return redirect()->route('admin.peserta.index')->with('status', 'Peserta berhasil dihapus.');
+        } catch (\Exception $e) {
+            return redirect()->route('admin.peserta.index')->with('error', 'Gagal menghapus peserta: '.$e->getMessage());
+        }
+    }
 }

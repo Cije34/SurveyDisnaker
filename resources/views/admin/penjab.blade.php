@@ -172,12 +172,12 @@
              @endif
          </section>
 
-         <!-- Modal Import Penjab -->
-         <div x-show="importOpen"
-              x-cloak
-              x-transition.opacity
-              class="fixed inset-0 z-[110] flex items-center justify-center bg-slate-900/50 backdrop-blur-md p-4 sm:p-6"
-              @click.self="importOpen = false">
+          <!-- Modal Import Penjab -->
+          <div x-show="importOpen"
+               x-cloak
+               x-transition.opacity
+               class="fixed inset-0 w-full h-full z-[110] flex items-center justify-center bg-slate-900/80 p-4 sm:p-6"
+               @click.self="importOpen = false">
              <div x-show="importOpen"
                   x-transition.scale
                   class="w-full max-w-3xl rounded-3txl bg-gradient-to-b from-sky-900 via-sky-800 to-sky-900 p-[1px] shadow-2xl">
@@ -229,12 +229,12 @@
              </div>
          </div>
 
-         <!-- Modal Tambah Penjab -->
-         <div x-show="modalOpen"
-              x-cloak
-              x-transition.opacity
-              class="fixed inset-0 w-screen h-screen z-[100] flex items-center justify-center bg-slate-900/50 backdrop-blur-md"
-              @click.self="modalOpen = false">
+          <!-- Modal Tambah Penjab -->
+          <div x-show="modalOpen"
+               x-cloak
+               x-transition.opacity
+               class="fixed inset-0 w-full h-full z-[100] flex items-center justify-center bg-slate-900/80"
+               @click.self="modalOpen = false">
              <div x-show="modalOpen"
                   x-transition.scale
                   class="w-full max-w-2xl rounded-3xl bg-gradient-to-b from-sky-700 via-sky-600 to-sky-800 p-[1px] shadow-2xl">
@@ -281,32 +281,22 @@
                                         class="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-5 py-2.5 text-sm text-slate-800 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100" />
                              </div>
                          </div>
-                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                             <div>
-                                 <label for="jenis_kelamin" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Jenis Kelamin</label>
-                                 <select id="jenis_kelamin" name="jenis_kelamin" required
-                                         class="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-5 py-2.5 text-sm text-slate-800 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100">
-                                     <option value="">Pilih</option>
-                                     <option value="Laki-laki" @selected(old('jenis_kelamin')==='Laki-laki')>Laki-laki</option>
-                                     <option value="Perempuan" @selected(old('jenis_kelamin')==='Perempuan')>Perempuan</option>
-                                 </select>
-                             </div>
-                             <div>
-                                 <label for="password" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Password</label>
-                                 <input id="password" type="password" name="password" required
-                                        class="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-5 py-2.5 text-sm text-slate-800 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100" />
-                             </div>
-                         </div>
-                         <div>
-                             <label for="alamat" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Alamat</label>
-                             <textarea id="alamat" name="alamat" rows="2" required
-                                       class="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-5 py-2.5 text-sm text-slate-800 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100">{{ old('alamat') }}</textarea>
-                         </div>
-                         <div>
-                             <label for="password_confirmation" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Konfirmasi Password</label>
-                             <input id="password_confirmation" type="password" name="password_confirmation" required
-                                    class="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-5 py-2.5 text-sm text-slate-800 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100" />
-                         </div>
+                          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div>
+                                  <label for="jenis_kelamin" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Jenis Kelamin</label>
+                                  <select id="jenis_kelamin" name="jenis_kelamin" required
+                                          class="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-5 py-2.5 text-sm text-slate-800 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100">
+                                      <option value="">Pilih</option>
+                                      <option value="Laki-laki" @selected(old('jenis_kelamin')==='Laki-laki')>Laki-laki</option>
+                                      <option value="Perempuan" @selected(old('jenis_kelamin')==='Perempuan')>Perempuan</option>
+                                  </select>
+                              </div>
+                              <div>
+                                  <label for="alamat" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Alamat</label>
+                                  <textarea id="alamat" name="alamat" rows="2" required
+                                            class="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-5 py-2.5 text-sm text-slate-800 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100">{{ old('alamat') }}</textarea>
+                              </div>
+                          </div>
                          <div class="flex items-center justify-end gap-3 pt-3">
                              <button type="button" @click="modalOpen = false"
                                      class="inline-flex items-center gap-2 rounded-full border border-slate-300 px-6 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100">Batal</button>
@@ -318,12 +308,12 @@
              </div>
          </div>
 
-         <!-- Modal Edit Penjab -->
-         <div x-show="editOpen"
-              x-cloak
-              x-transition.opacity
-              class="fixed inset-0 w-screen h-screen z-[100] flex items-center justify-center bg-slate-900/50 backdrop-blur-md"
-              @click.self="closeEditModal()">
+          <!-- Modal Edit Penjab -->
+          <div x-show="editOpen"
+               x-cloak
+               x-transition.opacity
+               class="fixed inset-0 w-full h-full z-[100] flex items-center justify-center bg-slate-900/80"
+               @click.self="closeEditModal()">
              <div x-show="editOpen"
                   x-transition.scale
                   class="w-full max-w-2xl rounded-3xl bg-gradient-to-b from-sky-700 via-sky-600 to-sky-800 p-[1px] shadow-2xl">
@@ -371,32 +361,22 @@
                                         class="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-5 py-2.5 text-sm text-slate-800 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100" />
                              </div>
                          </div>
-                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                             <div>
-                                 <label for="edit_jenis_kelamin" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Jenis Kelamin</label>
-                                 <select id="edit_jenis_kelamin" name="jenis_kelamin" required
-                                         class="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-5 py-2.5 text-sm text-slate-800 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100">
-                                     <option value="">Pilih</option>
-                                     <option value="Laki-laki" :selected="editMeta?.jenis_kelamin === 'Laki-laki'">Laki-laki</option>
-                                     <option value="Perempuan" :selected="editMeta?.jenis_kelamin === 'Perempuan'">Perempuan</option>
-                                 </select>
-                             </div>
-                             <div>
-                                 <label for="edit_password" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Password Baru (Opsional)</label>
-                                 <input id="edit_password" type="password" name="password"
-                                        class="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-5 py-2.5 text-sm text-slate-800 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100" />
-                             </div>
-                         </div>
-                         <div>
-                             <label for="edit_alamat" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Alamat</label>
-                             <textarea id="edit_alamat" name="alamat" rows="2" required
-                                       class="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-5 py-2.5 text-sm text-slate-800 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100" x-text="editMeta?.alamat"></textarea>
-                         </div>
-                         <div>
-                             <label for="edit_password_confirmation" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Konfirmasi Password Baru</label>
-                             <input id="edit_password_confirmation" type="password" name="password_confirmation"
-                                    class="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-5 py-2.5 text-sm text-slate-800 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100" />
-                         </div>
+                          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              <div>
+                                  <label for="edit_jenis_kelamin" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Jenis Kelamin</label>
+                                  <select id="edit_jenis_kelamin" name="jenis_kelamin" required
+                                          class="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-5 py-2.5 text-sm text-slate-800 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100">
+                                      <option value="">Pilih</option>
+                                      <option value="Laki-laki" :selected="editMeta?.jenis_kelamin === 'Laki-laki'">Laki-laki</option>
+                                      <option value="Perempuan" :selected="editMeta?.jenis_kelamin === 'Perempuan'">Perempuan</option>
+                                  </select>
+                              </div>
+                              <div>
+                                  <label for="edit_alamat" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Alamat</label>
+                                  <textarea id="edit_alamat" name="alamat" rows="2" required
+                                            class="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-5 py-2.5 text-sm text-slate-800 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100" x-text="editMeta?.alamat"></textarea>
+                              </div>
+                          </div>
                          <div class="flex items-center justify-end gap-3 pt-3">
                              <button type="button" @click="closeEditModal()"
                                      class="inline-flex items-center gap-2 rounded-full border border-slate-300 px-6 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100">Batal</button>
@@ -408,12 +388,12 @@
              </div>
          </div>
 
-         <!-- Modal Hapus Penjab -->
-         <div x-show="deleteOpen"
-              x-cloak
-              x-transition.opacity
-              class="fixed inset-0 z-[100] flex h-screen w-screen items-center justify-center bg-slate-900/50 backdrop-blur-md"
-              @click.self="closeDeleteModal()">
+          <!-- Modal Hapus Penjab -->
+          <div x-show="deleteOpen"
+               x-cloak
+               x-transition.opacity
+               class="fixed inset-0 w-full h-full z-[100] flex items-center justify-center bg-slate-900/80"
+               @click.self="closeDeleteModal()">
              <div x-show="deleteOpen"
                   x-transition.scale
                   class="w-full max-w-lg mx-4 rounded-3xl bg-gradient-to-b from-rose-700 via-rose-600 to-rose-800 p-[1px] shadow-2xl sm:mx-0">
