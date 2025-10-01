@@ -26,16 +26,43 @@ class JadwalController extends Controller
             ->orderByDesc('jadwals.tanggal_mulai')
             ->paginate(5);
 
+        return view('admin.jadwal', [
+            'user' => Auth::user(),
+            'schedules' => $schedules,
+        ]);
+    }
+
+    public function create(): View
+    {
         $kegiatanOptions = Kegiatan::with('tahunKegiatan:id,tahun,is_active')->orderBy('nama_kegiatan')->get(['id', 'nama_kegiatan', 'tahun_kegiatan_id']);
         $penjabOptions = Penjab::orderBy('name')->get(['id', 'name']);
         $tempatOptions = Tempat::orderBy('name')->get(['id', 'name']);
         $mentorOptions = Mentor::orderBy('name')->get(['id', 'name']);
         $pesertaOptions = Peserta::orderBy('name')->get(['id', 'name']);
-        // dd($schedules);
 
-        return view('admin.jadwal', [
+        return view('admin.jadwal.create', [
             'user' => Auth::user(),
-            'schedules' => $schedules,
+            'kegiatanOptions' => $kegiatanOptions,
+            'penjabOptions' => $penjabOptions,
+            'tempatOptions' => $tempatOptions,
+            'mentorOptions' => $mentorOptions,
+            'pesertaOptions' => $pesertaOptions,
+        ]);
+    }
+
+    public function edit(Jadwal $jadwal): View
+    {
+        $jadwal->load(['kegiatan.tahunKegiatan', 'tempat:id,name', 'mentors:id,name', 'penjabs:id,name', 'pesertas:id,name']);
+
+        $kegiatanOptions = Kegiatan::with('tahunKegiatan:id,tahun,is_active')->orderBy('nama_kegiatan')->get(['id', 'nama_kegiatan', 'tahun_kegiatan_id']);
+        $penjabOptions = Penjab::orderBy('name')->get(['id', 'name']);
+        $tempatOptions = Tempat::orderBy('name')->get(['id', 'name']);
+        $mentorOptions = Mentor::orderBy('name')->get(['id', 'name']);
+        $pesertaOptions = Peserta::orderBy('name')->get(['id', 'name']);
+
+        return view('admin.jadwal.edit', [
+            'user' => Auth::user(),
+            'jadwal' => $jadwal,
             'kegiatanOptions' => $kegiatanOptions,
             'penjabOptions' => $penjabOptions,
             'tempatOptions' => $tempatOptions,
@@ -54,15 +81,17 @@ class JadwalController extends Controller
             'mentor_ids' => ['required', 'array', 'min:1'],
             'mentor_ids.*' => ['integer', 'exists:mentors,id'],
             'peserta_ids' => ['nullable', 'array'],
-            'peserta_ids.*' => ['integer', 'exists:pesertas,id'],
+            'peserta_ids.*' => ['string', 'exists:pesertas,id'],
             'tanggal_mulai' => ['required', 'date'],
             'tanggal_selesai' => ['nullable', 'date', 'after_or_equal:tanggal_mulai'],
             'jam_mulai' => ['nullable', 'date_format:H:i'],
             'jam_selesai' => ['nullable', 'date_format:H:i'],
-        ]);
-        // dd($validated);
-        $jadwalData = collect($validated)->except(['mentor_ids', 'penjab_ids', 'peserta_ids'])->all();
-        $jadwal = Jadwal::create($jadwalData);
+         ]);
+         // dd($validated);
+         $validated['penjab_ids'] = array_map('intval', $validated['penjab_ids']);
+         $validated['mentor_ids'] = array_map('intval', $validated['mentor_ids']);
+         $jadwalData = collect($validated)->except(['mentor_ids', 'penjab_ids', 'peserta_ids'])->all();
+         $jadwal = Jadwal::create($jadwalData);
         $jadwal->mentors()->attach($validated['mentor_ids']);
         $jadwal->penjabs()->attach($validated['penjab_ids']);
         if (isset($validated['peserta_ids'])) {
@@ -82,15 +111,16 @@ class JadwalController extends Controller
             'mentor_ids' => ['required', 'array', 'min:1'],
             'mentor_ids.*' => ['integer', 'exists:mentors,id'],
             'peserta_ids' => ['nullable', 'array'],
-            'peserta_ids.*' => ['integer', 'exists:pesertas,id'],
+            'peserta_ids.*' => ['string', 'exists:pesertas,id'],
             'tanggal_mulai' => ['required', 'date'],
             'tanggal_selesai' => ['nullable', 'date', 'after_or_equal:tanggal_mulai'],
             'jam_mulai' => ['nullable', 'date_format:H:i'],
             'jam_selesai' => ['nullable', 'date_format:H:i'],
-        ]);
-
-        $jadwalData = collect($validated)->except(['mentor_ids', 'penjab_ids', 'peserta_ids'])->all();
-        $jadwal->update($jadwalData);
+         ]);
+         $validated['penjab_ids'] = array_map('intval', $validated['penjab_ids']);
+         $validated['mentor_ids'] = array_map('intval', $validated['mentor_ids']);
+         $jadwalData = collect($validated)->except(['mentor_ids', 'penjab_ids', 'peserta_ids'])->all();
+         $jadwal->update($jadwalData);
         $jadwal->mentors()->sync($validated['mentor_ids']);
         $jadwal->penjabs()->sync($validated['penjab_ids']);
         $jadwal->pesertas()->sync($validated['peserta_ids'] ?? []);

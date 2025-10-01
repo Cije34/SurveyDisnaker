@@ -31,10 +31,12 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('ad
 
      // Jadwal
      Route::get('/jadwal', [JadwalController::class, 'index'])->name('jadwal.index');
+     Route::get('/jadwal/create', [JadwalController::class, 'create'])->name('jadwal.create');
+     Route::get('/jadwal/{jadwal}/edit', [JadwalController::class, 'edit'])->name('jadwal.edit');
      Route::get('/jadwal/{jadwal}', [JadwalController::class, 'show'])->name('jadwal.show');
      Route::post('/jadwal', [JadwalController::class, 'store'])->name('jadwal.store');
-    Route::put('/jadwal/{jadwal}', [JadwalController::class, 'update'])->name('jadwal.update');
-    Route::delete('/jadwal/{jadwal}', [JadwalController::class, 'destroy'])->name('jadwal.destroy');
+     Route::put('/jadwal/{jadwal}', [JadwalController::class, 'update'])->name('jadwal.update');
+     Route::delete('/jadwal/{jadwal}', [JadwalController::class, 'destroy'])->name('jadwal.destroy');
 
     // Peserta
     Route::get('/peserta', [AdminPesertaController::class, 'index'])->name('peserta.index');

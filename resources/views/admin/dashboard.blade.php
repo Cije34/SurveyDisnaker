@@ -5,7 +5,7 @@
 
     <x-admin.topbar :user="$user" title="Dashboard Administrator" />
 
-    <div class="px-6 py-8 lg:px-10 lg:py-10 space-y-8" x-data="{ modalOpen: {{ $errors->any() ? 'true' : 'false' }} }">
+    <div class="px-6 py-8 lg:px-10 lg:py-10 space-y-8">
         @if (session('status'))
             <div class="rounded-2xl border border-sky-100 bg-sky-50 px-5 py-3 text-sm text-sky-700">{{ session('status') }}</div>
         @endif
@@ -60,137 +60,20 @@
             </div>
         </section>
 
-        <div x-show="modalOpen"
-             x-cloak
-             x-transition.opacity
-             class="fixed inset-0 z-[80] flex items-center justify-center px-4 bg-slate-900/30 backdrop-blur-sm"
-             @click.self="modalOpen = false">
-            <div x-show="modalOpen"
-                 x-transition.scale
-                 class="w-full max-w-xl rounded-3xl bg-gradient-to-b via-sky-600 to-sky-800 p-[1px] shadow-2xl">
-                <div class="rounded-3xl bg-white p-6">
-                    <div class="mb-4 flex items-center justify-between">
-                        <h3 class="text-lg font-semibold text-slate-900">Tambah Jadwal Kegiatan</h3>
-                        <button type="button" @click="modalOpen = false" class="text-slate-400 transition hover:text-slate-600">✕</button>
-                    </div>
-
-                    <form method="POST" action="{{ route('admin.jadwal.store') }}" class="space-y-4">
-                        @csrf
-                        <div>
-                            <label for="modal_kegiatan" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Kegiatan</label>
-                            <select id="modal_kegiatan" name="kegiatan_id"
-                                    class="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-2 text-sm text-slate-700 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100">
-                                <option value="">Pilih kegiatan</option>
-                                @foreach ($kegiatanOptions as $option)
-                                    <option value="{{ $option->id }}" @selected(old('kegiatan_id', $selectedKegiatanId) == $option->id)>{{ $option->nama_kegiatan }}</option>
-                                @endforeach
-                            </select>
-                            @error('kegiatan_id')
-                                <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <div class="grid gap-4 md:grid-cols-2">
-                            <div>
-                                <label for="modal_penjab" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Penanggung Jawab</label>
-                                <select id="modal_penjab" name="penjab_id"
-                                        class="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-2 text-sm text-slate-700 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100">
-                                    <option value="">Pilih penanggung jawab</option>
-                                    @foreach ($penjabOptions as $penjab)
-                                        <option value="{{ $penjab->id }}" @selected(old('penjab_id') == $penjab->id)>{{ $penjab->name }}</option>
-                                    @endforeach
-                                </select>
-                                @error('penjab_id')
-                                    <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <div>
-                                <label for="modal_tempat" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Tempat</label>
-                                <select id="modal_tempat" name="tempat_id"
-                                        class="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-2 text-sm text-slate-700 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100">
-                                    <option value="">Pilih tempat</option>
-                                    @foreach ($tempatOptions as $tempat)
-                                        <option value="{{ $tempat->id }}" @selected(old('tempat_id') == $tempat->id)>{{ $tempat->name }}</option>
-                                    @endforeach
-                                </select>
-                                @error('tempat_id')
-                                    <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="grid gap-4 md:grid-cols-2">
-                            <div>
-                                <label for="modal_tanggal_mulai" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Tanggal Mulai</label>
-                                <input id="modal_tanggal_mulai" type="date" name="tanggal_mulai"
-                                       value="{{ old('tanggal_mulai') }}"
-                                       class="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-2 text-sm text-slate-700 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100">
-                                @error('tanggal_mulai')
-                                    <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <div>
-                                <label for="modal_tanggal_selesai" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Tanggal Selesai</label>
-                                <input id="modal_tanggal_selesai" type="date" name="tanggal_selesai"
-                                       value="{{ old('tanggal_selesai') }}"
-                                       class="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-2 text-sm text-slate-700 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100">
-                                @error('tanggal_selesai')
-                                    <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="grid gap-4 md:grid-cols-2">
-                            <div>
-                                <label for="modal_jam_mulai" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Jam Mulai</label>
-                                <input id="modal_jam_mulai" type="time" name="jam_mulai"
-                                       value="{{ old('jam_mulai') }}"
-                                       class="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-2 text-sm text-slate-700 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100">
-                                @error('jam_mulai')
-                                    <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <div>
-                                <label for="modal_jam_selesai" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Jam Selesai</label>
-                                <input id="modal_jam_selesai" type="time" name="jam_selesai"
-                                       value="{{ old('jam_selesai') }}"
-                                       class="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-2 text-sm text-slate-700 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100">
-                                @error('jam_selesai')
-                                    <p class="mt-1 text-xs text-red-500">{{ $message }}</p>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="flex items-center justify-end gap-3 pt-2">
-                            <button type="button" @click="modalOpen = false"
-                                    class="inline-flex items-center gap-2 rounded-full border border-slate-300 px-5 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100">Batal</button>
-                            <button type="submit"
-                                    class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-sky-500 via-sky-400 to-emerald-400 px-6 py-2 text-sm font-semibold text-white shadow-lg transition hover:brightness-110">
-                                Simpan
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
         <section class="rounded-3xl border border-slate-200 bg-white p-5 shadow-[0_30px_55px_-35px_rgba(15,23,42,0.35)]">
             <div class="mb-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                 <div>
                     <h2 class="text-xl font-semibold text-slate-900">Jadwal Kegiatan Mendatang</h2>
                     <p class="text-sm text-slate-500">Daftar jadwal terkait kegiatan yang dipilih.</p>
                 </div>
-                <button type="button"
-                        @click="modalOpen = true"
-                        class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-sky-500 via-sky-400 to-emerald-400 px-5 py-2 text-sm font-semibold text-white shadow-lg transition hover:brightness-110">
+                <a href="{{ route('admin.jadwal.create') }}"
+                   class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-sky-500 via-sky-400 to-emerald-400 px-5 py-2 text-sm font-semibold text-white shadow-lg transition hover:brightness-110">
                     <span class="text-center">Tambah Jadwal</span>
                     <span class="inline-flex h-6 w-6 items-center justify-center rounded-full bg-white/25">
                         <img src="{{ asset('icons/calendar-plus.svg') }}" alt="Tambah" class="h-4 w-4 invert">
                     </span>
-                </button>
+                </a>
+
             </div>
 
             <div class="overflow-x-auto">
