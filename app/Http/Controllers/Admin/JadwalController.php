@@ -87,19 +87,21 @@ class JadwalController extends Controller
         return redirect()->route('admin.jadwal.index')->with('status', 'Jadwal berhasil diperbarui.');
     }
 
-     public function show(Jadwal $jadwal): View
-     {
-         $jadwal->load(['kegiatan.tahunKegiatan', 'tempat:id,name', 'mentors:id,name', 'penjabs:id,name']);
+    public function show(Jadwal $jadwal): View
+    {
+        $jadwal->load(['kegiatan.tahunKegiatan', 'tempat:id,name', 'mentors:id,name', 'penjabs:id,name', 'pesertas:id,name']);
 
-         return view('admin.jadwal-detail', [
-             'jadwal' => $jadwal,
-         ]);
-     }
+        return view('admin.jadwal-detail', [
+            'user' => Auth::user(),
+            'jadwal' => $jadwal,
 
-     public function destroy(Jadwal $jadwal): RedirectResponse
-     {
-         $jadwal->delete();
+        ]);
+    }
 
-         return redirect()->route('admin.jadwal.index')->with('status', 'Jadwal berhasil dihapus.');
-     }
- }
+    public function destroy(Jadwal $jadwal): RedirectResponse
+    {
+        $jadwal->delete();
+
+        return redirect()->route('admin.jadwal.index')->with('status', 'Jadwal berhasil dihapus.');
+    }
+}

@@ -95,6 +95,21 @@
                     </div>
                 </div>
             </div>
+
+            <div>
+                <h3 class="mb-3 text-lg font-medium text-slate-800">Peserta</h3>
+                <div class="space-y-2">
+                    @forelse ($jadwal->pesertas as $peserta)
+                        <div class="flex items-center gap-3">
+                            <img src="{{ asset('icons/chalkboard-teacher.svg') }}" alt="Mentor" class="h-5 w-5 text-sky-600">
+                            <span class="text-sm text-slate-700">{{ $peserta->name }}</span>
+                        </div>
+                    @empty
+                        <p class="text-sm text-slate-500">Tidak ada peserta</p>
+                    @endforelse
+                </div>
+            </div>
+
         </section>
     </div>
 </x-admin.layout>
