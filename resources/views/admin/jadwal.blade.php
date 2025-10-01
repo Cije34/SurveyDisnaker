@@ -15,7 +15,7 @@
         @endif
 
         <section class="rounded-3xl border border-slate-200 bg-white p-5 shadow-[0_30px_55px_-35px_rgba(15,23,42,0.35)]">
-            <div class="mb-6 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            <div class="mb-6 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
                 <div>
                     <h2 class="text-xl font-semibold text-slate-900">Jadwal Kegiatan</h2>
                     <p class="text-sm text-slate-500">Daftar seluruh jadwal kegiatan yang sudah terdaftar.</p>
@@ -148,7 +148,7 @@
                         $mentor = $schedule->mentors->pluck('name')->implode(', ') ?? '-';
                     @endphp
                      <div class="rounded-2xl border border-slate-200 bg-white p-4 shadow-md" x-data="{ open: false }">
-                         <div class="flex items-start justify-between gap-3">
+                         <div class="flex items-start justify-between gap-2">
                              <div class="flex-1 min-w-0">
                                  <p class="text-xs font-semibold uppercase tracking-wide text-sky-600 truncate">{{ $schedule->kegiatan->tahunKegiatan->tahun ?? '-' }}</p>
                                  <h3 class="font-semibold text-slate-800 truncate">{{ $schedule->kegiatan->nama_kegiatan ?? '-' }}</h3>
@@ -228,8 +228,8 @@
              @click.self="closeCreateModal()">
              <div x-show="createOpen"
                   x-transition.scale
-                  class="w-full max-w-2xl mx-4 rounded-3xl bg-gradient-to-b from-sky-700 via-sky-600 to-sky-800 p-[1px] shadow-2xl sm:mx-0">
-                 <form method="POST" action="{{ route('admin.jadwal.store') }}" class="rounded-3xl bg-white/95 p-4 sm:p-6 space-y-4 sm:space-y-5">
+                  class="w-full max-w-6xl mx-4 rounded-3xl bg-gradient-to-b from-sky-700 via-sky-600 to-sky-800 p-[1px] shadow-2xl sm:mx-0">
+                  <form method="POST" action="{{ route('admin.jadwal.store') }}" class="rounded-3xl bg-white/95 p-2 sm:p-4 space-y-3 sm:space-y-4">
                     @csrf
                     <div class="flex items-center justify-between">
                         <h3 class="text-xl font-semibold text-slate-900">Tambah Jadwal Baru</h3>
@@ -247,7 +247,7 @@
                         </div>
                     @endif
 
-                    <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+                    <div class="grid grid-cols-1 gap-2 md:grid-cols-2">
                         <div>
                             <label for="kegiatan_id" class="mb-1 block text-sm font-medium text-slate-700">Kegiatan</label>
                             <select name="kegiatan_id" id="kegiatan_id" class="w-full rounded-xl border-slate-300 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
@@ -270,9 +270,9 @@
                          </div>
                           <div>
                               <label class="mb-1 block text-sm font-medium text-slate-700">Penanggung Jawab</label>
-                             <div class="space-y-2 max-h-40 overflow-y-auto border border-slate-200 rounded-xl p-3 bg-slate-50">
+                             <div class="space-y-2 max-h-32 overflow-y-auto border border-slate-200 rounded-xl p-2 bg-slate-50">
                                  @foreach($penjabOptions as $penjab)
-                                     <label class="flex items-center gap-3 cursor-pointer">
+                                     <label class="flex items-center gap-2 cursor-pointer">
                                          <input type="checkbox"
                                                 value="{{ $penjab->id }}"
                                                 x-model="selectedPenjabIds"
@@ -291,7 +291,7 @@
                          </div>
                     </div>
 
-                    <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+                    <div class="grid grid-cols-1 gap-2 md:grid-cols-2">
                         <div>
                             <label for="tempat_id" class="mb-1 block text-sm font-medium text-slate-700">Lokasi</label>
                             <select name="tempat_id" id="tempat_id" class="w-full rounded-xl border-slate-300 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
@@ -301,11 +301,11 @@
                                 @endforeach
                             </select>
                         </div>
-                         <div>
-                             <label class="mb-1 block text-sm font-medium text-slate-700">Mentor</label>
-                             <div class="space-y-2 max-h-40 overflow-y-auto border border-slate-200 rounded-xl p-3 bg-slate-50">
+                          <div>
+                              <label class="mb-1 block text-sm font-medium text-slate-700">Mentor</label>
+                              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 max-h-32 overflow-y-auto border border-slate-200 rounded-xl p-2 bg-slate-50">
                                  @foreach($mentorOptions as $mentor)
-                                     <label class="flex items-center gap-3 cursor-pointer">
+                                     <label class="flex items-center gap-2 cursor-pointer">
                                          <input type="checkbox"
                                                 value="{{ $mentor->id }}"
                                                 x-model="selectedMentorIds"
@@ -318,13 +318,34 @@
                              @error('mentor_ids')
                                  <p class="mt-1 text-xs text-rose-500">{{ $message }}</p>
                              @enderror
-                             @error('mentor_ids.*')
-                                 <p class="mt-1 text-xs text-rose-500">{{ $message }}</p>
-                             @enderror
-                         </div>
-                    </div>
+                              @error('mentor_ids.*')
+                                  <p class="mt-1 text-xs text-rose-500">{{ $message }}</p>
+                              @enderror
+                          </div>
+                          <div>
+                              <label class="mb-1 block text-sm font-medium text-slate-700">Peserta</label>
+                              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 max-h-32 overflow-y-auto border border-slate-200 rounded-xl p-2 bg-slate-50">
+                                  @foreach($pesertaOptions as $peserta)
+                                      <label class="flex items-center gap-2 cursor-pointer">
+                                          <input type="checkbox"
+                                                 value="{{ $peserta->id }}"
+                                                 x-model="selectedPesertaIds"
+                                                 name="peserta_ids[]"
+                                                 class="rounded border-slate-300 text-sky-600 focus:ring-sky-500">
+                                          <span class="text-sm text-slate-700">{{ $peserta->name }}</span>
+                                      </label>
+                                  @endforeach
+                              </div>
+                              @error('peserta_ids')
+                                  <p class="mt-1 text-xs text-rose-500">{{ $message }}</p>
+                              @enderror
+                              @error('peserta_ids.*')
+                                  <p class="mt-1 text-xs text-rose-500">{{ $message }}</p>
+                              @enderror
+                          </div>
+                     </div>
 
-                    <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+                     <div class="grid grid-cols-1 gap-2 md:grid-cols-3">
                         <div>
                             <label for="tanggal_mulai" class="mb-1 block text-sm font-medium text-slate-700">Tanggal Mulai</label>
                             <input type="date" name="tanggal_mulai" id="tanggal_mulai" value="{{ old('tanggal_mulai') }}" class="w-full rounded-xl border-slate-300 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
@@ -335,7 +356,7 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+                    <div class="grid grid-cols-1 gap-2 md:grid-cols-2">
                         <div>
                             <label for="jam_mulai" class="mb-1 block text-sm font-medium text-slate-700">Jam Mulai</label>
                             <input type="time" name="jam_mulai" id="jam_mulai" value="{{ old('jam_mulai') }}" class="w-full rounded-xl border-slate-300 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
@@ -346,7 +367,7 @@
                         </div>
                     </div>
 
-                    <div class="flex justify-end gap-3 pt-4">
+                    <div class="flex justify-end gap-2 pt-4">
                         <button type="button" @click="closeCreateModal()" class="rounded-full bg-slate-100 px-5 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-200">Batal</button>
                         <button type="submit" class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-sky-500 via-sky-400 to-emerald-400 px-5 py-2 text-sm font-semibold text-white shadow-lg transition hover:brightness-110">Simpan Jadwal</button>
                     </div>
@@ -401,9 +422,9 @@ class="fixed inset-0 z-[100] flex h-screen w-screen items-center justify-center 
             <div class="grid gap-4 md:grid-cols-2">
                 <div>
                     <label class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Penanggung Jawab</label>
-                    <div class="mt-2 space-y-2 max-h-40 overflow-y-auto border border-slate-200 rounded-2xl bg-slate-50 p-3">
+                    <div class="mt-2 space-y-2 max-h-32 overflow-y-auto border border-slate-200 rounded-2xl bg-slate-50 p-2">
                         @foreach ($penjabOptions as $penjab)
-                            <label class="flex items-center gap-3 cursor-pointer">
+                            <label class="flex items-center gap-2 cursor-pointer">
                                 <input type="checkbox"
                                        value="{{ $penjab->id }}"
                                        x-model="selectedPenjabIdsEdit"
@@ -424,14 +445,30 @@ class="fixed inset-0 z-[100] flex h-screen w-screen items-center justify-center 
                            <option value="{{ $tempat->id }}" :selected="editMeta?.tempat_id == {{ $tempat->id }}">{{ $tempat->name }}</option>
                        @endforeach
                    </select>
-               </div>
-           </div>
+                </div>
+            </div>
 
             <div>
-                <label class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Mentor</label>
-                <div class="mt-2 space-y-2 max-h-40 overflow-y-auto border border-slate-200 rounded-2xl bg-slate-50 p-3">
+                <label class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Peserta</label>
+                <div class="mt-2 space-y-2 max-h-32 overflow-y-auto border border-slate-200 rounded-2xl bg-slate-50 p-2">
+                    @foreach ($pesertaOptions as $peserta)
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox"
+                                   value="{{ $peserta->id }}"
+                                   x-model="selectedPesertaIdsEdit"
+                                   name="peserta_ids[]"
+                                   class="rounded border-slate-300 text-sky-600 focus:ring-sky-500">
+                            <span class="text-sm text-slate-700">{{ $peserta->name }}</span>
+                        </label>
+                    @endforeach
+                </div>
+            </div>
+
+             <div>
+                 <label class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Mentor</label>
+                <div class="mt-2 space-y-2 max-h-32 overflow-y-auto border border-slate-200 rounded-2xl bg-slate-50 p-2">
                     @foreach ($mentorOptions as $mentor)
-                        <label class="flex items-center gap-3 cursor-pointer">
+                        <label class="flex items-center gap-2 cursor-pointer">
                             <input type="checkbox"
                                    value="{{ $mentor->id }}"
                                    x-model="selectedMentorIdsEdit"
@@ -475,7 +512,7 @@ class="fixed inset-0 z-[100] flex h-screen w-screen items-center justify-center 
                </div>
            </div>
 
-           <div class="flex items-center justify-end gap-3 pt-2">
+           <div class="flex items-center justify-end gap-2 pt-2">
                <button type="button" @click="closeEditModal()"
                        class="inline-flex items-center gap-2 rounded-full border border-slate-300 px-5 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-100">Batal</button>
                <button type="submit"
@@ -508,7 +545,7 @@ class="fixed inset-0 z-[100] flex h-screen w-screen items-center justify-center 
                         Apakah Anda yakin ingin menghapus jadwal kegiatan <strong x-text="editMeta?.nama" class="font-semibold text-slate-800"></strong>?
                         Tindakan ini tidak dapat diurungkan.
                     </p>
-                    <div class="flex justify-end gap-3 pt-4">
+                    <div class="flex justify-end gap-2 pt-4">
                         <button type="button" @click="closeDeleteModal()" class="rounded-full bg-slate-100 px-5 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-200">Batal</button>
                         <button type="submit" class="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-rose-500 via-rose-500 to-red-500 px-5 py-2 text-sm font-semibold text-white shadow-lg transition hover:brightness-110">Ya, Hapus</button>
                     </div>
@@ -527,22 +564,25 @@ class="fixed inset-0 z-[100] flex h-screen w-screen items-center justify-center 
              deleteOpen: false,
              editMeta: null,
              deleteTemplate: '{{ route('admin.jadwal.destroy', '__ID__') }}',
-             selectedPenjabIds: {{ old('penjab_ids', '[]') }},
-             selectedPenjabIdsEdit: [],
-             selectedMentorIds: {{ old('mentor_ids', '[]') }},
-             selectedMentorIdsEdit: [],
+              selectedPenjabIds: {{ old('penjab_ids', '[]') }},
+              selectedPenjabIdsEdit: [],
+              selectedMentorIds: {{ old('mentor_ids', '[]') }},
+              selectedMentorIdsEdit: [],
+              selectedPesertaIds: {{ old('peserta_ids', '[]') }},
+              selectedPesertaIdsEdit: [],
             openCreateModal() {
                 this.createOpen = true;
             },
             closeCreateModal() {
                 this.createOpen = false;
             },
-              openEditModal(meta) {
-                  this.editMeta = meta;
-                  this.selectedPenjabIdsEdit = (meta.penjab_ids || []).map(id => id.toString());
-                  this.selectedMentorIdsEdit = (meta.mentor_ids || []).map(id => id.toString());
-                  this.editOpen = true;
-              },
+               openEditModal(meta) {
+                   this.editMeta = meta;
+                   this.selectedPenjabIdsEdit = (meta.penjab_ids || []).map(id => id.toString());
+                   this.selectedMentorIdsEdit = (meta.mentor_ids || []).map(id => id.toString());
+                   this.selectedPesertaIdsEdit = (meta.peserta_ids || []).map(id => id.toString());
+                   this.editOpen = true;
+               },
             closeEditModal() {
                 this.editOpen = false;
                 this.editMeta = null;

@@ -260,7 +260,7 @@
 
                     <form method="POST" action="{{ route('admin.peserta.store') }}" class="space-y-4 pt-2">
                         @csrf
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 gap-4">
                             <div>
                                 <label for="name" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Nama Lengkap</label>
                                 <input id="name" type="text" name="name" value="{{ old('name') }}" required
@@ -272,7 +272,7 @@
                                        class="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-5 py-2.5 text-sm text-slate-800 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100" />
                             </div>
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 gap-4">
                             <div>
                                 <label for="email" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Alamat Email</label>
                                 <input id="email" type="email" name="email" value="{{ old('email') }}" required
@@ -303,7 +303,7 @@
                             <textarea id="alamat" name="alamat" rows="2" required
                                       class="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-5 py-2.5 text-sm text-slate-800 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100">{{ old('alamat') }}</textarea>
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 gap-4">
                             <div>
                                 <label for="password" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Password</label>
                                 <input id="password" type="password" name="password" required
@@ -355,7 +355,7 @@
                       <form method="POST" :action="`/admin/peserta/${editMeta?.id}`" class="space-y-4 pt-2">
                           @csrf
                           @method('PUT')
-                          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div class="grid grid-cols-1 gap-4">
                               <div>
                                   <label for="edit_name" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Nama Lengkap</label>
                                   <input id="edit_name" type="text" name="name" :value="editMeta?.name" required
@@ -367,7 +367,7 @@
                                          class="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-5 py-2.5 text-sm text-slate-800 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100" />
                               </div>
                           </div>
-                          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div class="grid grid-cols-1 gap-4">
                               <div>
                                   <label for="edit_email" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Alamat Email</label>
                                   <input id="edit_email" type="email" name="email" :value="editMeta?.email" required
@@ -398,7 +398,7 @@
                               <textarea id="edit_alamat" name="alamat" rows="2" required
                                         class="mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-5 py-2.5 text-sm text-slate-800 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100" x-text="editMeta?.alamat"></textarea>
                           </div>
-                          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div class="grid grid-cols-1 gap-4">
                               <div>
                                   <label for="edit_password" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Password Baru (Opsional)</label>
                                   <input id="edit_password" type="password" name="password"
