@@ -25,7 +25,7 @@ class JadwalController extends Controller
             ->orderByDesc('jadwals.tanggal_mulai')
             ->paginate(5);
 
-        $kegiatanOptions = Kegiatan::orderBy('nama_kegiatan')->get(['id', 'nama_kegiatan']);
+        $kegiatanOptions = Kegiatan::with('tahunKegiatan:id,tahun,is_active')->orderBy('nama_kegiatan')->get(['id', 'nama_kegiatan', 'tahun_kegiatan_id']);
         $penjabOptions = Penjab::orderBy('name')->get(['id', 'name']);
         $tempatOptions = Tempat::orderBy('name')->get(['id', 'name']);
         $mentorOptions = Mentor::orderBy('name')->get(['id', 'name']);

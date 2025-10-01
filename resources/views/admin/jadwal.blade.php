@@ -92,9 +92,9 @@
                                                      @click="open = false; openEditModal({
                                                          id: {{ $schedule->id }},
                                                          kegiatan_id: '{{ $schedule->kegiatan_id }}',
-                                                         penjab_ids: @js($schedule->penjabs->pluck('id')),
+                                                          penjab_ids: {!! json_encode($schedule->penjabs ? $schedule->penjabs->pluck('id') : []) !!},
                                                          tempat_id: '{{ $schedule->tempat_id }}',
-                                                         mentor_ids: @js($schedule->mentors->pluck('id')),
+                                                          mentor_ids: @json($schedule->mentors ? $schedule->mentors->pluck('id') : []),
                                                          tanggal_mulai: '{{ optional($schedule->tanggal_mulai)->format('Y-m-d') }}',
                                                          tanggal_selesai: '{{ optional($schedule->tanggal_selesai)->format('Y-m-d') }}',
                                                          jam_mulai: '{{ $schedule->jam_mulai ? substr($schedule->jam_mulai, 0, 5) : '' }}',
@@ -171,9 +171,9 @@
                                      <button type="button" @click="open = false; openEditModal({
                                               id: {{ $schedule->id }},
                                               kegiatan_id: '{{ $schedule->kegiatan_id }}',
-                                              penjab_ids: @js($schedule->penjabs->pluck('id')),
+                                               penjab_ids: @json($schedule->penjabs ? $schedule->penjabs->pluck('id') : []),
                                               tempat_id: '{{ $schedule->tempat_id }}',
-                                              mentor_ids: @js($schedule->mentors->pluck('id')),
+                                               mentor_ids: @json($schedule->mentors ? $schedule->mentors->pluck('id') : []),
                                               tanggal_mulai: '{{ optional($schedule->tanggal_mulai)->format('Y-m-d') }}',
                                               tanggal_selesai: '{{ optional($schedule->tanggal_selesai)->format('Y-m-d') }}',
                                               jam_mulai: '{{ $schedule->jam_mulai ? substr($schedule->jam_mulai, 0, 5) : '' }}',
@@ -253,17 +253,28 @@
                             <select name="kegiatan_id" id="kegiatan_id" class="w-full rounded-xl border-slate-300 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
                                 <option value="">Pilih Kegiatan</option>
                                 @foreach($kegiatanOptions as $kegiatan)
-                                    <option value="{{ $kegiatan->id }}" @selected(old('kegiatan_id') == $kegiatan->id)>{{ $kegiatan->nama_kegiatan }}</option>
+                                    <option value="{{ $kegiatan->id }}" @selected(old('kegiatan_id') == $kegiatan->id)> {{ $kegiatan->tahunKegiatan->tahun }} - {{ $kegiatan->nama_kegiatan }}</option>
                                 @endforeach
                             </select>
-                        </div>
+                         </div>
                          <div>
-                             <label class="mb-1 block text-sm font-medium text-slate-700">Penanggung Jawab</label>
+                             <label for="tahun_kegiatan_display" class="mb-1 block text-sm font-medium text-slate-700">Tahun Kegiatan</label>
+                             <input type="text" id="tahun_kegiatan_display" class="w-full rounded-xl border-slate-300 bg-slate-100 text-sm shadow-sm" readonly placeholder="Pilih kegiatan terlebih dahulu">
+                         </div>
+                         <div>
+                             <label class="mb-1 block text-sm font-medium text-slate-700">Status Aktif</label>
+                             <div class="flex items-center gap-2">
+                                 <input type="checkbox" id="is_active_display" class="rounded border-slate-300 text-sky-600 focus:ring-sky-500" disabled>
+                                 <span class="text-sm text-slate-700" id="is_active_text">Tidak Aktif</span>
+                             </div>
+                         </div>
+                          <div>
+                              <label class="mb-1 block text-sm font-medium text-slate-700">Penanggung Jawab</label>
                              <div class="space-y-2 max-h-40 overflow-y-auto border border-slate-200 rounded-xl p-3 bg-slate-50">
                                  @foreach($penjabOptions as $penjab)
                                      <label class="flex items-center gap-3 cursor-pointer">
                                          <input type="checkbox"
-                                                value="String{{ $penjab->id }}"
+                                                value="{{ $penjab->id }}"
                                                 x-model="selectedPenjabIds"
                                                 name="penjab_ids[]"
                                                 class="rounded border-slate-300 text-sky-600 focus:ring-sky-500">
@@ -296,7 +307,7 @@
                                  @foreach($mentorOptions as $mentor)
                                      <label class="flex items-center gap-3 cursor-pointer">
                                          <input type="checkbox"
-                                                value="String{{ $mentor->id }}"
+                                                value="{{ $mentor->id }}"
                                                 x-model="selectedMentorIds"
                                                 name="mentor_ids[]"
                                                 class="rounded border-slate-300 text-sky-600 focus:ring-sky-500">
@@ -367,13 +378,27 @@ class="fixed inset-0 z-[100] flex h-screen w-screen items-center justify-center 
                <select id="edit_kegiatan" name="kegiatan_id"
                        class="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-2 text-sm text-slate-700 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100">
                    <option value="">Pilih kegiatan</option>
-                   @foreach ($kegiatanOptions as $option)
-                       <option value="{{ $option->id }}" :selected="editMeta?.kegiatan_id == {{ $option->id }}">{{ $option->nama_kegiatan }}</option>
-                   @endforeach
-               </select>
-           </div>
+                    @foreach ($kegiatanOptions as $option)
+                        <option value="{{ $option->id }}" :selected="editMeta?.kegiatan_id == {{ $option->id }}">{{ $option->tahunKegiatan->tahun }} - {{ $option->nama_kegiatan }}</option>
+                    @endforeach
+                </select>
+            </div>
 
-           <div class="grid gap-4 md:grid-cols-2">
+            <div class="grid gap-4 md:grid-cols-2">
+                <div>
+                    <label for="edit_tahun_kegiatan_display" class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Tahun Kegiatan</label>
+                    <input type="text" id="edit_tahun_kegiatan_display" class="mt-2 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-2 text-sm text-slate-700" readonly placeholder="Pilih kegiatan terlebih dahulu">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Status Aktif</label>
+                    <div class="mt-2 flex items-center gap-2">
+                        <input type="checkbox" id="edit_is_active_display" class="rounded border-slate-300 text-sky-600 focus:ring-sky-500" disabled>
+                        <span class="text-sm text-slate-700" id="edit_is_active_text">Tidak Aktif</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid gap-4 md:grid-cols-2">
                 <div>
                     <label class="block text-xs font-semibold uppercase tracking-wide text-slate-500">Penanggung Jawab</label>
                     <div class="mt-2 space-y-2 max-h-40 overflow-y-auto border border-slate-200 rounded-2xl bg-slate-50 p-3">
@@ -534,9 +559,38 @@ class="fixed inset-0 z-[100] flex h-screen w-screen items-center justify-center 
                  if (!this.editMeta?.id) return '#';
                  return this.deleteTemplate.replace('__ID__', this.editMeta.id);
              },
-             init() {
-                 // Initialize edit penjab ids when opening edit modal
-             },
+              init() {
+                  // Initialize edit penjab ids when opening edit modal
+                  // Data kegiatan untuk lookup
+                  const kegiatanData = {!! json_encode($kegiatanOptions->mapWithKeys(function ($k) {
+                      return [$k->id => [
+                          'tahun' => $k->tahunKegiatan->tahun ?? '-',
+                          'is_active' => $k->tahunKegiatan->is_active ?? false
+                      ]];
+                  })) !!};
+
+                  // Event listener untuk auto-populate di create modal
+                  document.getElementById('kegiatan_id')?.addEventListener('change', function() {
+                      const selectedId = this.value;
+                      const data = kegiatanData[selectedId] || { tahun: '-', is_active: false };
+                      document.getElementById('tahun_kegiatan_display').value = data.tahun;
+                      const isActiveCheckbox = document.getElementById('is_active_display');
+                      const isActiveText = document.getElementById('is_active_text');
+                      isActiveCheckbox.checked = data.is_active;
+                      isActiveText.textContent = data.is_active ? 'Aktif' : 'Tidak Aktif';
+                  });
+
+                  // Event listener untuk auto-populate di edit modal
+                  document.getElementById('edit_kegiatan')?.addEventListener('change', function() {
+                      const selectedId = this.value;
+                      const data = kegiatanData[selectedId] || { tahun: '-', is_active: false };
+                      document.getElementById('edit_tahun_kegiatan_display').value = data.tahun;
+                      const isActiveCheckbox = document.getElementById('edit_is_active_display');
+                      const isActiveText = document.getElementById('edit_is_active_text');
+                      isActiveCheckbox.checked = data.is_active;
+                      isActiveText.textContent = data.is_active ? 'Aktif' : 'Tidak Aktif';
+                  });
+              },
         };
     }
 </script>
