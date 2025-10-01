@@ -115,6 +115,13 @@
                                                 </svg>
                                                 Hapus
                                             </button>
+
+                                             <a href="{{ route('admin.jadwal.show', $schedule->id) }}"
+                                                 class="flex w-full items-center gap-2 px-4 py-2 text-left text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900">
+                                                 <img src="{{ asset('icons/eye.svg') }}" alt="Detail" class="h-4 w-4">
+                                                 Detail
+                                             </a>
+
                                         </div>
                                     </div>
                                 </td>
@@ -156,20 +163,24 @@
                                          <path d="M12 7.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm0 6a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Zm0 6a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" />
                                      </svg>
                                  </button>
-                                <div x-show="open" x-transition.origin.top.right x-cloak class="absolute right-0 top-full z-10 mt-2 w-40 rounded-xl border bg-white py-2 shadow-lg">
-                                    <button type="button" @click="open = false; openEditModal({
-                                             id: {{ $schedule->id }},
-                                             kegiatan_id: '{{ $schedule->kegiatan_id }}',
-                                             penjab_ids: @js($schedule->penjabs->pluck('id')),
-                                             tempat_id: '{{ $schedule->tempat_id }}',
-                                             mentor_ids: @js($schedule->mentors->pluck('id')),
-                                             tanggal_mulai: '{{ optional($schedule->tanggal_mulai)->format('Y-m-d') }}',
-                                             tanggal_selesai: '{{ optional($schedule->tanggal_selesai)->format('Y-m-d') }}',
-                                             jam_mulai: '{{ $schedule->jam_mulai ? substr($schedule->jam_mulai, 0, 5) : '' }}',
-                                             jam_selesai: '{{ $schedule->jam_selesai ? substr($schedule->jam_selesai, 0, 5) : '' }}'
-                                        })" class="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-slate-600 hover:bg-slate-100">
-                                        Edit
-                                    </button>
+                                 <div x-show="open" x-transition.origin.top.right x-cloak class="absolute right-0 top-full z-10 mt-2 w-40 rounded-xl border bg-white py-2 shadow-lg">
+                                     <a href="{{ route('admin.jadwal.show', $schedule->id) }}" class="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-slate-600 hover:bg-slate-100">
+                                         <img src="{{ asset('icons/eye.svg') }}" alt="Detail" class="h-4 w-4">
+                                         Detail
+                                     </a>
+                                     <button type="button" @click="open = false; openEditModal({
+                                              id: {{ $schedule->id }},
+                                              kegiatan_id: '{{ $schedule->kegiatan_id }}',
+                                              penjab_ids: @js($schedule->penjabs->pluck('id')),
+                                              tempat_id: '{{ $schedule->tempat_id }}',
+                                              mentor_ids: @js($schedule->mentors->pluck('id')),
+                                              tanggal_mulai: '{{ optional($schedule->tanggal_mulai)->format('Y-m-d') }}',
+                                              tanggal_selesai: '{{ optional($schedule->tanggal_selesai)->format('Y-m-d') }}',
+                                              jam_mulai: '{{ $schedule->jam_mulai ? substr($schedule->jam_mulai, 0, 5) : '' }}',
+                                              jam_selesai: '{{ $schedule->jam_selesai ? substr($schedule->jam_selesai, 0, 5) : '' }}'
+                                         })" class="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-slate-600 hover:bg-slate-100">
+                                         Edit
+                                     </button>
                                     <button type="button" @click="open = false; confirmDelete({ id: {{ $schedule->id }}, nama: @js($schedule->kegiatan->nama_kegiatan ?? 'Tanpa Nama') })" class="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-rose-500 hover:bg-rose-50">
                                         Hapus
                                     </button>

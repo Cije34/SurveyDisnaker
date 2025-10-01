@@ -17,7 +17,7 @@ class JadwalController extends Controller
 {
     public function index(): View
     {
-        $schedules = Jadwal::with(['kegiatan.tahunKegiatan', 'tempat:id,name', 'mentors:id,name', 'penjabs:id,name'])
+        $schedules = Jadwal::with(['kegiatan.tahunKegiatan', 'tempat:id,name', 'mentors:id,name', 'penjabs:id,name', 'pesertas:id,name'])
             ->select('jadwals.*')
             ->join('kegiatans', 'jadwals.kegiatan_id', '=', 'kegiatans.id')
             ->join('tahun_kegiatans', 'kegiatans.tahun_kegiatan_id', '=', 'tahun_kegiatans.id')
@@ -87,10 +87,19 @@ class JadwalController extends Controller
         return redirect()->route('admin.jadwal.index')->with('status', 'Jadwal berhasil diperbarui.');
     }
 
-    public function destroy(Jadwal $jadwal): RedirectResponse
-    {
-        $jadwal->delete();
+     public function show(Jadwal $jadwal): View
+     {
+         $jadwal->load(['kegiatan.tahunKegiatan', 'tempat:id,name', 'mentors:id,name', 'penjabs:id,name']);
 
-        return redirect()->route('admin.jadwal.index')->with('status', 'Jadwal berhasil dihapus.');
-    }
-}
+         return view('admin.jadwal-detail', [
+             'jadwal' => $jadwal,
+         ]);
+     }
+
+     public function destroy(Jadwal $jadwal): RedirectResponse
+     {
+         $jadwal->delete();
+
+         return redirect()->route('admin.jadwal.index')->with('status', 'Jadwal berhasil dihapus.');
+     }
+ }
