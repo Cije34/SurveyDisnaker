@@ -10,13 +10,13 @@ class Jawaban extends Model
     /** @use HasFactory<\Database\Factories\JawabanFactory> */
     use HasFactory;
 
-    public function kegiatan()
+    public function peserta()
     {
-        return $this->belongsTo(Kegiatan::class);
+        return $this->belongsTo(Peserta::class);
     }
 
-    public function jawaban()
+    public function survey()
     {
-        return $this->belongsTo(Jawaban::class);
+        return $this->belongsTo(Survey::class);
     }
 }
