@@ -28,7 +28,7 @@
                     <thead class="bg-sky-700 text-left text-white">
                         <tr>
                             <th class="px-5 py-3 font-semibold">Tahun</th>
-                            <th class="px-5 py-3 font-semibold">Status</th>
+                            <th class="px-5 py-3 font-semibold text-center">Status</th>
                             <th class="px-5 py-3 font-semibold text-center">Action</th>
                         </tr>
                     </thead>
@@ -36,15 +36,18 @@
                         @forelse ($years as $year)
                             <tr class="border-b border-slate-200">
                                 <td class="px-5 py-3 font-semibold text-slate-800">{{ $year->tahun }}</td>
-                                <td class="px-5 py-3">
-                                    <span @class([
-                                        'inline-flex items-center justify-center gap-2 rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide leading-none',
-                                        'bg-emerald-100 text-emerald-700' => $year->is_active,
-                                        'bg-rose-100 text-rose-700' => ! $year->is_active,
-                                    ])>
-                                        <span class="h-2.5 w-2.5 rounded-full" @class(['bg-emerald-500' => $year->is_active, 'bg-rose-500' => ! $year->is_active])></span>
-                                        <span class="tracking-wide">{{ $year->is_active ? 'Aktif' : 'Tidak Aktif' }}</span>
-                                    </span>
+                                <td class="px-5 py-3 text-center">
+                                    @if ($year->is_active)
+                                        <span class="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
+                                            <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+                                            Aktif
+                                        </span>
+                                    @else
+                                        <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
+                                            <span class="h-2 w-2 rounded-full bg-slate-500"></span>
+                                            Tidak Aktif
+                                        </span>
+                                    @endif
                                 </td>
                                 <td class="px-5 py-3 text-center">
                                      <button @click="Swal.fire({

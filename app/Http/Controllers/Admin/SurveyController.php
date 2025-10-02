@@ -19,7 +19,7 @@ class SurveyController extends Controller
             ->join('tahun_kegiatans', 'tahun_kegiatans.id', '=', 'kegiatans.tahun_kegiatan_id')
             ->with([
                 'tahunKegiatan:id,tahun',
-                'surveys:id,kegiatan_id,type,pertanyaan,created_at',
+                'surveys:id,kegiatan_id,type,pertanyaan,is_active,created_at',
             ])
             ->withCount('surveys')
             ->whereHas('surveys')
@@ -61,6 +61,7 @@ class SurveyController extends Controller
                 'kegiatan_id' => $validated['kegiatan_id'],
                 'type' => $question['type'],
                 'pertanyaan' => $question['pertanyaan'],
+                'is_active' => true,
             ]);
         }
 
@@ -143,6 +144,7 @@ class SurveyController extends Controller
                     'kegiatan_id' => $validated['kegiatan_id'],
                     'type' => $question['type'],
                     'pertanyaan' => $question['pertanyaan'],
+                    'is_active' => true,
                 ]);
 
                 $handledSurveyIds[] = $newSurvey->id;
@@ -162,6 +164,16 @@ class SurveyController extends Controller
 
     public function destroy(Survey $survey): RedirectResponse
     {
+        $kegiatan = $survey->kegiatan()->with('surveys')->first();
+
+        if ($kegiatan) {
+            $kegiatan->surveys()->delete();
+
+            return redirect()
+                ->route('admin.survey.index')
+                ->with('status', 'Seluruh pertanyaan survey untuk kegiatan ini berhasil dihapus.');
+        }
+
         $survey->delete();
 
         return redirect()
@@ -182,7 +194,17 @@ class SurveyController extends Controller
 
     public function close(Survey $survey): RedirectResponse
     {
-        $survey->update(['is_active' => false]); // Asumsikan ada field is_active
+        $kegiatan = $survey->kegiatan()->with('surveys')->first();
+
+        if ($kegiatan) {
+            $kegiatan->surveys()->update(['is_active' => false]);
+
+            return redirect()
+                ->route('admin.survey.index')
+                ->with('status', 'Survey kegiatan berhasil ditutup.');
+        }
+
+        $survey->update(['is_active' => false]);
 
         return redirect()->route('admin.survey.index')->with('status', 'Survey berhasil ditutup.');
     }

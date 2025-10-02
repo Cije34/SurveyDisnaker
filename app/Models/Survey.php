@@ -24,6 +24,7 @@ class Survey extends Model
 
     protected $casts = [
         'type' => 'string',
+        'is_active' => 'boolean',
     ];
 
     public function kegiatan(): BelongsTo

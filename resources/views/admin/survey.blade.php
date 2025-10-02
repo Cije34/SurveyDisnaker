@@ -10,6 +10,16 @@
             <div class="rounded-2xl border border-emerald-100 bg-emerald-50 px-5 py-3 text-sm text-emerald-700">
                 {{ session('status') }}
             </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil',
+                        text: @js(session('status')),
+                        confirmButtonColor: '#0284c7'
+                    });
+                });
+            </script>
         @endif
 
         @if ($errors->any())
@@ -38,6 +48,7 @@
                     <thead class="bg-sky-700 text-left text-white">
                         <tr>
                             <th class="px-6 py-4 text-center font-semibold uppercase tracking-wide">Kegiatan</th>
+                            <th class="px-6 py-4 text-center font-semibold uppercase tracking-wide">Status</th>
                             <th class="px-6 py-4 text-center font-semibold uppercase tracking-wide">Pertanyaan</th>
                             <th class="px-6 py-4 text-center font-semibold uppercase tracking-wide">Aksi</th>
                         </tr>
@@ -46,10 +57,25 @@
                         @forelse($surveyGroups as $kegiatan)
                             @php
                                 $primarySurvey = $kegiatan->surveys->first();
+                                $activeSurveyCount = $kegiatan->surveys->filter(fn ($survey) => $survey->is_active !== false)->count();
+                                $isClosed = $kegiatan->surveys->isNotEmpty() && $activeSurveyCount === 0;
                             @endphp
                             <tr class="transition hover:bg-slate-50">
                                 <td class="px-6 py-4 text-center font-medium text-slate-800">
                                     {{ $kegiatan->tahunKegiatan->tahun }} | {{ $kegiatan->nama_kegiatan ?? 'N/A' }}
+                                </td>
+                                <td class="px-6 py-4 text-center">
+                                    @if ($isClosed)
+                                        <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
+                                            <span class="h-2 w-2 rounded-full bg-slate-500"></span>
+                                            Ditutup
+                                        </span>
+                                    @else
+                                        <span class="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
+                                            <span class="h-2 w-2 rounded-full bg-emerald-500"></span>
+                                            Aktif
+                                        </span>
+                                    @endif
                                 </td>
                                 <td class="px-6 py-4 text-center text-sm text-slate-600">
                                     {{ $kegiatan->surveys_count }} pertanyaan
@@ -64,45 +90,73 @@
                                                 Edit
                                             </a>
                                             <button @click="Swal.fire({
-                                            title: 'Konfirmasi Hapus',
-                                            text: 'Apakah Anda yakin ingin menghapus survey ini? Tindakan ini tidak dapat dibatalkan.',
-                                            icon: 'warning',
-                                            showCancelButton: true,
-                                            confirmButtonColor: '#ef4444',
-                                            cancelButtonColor: '#6b7280',
-                                            confirmButtonText: 'Hapus',
-                                            cancelButtonText: 'Batal'
-                                        }).then((result) => {
-                                            if (result.isConfirmed) {
-                                                const form = document.createElement('form');
-                                                form.method = 'POST';
-                                                form.action = '/admin/survey/{{ $primarySurvey->id }}';
-                                                const csrf = document.createElement('input');
-                                                csrf.type = 'hidden';
-                                                csrf.name = '_token';
-                                                csrf.value = '{{ csrf_token() }}';
-                                                form.appendChild(csrf);
-                                                const method = document.createElement('input');
-                                                method.type = 'hidden';
-                                                method.name = '_method';
-                                                method.value = 'DELETE';
-                                                form.appendChild(method);
-                                                document.body.appendChild(form);
-                                                form.submit();
-                                            }
-                                        })" class="inline-flex items-center gap-2 rounded-full bg-rose-500 px-4 py-2 text-white shadow hover:bg-rose-600">
-                                                Hapus
+                                                title: 'Konfirmasi Hapus',
+                                                text: 'Apakah Anda yakin ingin menghapus semua pertanyaan survey pada kegiatan ini? Tindakan ini tidak dapat dibatalkan.',
+                                                icon: 'warning',
+                                                showCancelButton: true,
+                                                confirmButtonColor: '#ef4444',
+                                                cancelButtonColor: '#6b7280',
+                                                confirmButtonText: 'Hapus',
+                                                cancelButtonText: 'Batal'
+                                            }).then((result) => {
+                                                if (result.isConfirmed) {
+                                                    const form = document.createElement('form');
+                                                    form.method = 'POST';
+                                                    form.action = '/admin/survey/{{ $primarySurvey->id }}';
+                                                    const csrf = document.createElement('input');
+                                                    csrf.type = 'hidden';
+                                                    csrf.name = '_token';
+                                                    csrf.value = '{{ csrf_token() }}';
+                                                    form.appendChild(csrf);
+                                                    const method = document.createElement('input');
+                                                    method.type = 'hidden';
+                                                    method.name = '_method';
+                                                    method.value = 'DELETE';
+                                                    form.appendChild(method);
+                                                    document.body.appendChild(form);
+                                                    form.submit();
+                                                }
+                                            })" class="inline-flex items-center gap-2 rounded-full bg-rose-500 px-4 py-2 text-white shadow hover:bg-rose-600">
+                                                Hapus Semua
                                             </button>
-                                            <a href="{{ route('admin.survey.close', $primarySurvey->id) }}" class="inline-flex items-center gap-2 rounded-full bg-slate-800 px-4 py-2 text-white shadow hover:bg-slate-900">
-                                                Tutup
-                                            </a>
+                                            @if ($isClosed)
+                                                <button type="button" class="inline-flex items-center gap-2 rounded-full bg-slate-400 px-4 py-2 text-white opacity-60 cursor-not-allowed" disabled>
+                                                    Ditutup
+                                                </button>
+                                            @else
+                                                <button type="button" @click="Swal.fire({
+                                                    title: 'Konfirmasi Tutup',
+                                                    text: 'Menutup survey akan menghentikan peserta untuk mengisi lagi. Lanjutkan?',
+                                                    icon: 'warning',
+                                                    showCancelButton: true,
+                                                    confirmButtonColor: '#1f2937',
+                                                    cancelButtonColor: '#6b7280',
+                                                    confirmButtonText: 'Tutup',
+                                                    cancelButtonText: 'Batal'
+                                                }).then((result) => {
+                                                    if (result.isConfirmed) {
+                                                        const form = document.createElement('form');
+                                                        form.method = 'POST';
+                                                        form.action = '{{ route('admin.survey.close', $primarySurvey->id) }}';
+                                                        const csrf = document.createElement('input');
+                                                        csrf.type = 'hidden';
+                                                        csrf.name = '_token';
+                                                        csrf.value = '{{ csrf_token() }}';
+                                                        form.appendChild(csrf);
+                                                        document.body.appendChild(form);
+                                                        form.submit();
+                                                    }
+                                                })" class="inline-flex items-center gap-2 rounded-full bg-slate-800 px-4 py-2 text-white shadow hover:bg-slate-900">
+                                                    Tutup
+                                                </button>
+                                            @endif
                                         @endif
                                     </div>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="3" class="px-6 py-10 text-center text-sm text-slate-500">Tidak ada survey.</td>
+                                <td colspan="4" class="px-6 py-10 text-center text-sm text-slate-500">Tidak ada survey.</td>
                             </tr>
                         @endforelse
                     </tbody>

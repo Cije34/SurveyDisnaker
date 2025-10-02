@@ -16,7 +16,10 @@ class KegiatanController extends Controller
     public function index(Request $request): View
     {
         $paginatedKegiatan = Kegiatan::with('tahunKegiatan')
-            ->latest()
+            ->join('tahun_kegiatans', 'kegiatans.tahun_kegiatan_id', '=', 'tahun_kegiatans.id')
+            ->orderByDesc('tahun_kegiatans.tahun')
+            ->orderByDesc('kegiatans.created_at')
+            ->select('kegiatans.*')
             ->paginate(5);
 
         $kegiatanCollection = $paginatedKegiatan->getCollection();
