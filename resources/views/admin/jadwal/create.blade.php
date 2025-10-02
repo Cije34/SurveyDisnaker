@@ -5,7 +5,7 @@
 
     <x-admin.topbar :user="$user" title="Tambah Jadwal" />
 
-    <div class="px-6 py-8 lg:px-10 lg:py-10 space-y-8">
+    <div class="px-6 py-8 lg:px-10 lg:py-10 space-y-8" x-data="{ pesertaSearch: '', mentorSearch: '' }">
         @if (session('status'))
             <div class="rounded-2xl border border-emerald-100 bg-emerald-50 px-5 py-3 text-sm text-emerald-700">
                 {{ session('status') }}
@@ -81,19 +81,20 @@
                             <p class="mt-1 text-xs text-rose-500">{{ $message }}</p>
                         @enderror
                     </div>
-                    <div>
-                        <label class="mb-1 block text-sm font-medium text-slate-700">Mentor</label>
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 max-h-32 overflow-y-auto border border-slate-200 rounded-xl p-2 bg-slate-50">
-                            @foreach($mentorOptions as $mentor)
-                                <label class="flex items-center gap-2 cursor-pointer">
-                                    <input type="checkbox"
-                                           value="{{ $mentor->id }}"
-                                           @checked(in_array($mentor->id, old('mentor_ids', [])))
-                                           name="mentor_ids[]"
-                                           class="rounded border-slate-300 text-sky-600 focus:ring-sky-500">
-                                    <span class="text-sm text-slate-700">{{ $mentor->name }}</span>
-                                </label>
-                            @endforeach
+                     <div>
+                         <label class="mb-1 block text-sm font-medium text-slate-700">Mentor</label>
+                         <input type="text" x-model="mentorSearch" placeholder="Cari mentor..." class="mb-2 w-full rounded-xl border-slate-300 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
+                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 max-h-32 overflow-y-auto border border-slate-200 rounded-xl p-2 bg-slate-50">
+                             @foreach($mentorOptions as $mentor)
+                                 <label x-show="mentorSearch === '' || '{{ $mentor->name }}'.toLowerCase().includes(mentorSearch.toLowerCase())" class="flex items-center gap-2 cursor-pointer">
+                                     <input type="checkbox"
+                                            value="{{ $mentor->id }}"
+                                            @checked(in_array($mentor->id, old('mentor_ids', [])))
+                                            name="mentor_ids[]"
+                                            class="rounded border-slate-300 text-sky-600 focus:ring-sky-500">
+                                     <span class="text-sm text-slate-700">{{ $mentor->name }}</span>
+                                 </label>
+                             @endforeach
                         </div>
                         @error('mentor_ids')
                             <p class="mt-1 text-xs text-rose-500">{{ $message }}</p>
@@ -102,19 +103,20 @@
                             <p class="mt-1 text-xs text-rose-500">{{ $message }}</p>
                         @enderror
                     </div>
-                    <div>
-                        <label class="mb-1 block text-sm font-medium text-slate-700">Peserta</label>
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 max-h-32 overflow-y-auto border border-slate-200 rounded-xl p-2 bg-slate-50">
-                            @foreach($pesertaOptions as $peserta)
-                                <label class="flex items-center gap-2 cursor-pointer">
-                                    <input type="checkbox"
-                                           value="{{ $peserta->id }}"
-                                           @checked(in_array($peserta->id, old('peserta_ids', [])))
-                                           name="peserta_ids[]"
-                                           class="rounded border-slate-300 text-sky-600 focus:ring-sky-500">
-                                    <span class="text-sm text-slate-700">{{ $peserta->name }}</span>
-                                </label>
-                            @endforeach
+                     <div>
+                         <label class="mb-1 block text-sm font-medium text-slate-700">Peserta</label>
+                         <input type="text" x-model="pesertaSearch" placeholder="Cari peserta..." class="mb-2 w-full rounded-xl border-slate-300 text-sm shadow-sm focus:border-sky-500 focus:ring-sky-500">
+                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 max-h-32 overflow-y-auto border border-slate-200 rounded-xl p-2 bg-slate-50">
+                             @foreach($pesertaOptions as $peserta)
+                                 <label x-show="pesertaSearch === '' || '{{ $peserta->name }}'.toLowerCase().includes(pesertaSearch.toLowerCase())" class="flex items-center gap-2 cursor-pointer">
+                                     <input type="checkbox"
+                                            value="{{ $peserta->id }}"
+                                            @checked(in_array($peserta->id, old('peserta_ids', [])))
+                                            name="peserta_ids[]"
+                                            class="rounded border-slate-300 text-sky-600 focus:ring-sky-500">
+                                     <span class="text-sm text-slate-700">{{ $peserta->name }}</span>
+                                 </label>
+                             @endforeach
                         </div>
                         @error('peserta_ids')
                             <p class="mt-1 text-xs text-rose-500">{{ $message }}</p>

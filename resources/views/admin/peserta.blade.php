@@ -5,7 +5,7 @@
 
     <x-admin.topbar :user="$user" title="Peserta" />
 
-     <div class="px-6 py-8 lg:px-10 lg:py-10 space-y-8" x-data="pesertaPage()">
+      <div class="px-6 py-8 lg:px-10 lg:py-10 space-y-8" x-data="pesertaPage()">
         @if (session('status'))
             <div class="rounded-2xl border border-emerald-100 bg-emerald-50 px-5 py-3 text-sm text-emerald-700">
                 {{ session('status') }}
@@ -40,14 +40,19 @@
                         </span>
                     </button>
                 </div>
-            </div>
+             </div>
 
-            <!-- Desktop view -->
+
+
+             <!-- Desktop view -->
             <div class="hidden md:block relative rounded-3xl border border-slate-200 shadow-lg overflow-x-auto">
                 <table class="min-w-full divide-y divide-slate-200">
-                    <thead>
-                        <tr class="bg-sky-700">
-                            <th scope="col" class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wide text-white">Nama</th>
+                     <thead>
+                         <tr class="bg-sky-700">
+                             <th scope="col" class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wide text-white">
+                                 <input type="checkbox" x-model="selectAll" @change="selectedItems = selectAll ? pesertas.map(p => p.id) : []" class="rounded border-slate-300 text-sky-600 shadow-sm focus:border-sky-300 focus:ring focus:ring-sky-200 focus:ring-opacity-50">
+                             </th>
+                             <th scope="col" class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wide text-white">Nama</th>
                             <th scope="col" class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wide text-white">NIK</th>
                             <th scope="col" class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wide text-white">Pendidikan trakhir</th>
                             <th scope="col" class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wide text-white">Email</th>
@@ -57,8 +62,11 @@
                     </thead>
                     <tbody class="divide-y divide-slate-100 bg-white">
                         @forelse ($pesertas as $peserta)
-                             <tr class="hover:bg-slate-50" x-data="{ open: false }" :class="{ 'relative z-10': open }">
-                                 <td class="whitespace-nowrap px-6 py-4 text-sm font-semibold text-slate-800">{{ $peserta->user->name ?? '-' }}</td>
+                              <tr class="hover:bg-slate-50" x-data="{ open: false }" :class="{ 'relative z-10': open }">
+                                  <td class="whitespace-nowrap px-6 py-4 text-sm">
+                                      <input type="checkbox" :value="$peserta->id" x-model="selectedItems" class="rounded border-slate-300 text-sky-600 shadow-sm focus:border-sky-300 focus:ring focus:ring-sky-200 focus:ring-opacity-50">
+                                  </td>
+                                  <td class="whitespace-nowrap px-6 py-4 text-sm font-semibold text-slate-800">{{ $peserta->user->name ?? '-' }}</td>
                                  <td class="whitespace-nowrap px-6 py-4 text-sm text-slate-600">{{ $peserta->nik ?? '-' }}</td>
                                  <td class="whitespace-nowrap px-6 py-4 text-sm text-slate-600">{{ $peserta->pendidikan_terakhir ?? '-' }}</td>
                                  <td class="whitespace-nowrap px-6 py-4 text-sm text-slate-600">{{ $peserta->email ?? '-' }}</td>

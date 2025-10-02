@@ -25,14 +25,16 @@
                         <img src="{{ asset('icons/calendar-plus.svg') }}" alt="Tambah" class="h-4 w-4 invert">
                     </span>
                 </a>
-            </div>
+             </div>
 
-            <!-- Desktop view -->
+
+
+             <!-- Desktop view -->
             <div class="hidden md:block relative rounded-3xl border border-slate-200 shadow-lg overflow-x-auto">
                 <table class="min-w-full divide-y divide-slate-200">
-                    <thead>
-                        <tr class="bg-sky-700">
-                            <th scope="col" class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wide text-white">Tahun Kegiatan</th>
+                     <thead>
+                         <tr class="bg-sky-700">
+                             <th scope="col" class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wide text-white">Tahun Kegiatan</th>
                             <th scope="col" class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wide text-white">Kegiatan</th>
                             <th scope="col" class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wide text-white">Mentor</th>
                             <th scope="col" class="px-6 py-4 text-left text-sm font-semibold uppercase tracking-wide text-white">Tanggal</th>
@@ -50,8 +52,8 @@
                                 $timeRange = trim(($startTime ? $startTime : '') . ($endTime ? ' - ' . $endTime : ''));
                                 $mentor = $schedule->mentors->pluck('name')->implode(', ') ?? '-';
                             @endphp
-                            <tr class="hover:bg-slate-50" x-data="{ open: false }" :class="{ 'relative z-10': open }">
-                                <td class="whitespace-nowrap px-6 py-4 text-sm font-semibold text-slate-800">
+                             <tr class="hover:bg-slate-50" x-data="{ open: false }" :class="{ 'relative z-10': open }">
+                                 <td class="whitespace-nowrap px-6 py-4 text-sm font-semibold text-slate-800">
                                     {{ $schedule->kegiatan->tahunKegiatan->tahun ?? '-' }}
                                 </td>
                                 <td class="whitespace-nowrap px-6 py-4 text-sm text-slate-600">
