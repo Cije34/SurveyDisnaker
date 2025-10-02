@@ -15,18 +15,18 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             RolePermissionSeeder::class,
-            TahunKegiatanSeeder::class,
-            KegiatanSeeder::class,
-            PenjabSeeder::class,
-            MentorSeeder::class,
-            TempatSeeder::class,
-            PesertaSeeder::class,
-            SurveySeeder::class,
-            JawabanSeeder::class,
-            JadwalSeeder::class,
-            JadwalMentorSeeder::class,
-            JadwalPesertaSeeder::class,
-            JadwalPenjabs::class,
+            // TahunKegiatanSeeder::class,
+            // KegiatanSeeder::class,
+            // PenjabSeeder::class,
+            // MentorSeeder::class,
+            // TempatSeeder::class,
+            // PesertaSeeder::class,
+            // SurveySeeder::class,
+            // JawabanSeeder::class,
+            // JadwalSeeder::class,
+            // JadwalMentorSeeder::class,
+            // JadwalPesertaSeeder::class,
+            // JadwalPenjabs::class,
         ]);
 
         $admin = User::create([
