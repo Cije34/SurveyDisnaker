@@ -15,6 +15,13 @@ class Survey extends Model
     public const TYPE_CHOICE = 'choice';
     public const TYPE_TEXT = 'text';
 
+    protected $fillable = [
+        'kegiatan_id',
+        'type',
+        'pertanyaan',
+        'is_active',
+    ];
+
     protected $casts = [
         'type' => 'string',
     ];

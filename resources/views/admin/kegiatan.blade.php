@@ -125,17 +125,36 @@
                                                         class="inline-flex items-center gap-2 rounded-full border border-sky-300 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-sky-600 transition hover:bg-sky-50">
                                                     Edit
                                                 </button>
-                                                <form method="POST"
-                                                      action="{{ route('admin.kegiatan.destroy', $kegiatan) }}"
-                                                      class="inline-flex"
-                                                      onsubmit="return confirm('Hapus kegiatan {{ $kegiatan->nama_kegiatan }}?');">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit"
-                                                            class="inline-flex items-center gap-2 rounded-full border border-rose-300 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-rose-600 transition hover:bg-rose-50">
-                                                        Hapus
-                                                    </button>
-                                                </form>
+                                                 <button @click="Swal.fire({
+                                                     title: 'Konfirmasi Hapus',
+                                                     text: 'Apakah Anda yakin ingin menghapus kegiatan {{ $kegiatan->nama_kegiatan }}? Tindakan ini tidak dapat dibatalkan.',
+                                                     icon: 'warning',
+                                                     showCancelButton: true,
+                                                     confirmButtonColor: '#ef4444',
+                                                     cancelButtonColor: '#6b7280',
+                                                     confirmButtonText: 'Hapus',
+                                                     cancelButtonText: 'Batal'
+                                                 }).then((result) => {
+                                                     if (result.isConfirmed) {
+                                                         const form = document.createElement('form');
+                                                         form.method = 'POST';
+                                                         form.action = '{{ route('admin.kegiatan.destroy', $kegiatan) }}';
+                                                         const csrf = document.createElement('input');
+                                                         csrf.type = 'hidden';
+                                                         csrf.name = '_token';
+                                                         csrf.value = '{{ csrf_token() }}';
+                                                         form.appendChild(csrf);
+                                                         const method = document.createElement('input');
+                                                         method.type = 'hidden';
+                                                         method.name = '_method';
+                                                         method.value = 'DELETE';
+                                                         form.appendChild(method);
+                                                         document.body.appendChild(form);
+                                                         form.submit();
+                                                     }
+                                                 })" class="inline-flex items-center gap-2 rounded-full border border-rose-300 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-rose-600 transition hover:bg-rose-50">
+                                                     Hapus
+                                                 </button>
                                             </div>
                                         </td>
                                     </tr>

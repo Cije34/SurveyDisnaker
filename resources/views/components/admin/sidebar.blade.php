@@ -6,7 +6,7 @@
         ['label' => 'Tahun Kegiatan', 'icon' => asset('icons/calendar.svg'), 'route' => route('admin.tahun.index'), 'key' => 'tahun'],
         ['label' => 'Kegiatan', 'icon' => asset('icons/calendar-plus.svg'), 'route' => route('admin.kegiatan.index'), 'key' => 'kegiatan'],
         ['label' => 'Jadwal', 'icon' => asset('icons/calendar-dot.svg'), 'route' => route('admin.jadwal.index'), 'key' => 'jadwal'],
-        ['label' => 'Survey', 'icon' => asset('icons/chalkboard-teacher.svg'), 'route' => '#', 'key' => 'survey'],
+        ['label' => 'Survey', 'icon' => asset('icons/chalkboard-teacher.svg'), 'route' => route('admin.survey.index'), 'key' => 'survey'],
     ];
 
     $dataMenus = [

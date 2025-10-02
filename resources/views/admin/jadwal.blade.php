@@ -92,18 +92,39 @@
                                                 </svg>
                                                 Edit
                                             </a>
-                                            <form method="POST" action="{{ route('admin.jadwal.destroy', $schedule->id) }}"
-                                                  class="flex w-full items-center gap-2 px-4 py-2 text-left text-sm font-medium text-rose-500 transition hover:bg-rose-50"
-                                                  onsubmit="return confirm('Hapus jadwal {{ addslashes($schedule->kegiatan->nama_kegiatan ?? 'Tanpa Nama') }}?');">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="flex w-full items-center gap-2 text-left">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="h-4 w-4">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                                                    </svg>
-                                                    Hapus
-                                                </button>
-                                            </form>
+                                             <button @click="Swal.fire({
+                                                 title: 'Konfirmasi Hapus',
+                                                 text: 'Apakah Anda yakin ingin menghapus jadwal {{ addslashes($schedule->kegiatan->nama_kegiatan ?? 'Tanpa Nama') }}? Tindakan ini tidak dapat dibatalkan.',
+                                                 icon: 'warning',
+                                                 showCancelButton: true,
+                                                 confirmButtonColor: '#ef4444',
+                                                 cancelButtonColor: '#6b7280',
+                                                 confirmButtonText: 'Hapus',
+                                                 cancelButtonText: 'Batal'
+                                             }).then((result) => {
+                                                 if (result.isConfirmed) {
+                                                     const form = document.createElement('form');
+                                                     form.method = 'POST';
+                                                     form.action = '{{ route('admin.jadwal.destroy', $schedule->id) }}';
+                                                     const csrf = document.createElement('input');
+                                                     csrf.type = 'hidden';
+                                                     csrf.name = '_token';
+                                                     csrf.value = '{{ csrf_token() }}';
+                                                     form.appendChild(csrf);
+                                                     const method = document.createElement('input');
+                                                     method.type = 'hidden';
+                                                     method.name = '_method';
+                                                     method.value = 'DELETE';
+                                                     form.appendChild(method);
+                                                     document.body.appendChild(form);
+                                                     form.submit();
+                                                 }
+                                             })" class="flex w-full items-center gap-2 px-4 py-2 text-left text-sm font-medium text-rose-500 transition hover:bg-rose-50">
+                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="h-4 w-4">
+                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                                 </svg>
+                                                 Hapus
+                                             </button>
                                             <a href="{{ route('admin.jadwal.show', $schedule->id) }}"
                                                class="flex w-full items-center gap-2 px-4 py-2 text-left text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900">
                                                 <img src="{{ asset('icons/eye.svg') }}" alt="Detail" class="h-4 w-4">
@@ -158,15 +179,36 @@
                                     <a href="{{ route('admin.jadwal.edit', $schedule->id) }}" class="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-slate-600 hover:bg-slate-100">
                                         Edit
                                     </a>
-                                    <form method="POST" action="{{ route('admin.jadwal.destroy', $schedule->id) }}"
-                                          class="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-rose-500 hover:bg-rose-50"
-                                          onsubmit="return confirm('Hapus jadwal {{ addslashes($schedule->kegiatan->nama_kegiatan ?? 'Tanpa Nama') }}?');">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="flex w-full items-center gap-2 text-left">
-                                            Hapus
-                                        </button>
-                                    </form>
+                                     <button @click="Swal.fire({
+                                         title: 'Konfirmasi Hapus',
+                                         text: 'Apakah Anda yakin ingin menghapus jadwal {{ addslashes($schedule->kegiatan->nama_kegiatan ?? 'Tanpa Nama') }}? Tindakan ini tidak dapat dibatalkan.',
+                                         icon: 'warning',
+                                         showCancelButton: true,
+                                         confirmButtonColor: '#ef4444',
+                                         cancelButtonColor: '#6b7280',
+                                         confirmButtonText: 'Hapus',
+                                         cancelButtonText: 'Batal'
+                                     }).then((result) => {
+                                         if (result.isConfirmed) {
+                                             const form = document.createElement('form');
+                                             form.method = 'POST';
+                                             form.action = '{{ route('admin.jadwal.destroy', $schedule->id) }}';
+                                             const csrf = document.createElement('input');
+                                             csrf.type = 'hidden';
+                                             csrf.name = '_token';
+                                             csrf.value = '{{ csrf_token() }}';
+                                             form.appendChild(csrf);
+                                             const method = document.createElement('input');
+                                             method.type = 'hidden';
+                                             method.name = '_method';
+                                             method.value = 'DELETE';
+                                             form.appendChild(method);
+                                             document.body.appendChild(form);
+                                             form.submit();
+                                         }
+                                     })" class="flex w-full items-center gap-2 px-4 py-2 text-left text-sm text-rose-500 hover:bg-rose-50">
+                                         Hapus
+                                     </button>
                                 </div>
                             </div>
                         </div>

@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\JadwalController;
 use App\Http\Controllers\Admin\MentorController as AdminMentorController;
 use App\Http\Controllers\Admin\PenjabController as AdminPenjabController;
 use App\Http\Controllers\Admin\PesertaController as AdminPesertaController;
+use App\Http\Controllers\Admin\SurveyController;
 use App\Http\Controllers\Admin\TahunKegiatanController;
 use App\Http\Controllers\Admin\TempatController as AdminTempatController;
 use App\Http\Controllers\KegiatanController;
@@ -38,6 +39,16 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('ad
      Route::put('/jadwal/{jadwal}', [JadwalController::class, 'update'])->name('jadwal.update');
      Route::delete('/jadwal/{jadwal}', [JadwalController::class, 'destroy'])->name('jadwal.destroy');
 
+     // Survey
+     Route::get('/survey', [SurveyController::class, 'index'])->name('survey.index');
+     Route::get('/survey/create', [SurveyController::class, 'create'])->name('survey.create');
+     Route::get('/survey/{survey}/edit', [SurveyController::class, 'edit'])->name('survey.edit');
+     Route::post('/survey', [SurveyController::class, 'store'])->name('survey.store');
+     Route::put('/survey/{survey}', [SurveyController::class, 'update'])->name('survey.update');
+     Route::delete('/survey/{survey}', [SurveyController::class, 'destroy'])->name('survey.destroy');
+     Route::get('/survey/{survey}/answers', [SurveyController::class, 'answers'])->name('survey.answers');
+     Route::post('/survey/{survey}/close', [SurveyController::class, 'close'])->name('survey.close');
+
     // Peserta
     Route::get('/peserta', [AdminPesertaController::class, 'index'])->name('peserta.index');
     Route::post('/peserta', [AdminPesertaController::class, 'store'])->name('peserta.store');
@@ -68,11 +79,9 @@ Route::middleware(['auth', 'verified', 'role:admin'])->prefix('admin')->name('ad
     Route::put('/tempat/{tempat}', [AdminTempatController::class, 'update'])->name('tempat.update');
     Route::delete('/tempat/{tempat}', [AdminTempatController::class, 'destroy'])->name('tempat.destroy');
 
+    // Survey
+    Route::get('/survey', [SurveyController::class, 'index'])->name('survey.index');
 
-
-
-
-    // User
 });
 
 Route::middleware(['auth', 'verified', 'role:peserta'])->prefix('peserta')->name('peserta.')->group(function () {
