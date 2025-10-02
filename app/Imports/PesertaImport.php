@@ -8,6 +8,8 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
+use Maatwebsite\Excel\Concerns\SkipsFailures;
+use Maatwebsite\Excel\Concerns\SkipsOnFailure;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
@@ -16,60 +18,86 @@ use Maatwebsite\Excel\Concerns\WithUpserts;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use PhpOffice\PhpSpreadsheet\Shared\Date as ExcelDate;
 
-class PesertaImport implements SkipsEmptyRows, ToModel, WithBatchInserts, WithChunkReading, WithHeadingRow, WithUpserts, WithValidation
+class PesertaImport implements SkipsEmptyRows, SkipsOnFailure, ToModel, WithBatchInserts, WithChunkReading, WithHeadingRow, WithUpserts, WithValidation
 {
+    use SkipsFailures;
+
     public function model(array $row)
     {
-        $name = trim($row['name'] ?? '');
-        if (empty($name) || strlen($name) < 3) {
-            dd('Debug: Row with invalid name', $row); // Temporary debug
-
-            return null; // Skip this row
+        $name = trim((string) ($row['name'] ?? ''));
+        if (strlen($name) < 3) {
+            return null;
         }
 
-        $tgl = null;
+        $email = strtolower(trim((string) ($row['email'] ?? '')));
+        $nik = isset($row['nik']) ? preg_replace('/\D/', '', (string) $row['nik']) : null;
+
+        if ($email === '' || empty($nik)) {
+            return null;
+        }
+
+        $jenisKelamin = trim((string) ($row['jenis_kelamin'] ?? ''));
+        if (! in_array($jenisKelamin, ['Laki-laki', 'Perempuan'], true)) {
+            return null;
+        }
+
+        $tanggalLahir = null;
         if (isset($row['tanggal_lahir']) && $row['tanggal_lahir'] !== '') {
-            $tgl = is_numeric($row['tanggal_lahir'])
+            $tanggalLahir = is_numeric($row['tanggal_lahir'])
                 ? Carbon::instance(ExcelDate::excelToDateTimeObject($row['tanggal_lahir']))->toDateString()
                 : Carbon::parse($row['tanggal_lahir'])->toDateString();
         }
 
-        $user = null;
-        if (! empty($row['email'])) {
-            $user = User::firstOrCreate(
-                ['email' => $row['email']],
-                [
-                    'name' => $name,
-                    'password' => Hash::make('password'),
-                ]
-            );
+        $user = User::firstOrCreate(
+            ['email' => $email],
+            [
+                'name' => $name,
+                'password' => Hash::make('password'),
+            ]
+        );
+
+        if ($user->wasRecentlyCreated) {
             $user->assignRole('peserta');
+        } elseif ($user->name !== $name) {
+            $user->forceFill(['name' => $name])->save();
         }
 
-        $jenisKelamin = trim($row['jenis_kelamin'] ?? '');
-        if (empty($jenisKelamin) || ! in_array($jenisKelamin, ['Laki-laki', 'Perempuan'])) {
+        $nikConflict = Peserta::query()
+            ->where('nik', $nik)
+            ->where('user_id', '!=', $user->id)
+            ->exists();
 
+        if ($nikConflict) {
             return null;
         }
 
-        $peserta = new Peserta([
-            'id' => Str::uuid(),
-            'user_id' => $user ? $user->id : null,
+        $existingPesertaId = Peserta::query()
+            ->where('user_id', $user->id)
+            ->value('id');
+
+        $timestamp = now();
+
+        $attributes = [
+            'user_id' => $user->id,
             'name' => $name,
-            'email' => $row['email'] ?? null,
+            'email' => $email,
             'no_hp' => isset($row['no_hp']) ? preg_replace('/\s+|-/', '', (string) $row['no_hp']) : null,
-            'nik' => isset($row['nik']) ? preg_replace('/\D/', '', (string) $row['nik']) : null,
-            'tanggal_lahir' => $tgl,
+            'nik' => $nik,
+            'tanggal_lahir' => $tanggalLahir,
             'jenis_kelamin' => $jenisKelamin,
             'pendidikan_terakhir' => $row['pendidikan_terakhir'] ?? null,
             'alamat' => $row['alamat'] ?? null,
-        ]);
+            'updated_at' => $timestamp,
+        ];
 
-        // Log before save for debugging
+        if ($existingPesertaId) {
+            $attributes['id'] = $existingPesertaId;
+        } else {
+            $attributes['id'] = (string) Str::uuid();
+            $attributes['created_at'] = $timestamp;
+        }
 
-        $peserta->save();
-
-        return $peserta;
+        return new Peserta($attributes);
     }
 
     public function rules(): array
@@ -97,9 +125,23 @@ class PesertaImport implements SkipsEmptyRows, ToModel, WithBatchInserts, WithCh
         return 500;
     }
 
-    // upsert by nik since it's unique in the database
     public function uniqueBy()
     {
-        return ['nik'];
+        return ['user_id'];
+    }
+
+    public function upsertColumns()
+    {
+        return [
+            'name',
+            'email',
+            'no_hp',
+            'nik',
+            'tanggal_lahir',
+            'jenis_kelamin',
+            'pendidikan_terakhir',
+            'alamat',
+            'updated_at',
+        ];
     }
 }

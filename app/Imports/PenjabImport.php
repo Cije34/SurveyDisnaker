@@ -30,9 +30,21 @@ class PenjabImport implements SkipsEmptyRows, ToModel, WithBatchInserts, WithChu
             return null;
         }
 
-        $email = trim($row['email'] ?? '');
+        $email = strtolower(trim((string) ($row['email'] ?? '')));
         if (empty($email)) {
             Log::warning('Skipping row due to missing email: '.json_encode($row));
+            return null;
+        }
+
+        $jabatan = trim((string) ($row['jabatan'] ?? ''));
+        if ($jabatan === '') {
+            Log::warning('Skipping row due to missing jabatan: '.json_encode($row));
+            return null;
+        }
+
+        $noHp = isset($row['no_hp']) ? preg_replace('/\s+|-/', '', (string) $row['no_hp']) : '';
+        if ($noHp === '') {
+            Log::warning('Skipping row due to missing no_hp: '.json_encode($row));
             return null;
         }
 
@@ -44,22 +56,36 @@ class PenjabImport implements SkipsEmptyRows, ToModel, WithBatchInserts, WithChu
                 'password' => Hash::make('password'),
             ]
         );
-        $user->assignRole('admin');
 
-        $penjab = new Penjab([
+        if ($user->wasRecentlyCreated) {
+            $user->assignRole('admin');
+        } elseif ($user->name !== $name) {
+            $user->forceFill(['name' => $name])->save();
+        }
+
+        $emailConflict = Penjab::query()
+            ->where('email', $email)
+            ->where('user_id', '!=', $user->id)
+            ->exists();
+
+        if ($emailConflict) {
+            Log::warning('Skipping row due to email conflict: '.json_encode($row));
+            return null;
+        }
+
+        $timestamp = now();
+
+        return new Penjab([
             'user_id' => $user->id,
             'name' => $name,
-            'jabatan' => $row['jabatan'] ?? null,
+            'jabatan' => $jabatan,
             'email' => $email,
-            'no_hp' => isset($row['no_hp']) ? preg_replace('/\s+|-/', '', (string) $row['no_hp']) : null,
+            'no_hp' => $noHp,
             'jenis_kelamin' => $jenisKelamin,
             'alamat' => $row['alamat'] ?? null,
+            'created_at' => $timestamp,
+            'updated_at' => $timestamp,
         ]);
-
-        Log::info('Attempting to save Penjab: ', $penjab->toArray());
-        $penjab->save();
-
-        return $penjab;
     }
 
     public function rules(): array
@@ -67,7 +93,9 @@ class PenjabImport implements SkipsEmptyRows, ToModel, WithBatchInserts, WithChu
         return [
             '*.name' => ['required', 'string', 'min:3'],
             '*.email' => ['required', 'email'],
-            '*.jenis_kelamin' => ['nullable', 'in:Laki-laki,Perempuan'],
+            '*.jenis_kelamin' => ['required', 'in:Laki-laki,Perempuan'],
+            '*.jabatan' => ['required', 'string'],
+            '*.no_hp' => ['required'],
         ];
     }
 
@@ -86,9 +114,21 @@ class PenjabImport implements SkipsEmptyRows, ToModel, WithBatchInserts, WithChu
         return 500;
     }
 
-    // upsert by email since it's unique in the database
     public function uniqueBy()
     {
-        return ['email'];
+        return ['user_id'];
+    }
+
+    public function upsertColumns()
+    {
+        return [
+            'name',
+            'jabatan',
+            'email',
+            'no_hp',
+            'jenis_kelamin',
+            'alamat',
+            'updated_at',
+        ];
     }
 }

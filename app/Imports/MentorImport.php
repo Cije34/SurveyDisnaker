@@ -28,27 +28,39 @@ class MentorImport implements SkipsEmptyRows, ToModel, WithBatchInserts, WithChu
             return null;
         }
 
-        $mentor = new Mentor([
+        $email = strtolower(trim((string) ($row['email'] ?? '')));
+        if ($email === '') {
+            Log::warning('Skipping row due to missing email: '.json_encode($row));
+            return null;
+        }
+
+        $noHp = isset($row['no_hp']) ? preg_replace('/\s+|-/', '', (string) $row['no_hp']) : '';
+        if ($noHp === '') {
+            Log::warning('Skipping row due to missing no_hp: '.json_encode($row));
+            return null;
+        }
+
+        $timestamp = now();
+
+        return new Mentor([
             'name' => $name,
-            'email' => $row['email'] ?? null,
-            'no_hp' => isset($row['no_hp']) ? preg_replace('/\s+|-/', '', (string) $row['no_hp']) : null,
+            'email' => $email,
+            'no_hp' => $noHp,
             'jenis_kelamin' => $jenisKelamin,
             'alamat' => $row['alamat'] ?? null,
             'materi' => $row['materi'] ?? null,
+            'created_at' => $timestamp,
+            'updated_at' => $timestamp,
         ]);
-
-        Log::info('Attempting to save Mentor: ', $mentor->toArray());
-        $mentor->save();
-
-        return $mentor;
     }
 
     public function rules(): array
     {
         return [
             '*.name' => ['required', 'string', 'min:3'],
-            '*.email' => ['nullable', 'email'],
-            '*.jenis_kelamin' => ['nullable', 'in:Laki-laki,Perempuan'],
+            '*.email' => ['required', 'email'],
+            '*.jenis_kelamin' => ['required', 'in:Laki-laki,Perempuan'],
+            '*.no_hp' => ['required'],
         ];
     }
 
@@ -67,9 +79,20 @@ class MentorImport implements SkipsEmptyRows, ToModel, WithBatchInserts, WithChu
         return 500;
     }
 
-    // upsert by name since it's unique in the database
     public function uniqueBy()
     {
-        return ['name'];
+        return ['email'];
+    }
+
+    public function upsertColumns()
+    {
+        return [
+            'name',
+            'no_hp',
+            'jenis_kelamin',
+            'alamat',
+            'materi',
+            'updated_at',
+        ];
     }
 }
