@@ -13,16 +13,34 @@
             </div>
 
             <div class="bg-white rounded-2xl border border-slate-200 shadow-lg p-6">
-                @if($jawabans->isEmpty())
-                    <p class="text-center text-slate-500">Belum ada jawaban untuk survey ini.</p>
+                @if ($participantRows->isEmpty())
+                    <p class="text-center text-slate-500">Belum ada data peserta untuk survey ini.</p>
                 @else
-                    <div class="space-y-4">
-                        @foreach($jawabans as $jawaban)
-                            <div class="border border-slate-200 rounded-xl p-4">
-                                <p class="font-medium text-slate-900">{{ $jawaban->peserta->name ?? 'Anonim' }}</p>
-                                <p class="text-sm text-slate-700 mt-1">{{ $jawaban->jawaban }}</p>
-                            </div>
-                        @endforeach
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full text-sm text-slate-600">
+                            <thead class="bg-sky-700 text-white">
+                                <tr>
+                                    <th class="px-5 py-3 text-left font-semibold">Nama Peserta</th>
+                                    <th class="px-4 py-3 text-center font-semibold">Status</th>
+                                    <th class="px-5 py-3 text-left font-semibold">Jawaban</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 bg-white">
+                                @foreach ($participantRows as $row)
+                                    <tr>
+                                        <td class="px-5 py-3 font-medium text-slate-800">{{ $row['peserta']->name ?? 'Anonim' }}</td>
+                                        <td class="px-4 py-3 text-center">
+                                            @if ($row['status'] === 'answered')
+                                                <span class="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">Sudah menjawab</span>
+                                            @else
+                                                <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">Belum menjawab</span>
+                                            @endif
+                                        </td>
+                                        <td class="px-5 py-3 text-slate-700">{{ $row['jawaban'] ?? '-' }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 @endif
             </div>

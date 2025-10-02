@@ -25,7 +25,9 @@
                     @csrf
                     @foreach ($kegiatan->surveys as $index => $question)
                     @php
-                        $field = "answers.{$question->id}";
+                        $fieldIndex = $question->id;
+                        $fieldName = "answers[{$fieldIndex}]";
+                        $fieldError = "answers.{$fieldIndex}";
                         $existing = optional($question->jawabans->first())->jawaban;
                     @endphp
                     <div class="rounded-2xl border border-slate-200 px-6 py-5 shadow-[0_15px_35px_-30px_rgba(15,23,42,0.25)]">
@@ -36,23 +38,23 @@
                                 @foreach (['Sangat Baik', 'Baik', 'Cukup Baik', 'Buruk'] as $indexOption => $option)
                                     <label class="flex cursor-pointer items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 hover:border-sky-400">
                                         <input type="radio"
-                                               name="{{ $field }}"
+                                               name="{{ $fieldName }}"
                                                value="{{ $option }}"
                                                class="h-4 w-4 border-slate-300 text-sky-500 focus:ring-sky-400"
-                                               @checked(old($field, $existing) === $option)>
+                                               @checked(old($fieldError, $existing) === $option)>
                                         <span><strong>{{ chr(65 + $indexOption) }}.</strong> {{ $option }}</span>
                                     </label>
                                 @endforeach
                             </div>
                         @else
                             <textarea
-                                name="{{ $field }}"
+                                name="{{ $fieldName }}"
                                 rows="4"
                                 class="mt-3 w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 shadow-inner focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-100"
-                                placeholder="Tulis jawaban Anda di sini...">{{ old($field, $existing) }}</textarea>
+                                placeholder="Tulis jawaban Anda di sini...">{{ old($fieldError, $existing) }}</textarea>
                         @endif
 
-                        @error($field)
+                        @error($fieldError)
                             <p class="mt-2 text-sm text-red-500">{{ $message }}</p>
                         @enderror
                     </div>

@@ -96,6 +96,8 @@ class PesertaController extends Controller
 
         $this->authorizeKegiatanSurvey($peserta, $kegiatan);
 
+        $this->abortIfSurveyClosed($kegiatan);
+
         $kegiatan->load(['surveys' => function ($query) use ($peserta) {
             $query->with(['jawabans' => fn ($q) => $q->where('peserta_id', $peserta->id)]);
         }]);
@@ -119,6 +121,7 @@ class PesertaController extends Controller
         }
 
         $this->authorizeKegiatanSurvey($peserta, $kegiatan);
+        $this->abortIfSurveyClosed($kegiatan);
 
         $kegiatan->load('surveys');
         $kegiatan->setRelation('surveys', $kegiatan->surveys->sortBy('id')->values());
@@ -196,6 +199,7 @@ class PesertaController extends Controller
                 $surveys = $kegiatan->surveys;
 
                 $completed = $surveys->every(fn (Survey $survey) => $survey->jawabans->isNotEmpty());
+                $isClosed = $surveys->isNotEmpty() && $surveys->every(fn (Survey $survey) => $survey->is_active === false);
 
                 return [
                     'id' => $kegiatan->id,
@@ -205,8 +209,8 @@ class PesertaController extends Controller
                     'mentor' => $group->flatMap(function ($item) {
                         return $item->mentors ?? collect();
                     })->pluck('name')->unique()->implode(', ') ?: '-',
-                    'status' => $completed ? 'completed' : 'pending',
-                    'action' => route('peserta.survey.show', $kegiatan->id),
+                    'status' => $isClosed ? 'closed' : ($completed ? 'completed' : 'pending'),
+                    'action' => $isClosed ? null : route('peserta.survey.show', $kegiatan->id),
                 ];
             })->values();
     }
@@ -216,5 +220,14 @@ class PesertaController extends Controller
         $eligible = $peserta->jadwals()->where('kegiatan_id', $kegiatan->id)->exists();
 
         abort_unless($eligible, 403, 'Survey tidak tersedia untuk peserta ini.');
+    }
+
+    protected function abortIfSurveyClosed(Kegiatan $kegiatan): void
+    {
+        $kegiatan->loadMissing('surveys');
+
+        $isClosed = $kegiatan->surveys->isNotEmpty() && $kegiatan->surveys->every(fn (Survey $survey) => $survey->is_active === false);
+
+        abort_if($isClosed, 403, 'Survey sudah ditutup.');
     }
 }

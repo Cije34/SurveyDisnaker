@@ -185,10 +185,49 @@ class SurveyController extends Controller
     {
         $jawabans = $survey->jawabans()->with('peserta')->get();
 
+        $survey->load(['kegiatan.jadwal.pesertas']);
+
+        $participants = optional($survey->kegiatan)
+            ? $survey->kegiatan->jadwal
+                ->flatMap(fn ($jadwal) => $jadwal->pesertas)
+                ->unique('id')
+                ->values()
+            : collect();
+
+        $jawabanByPeserta = $jawabans
+            ->filter(fn ($jawaban) => $jawaban->peserta)
+            ->keyBy('peserta_id');
+
+        $participantRows = $participants->map(function ($peserta) use ($jawabanByPeserta) {
+            $jawaban = $jawabanByPeserta->get($peserta->id);
+
+            return [
+                'peserta' => $peserta,
+                'jawaban' => $jawaban?->jawaban,
+                'status' => $jawaban ? 'answered' : 'pending',
+            ];
+        });
+
+        $additionalRows = $jawabans
+            ->filter(fn ($jawaban) => $jawaban->peserta && ! $participants->contains('id', $jawaban->peserta_id))
+            ->map(function ($jawaban) {
+                return [
+                    'peserta' => $jawaban->peserta,
+                    'jawaban' => $jawaban->jawaban,
+                    'status' => 'answered',
+                ];
+            });
+
+        $participantRows = $participantRows
+            ->concat($additionalRows)
+            ->unique(fn ($row) => optional($row['peserta'])->id)
+            ->sortBy(fn ($row) => strtolower($row['peserta']->name ?? ''))
+            ->values();
+
         return view('admin.survey.answers', [
             'user' => Auth::user(),
             'survey' => $survey,
-            'jawabans' => $jawabans,
+            'participantRows' => $participantRows,
         ]);
     }
 
