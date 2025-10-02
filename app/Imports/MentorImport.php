@@ -14,6 +14,8 @@ use Maatwebsite\Excel\Concerns\WithValidation;
 
 class MentorImport implements SkipsEmptyRows, ToModel, WithBatchInserts, WithChunkReading, WithHeadingRow, WithUpserts, WithValidation
 {
+    protected array $processedEmails = [];
+
     public function model(array $row)
     {
         $name = trim($row['name'] ?? '');
@@ -34,6 +36,11 @@ class MentorImport implements SkipsEmptyRows, ToModel, WithBatchInserts, WithChu
             return null;
         }
 
+        if (isset($this->processedEmails[$email])) {
+            Log::warning('Skipping duplicate email within import: '.$email);
+            return null;
+        }
+
         $noHp = isset($row['no_hp']) ? preg_replace('/\s+|-/', '', (string) $row['no_hp']) : '';
         if ($noHp === '') {
             Log::warning('Skipping row due to missing no_hp: '.json_encode($row));
@@ -42,16 +49,25 @@ class MentorImport implements SkipsEmptyRows, ToModel, WithBatchInserts, WithChu
 
         $timestamp = now();
 
-        return new Mentor([
+        $mentor = Mentor::firstOrNew(['email' => $email]);
+
+        $mentor->fill([
             'name' => $name,
-            'email' => $email,
             'no_hp' => $noHp,
             'jenis_kelamin' => $jenisKelamin,
             'alamat' => $row['alamat'] ?? null,
             'materi' => $row['materi'] ?? null,
-            'created_at' => $timestamp,
-            'updated_at' => $timestamp,
         ]);
+
+        $mentor->updated_at = $timestamp;
+
+        if (! $mentor->exists) {
+            $mentor->created_at = $timestamp;
+        }
+
+        $this->processedEmails[$email] = true;
+
+        return $mentor;
     }
 
     public function rules(): array
@@ -81,7 +97,7 @@ class MentorImport implements SkipsEmptyRows, ToModel, WithBatchInserts, WithChu
 
     public function uniqueBy()
     {
-        return ['email'];
+        return ['id'];
     }
 
     public function upsertColumns()
